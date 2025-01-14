@@ -7,7 +7,7 @@
 
 ## 理由
 
-- テーブル定義書/ER図がないと、テーブル構成が明確にならず、開発に入った際に後から作り直すリスクが高まります。
+義書/ER図がないと、テーブル構成が明確にならず、開発に入った際に後から作り直すリスクが高まります。
 
 ## 参考
 
@@ -18,5 +18,5 @@
 図を記載するツールは何でも良いのですが、Figma, draw.io などがおすすめです。
 
 GitHub のリポジトリの documents ディレクトリ内にテーブル定義書/ER図についてまとめた md ファイルを作成し図を記載してください。
-[【Spotide】テーブル定義書.xlsx](https://github.com/user-attachments/files/18373107/Spotide.xlsx)
-[Uploading 【Spotide】テーブル定義書.xlsx…]()
+
+[【Spotide】テーブル定義書.xlsx](https://github.com/user-attachments/files/18410101/Spotide.xlsx)
