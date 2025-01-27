@@ -14,6 +14,7 @@
   }
 }
 
+/* 基本的なスタイル */
 body {
   font-family: 'Geist', sans-serif;
   margin: 0;
@@ -22,13 +23,16 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+  flex-direction: column;
 }
 
-/* レスポンシブデザイン */
-@media (max-width: 768px) {
-  body {
-    flex-direction: column;
-    justify-content: flex-start;
-    padding: 10px;
-  }
+/* main */
+main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column; 
+  width: 100%;
+  height: 100vh;
 }
+
