@@ -2,6 +2,7 @@
 
 import Button from '@components/Button';
 import { signIn } from 'next-auth/react';
+import Image from 'next/image';
 
 const RegistrationButton = () => {
   const handleRegistration = () => {
@@ -10,10 +11,20 @@ const RegistrationButton = () => {
   }
   return (
     <Button
-      text="Googleアカウントで登録"
-      onClick={handleRegistration}
-      className="bg-blue-500 hover:bg-blue-600"
-    />
+    onClick={handleRegistration}
+    className="flex items-center justify-center w-full max-w-xs px-4 py-2 text-sm font-medium"
+    text={
+      <div className="flex items-center">
+        <Image
+          src="/images/web_light_rd_SU.svg"
+          alt="Googleで会員登録"
+          width={500}
+          height={500}
+          className="mr-2 object-contain"
+        />
+      </div>
+    }
+  />
   );
 };
 
