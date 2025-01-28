@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import ResponsiveHeader from "@/components/responsive/header/ResponsiveHeader";
+import ResponsiveFooter from "@/components/responsive/footer/ResponsiveFooter";
 import "@/app/styles/globals.css";
 
 const geistSans = Geist({
@@ -32,6 +33,7 @@ export default function RootLayout({
         <main>
           {children}
         </main>
+        <ResponsiveFooter/>
       </body>
     </html>
   );
