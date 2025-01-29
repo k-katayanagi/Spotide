@@ -1,7 +1,11 @@
-import type { NextConfig } from "next";
+// next.config.ts
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  reactStrictMode: true,  // React の Strict Mode を有効にする
+  experimental: {
+    appDir: true,  // appディレクトリを有効にする
+  },
 };
 
 export default nextConfig;
