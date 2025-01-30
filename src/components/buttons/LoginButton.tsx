@@ -20,8 +20,7 @@ const LoginButton = (props: Props) => {
     // // Googleサインインを開始
     // await signIn('google');
     toast({
-      title: "ログインしました！",
-      description: "ログイン完了",
+      title: "ログイン完了",
       status: "success",
       duration: 3000,
       isClosable: true,
