@@ -39,15 +39,18 @@ const ListCreate = () => {
   const [error, setError] = useState('');
   const [selectedType, setSelectedType] = useState<string>("simple");
 
-  const handleSelectChange = (value: string) => {
-    setSelectedType(value);
-  };
 
 
-   // リスト名変更
+   // リスト名変更（文字列を直接受け取る）
    const onListnameChange = (value: string) => {
     setListname(value);
   };
+  
+    //リスト選択変更
+    const handleSelectChange = (value: string) => {
+      setSelectedType(value);
+    };
+  
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

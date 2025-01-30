@@ -4,9 +4,10 @@ type Props = {
   type?: "text" | "email" | "password" | "search";
   placeholder?: string;
   value?: string;
-  onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  onChange?:(e: React.ChangeEvent<HTMLInputElement>) => void; 
   width?: string;
   height?: string;
+  disabled?: boolean;
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
 const InputBox: React.FC<Props> = ({
@@ -17,6 +18,7 @@ const InputBox: React.FC<Props> = ({
   className = "",
   width = "200px",
   height = "40px",
+  disabled = false,
   style,
   ...restProps
 }) => {
@@ -28,6 +30,7 @@ const InputBox: React.FC<Props> = ({
       onChange={onChange}
       className={`input ${className}`}  // ここで TailwindCSS のクラスを適用
       style={{ width, height, ...style }} // 親コンポーネントから渡された width と height を適用
+      disabled={disabled} 
       {...restProps}
     />
   );
