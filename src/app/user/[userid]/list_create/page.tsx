@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import ListNameInput from "@components/inputbox/ListNameInput";
 import ListSelect from '@/components/ListSelect';
 import { listTypeOptions } from '@/consts/OptionList';
+import DateTimePicker from '@/components/dateTimePicker/DateTimePicker';
 
 type User = {
   id: number;
@@ -49,6 +50,7 @@ const ListCreate = () => {
     //リスト選択変更
     const handleSelectChange = (value: string) => {
       setSelectedType(value);
+      console.log(value)
     };
   
 
@@ -66,26 +68,32 @@ const ListCreate = () => {
 
 
   return (
-    <div>
-      <h1>リスト新規作成</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <h2>リスト名</h2>
-          <ListNameInput
-            listname={listname}
-            onChange={onListnameChange}
-            error={error}
-            setError={setError}
-            width="300px"
-            height="50px"
-          />
-           <h2>リストタイプ</h2>
-           <ListSelect options={listTypeOptions} onSelect={handleSelectChange} />
-           <h2>投票開始日設定</h2>
-           <h2>時間</h2>
-        </div>
-        <button type="submit">送信</button>
-      </form>
+    <div className="flex flex-col w-full min-h-screen pt-5 pl-5">
+      <h1 className="text-xl font-bold mt-0">リスト新規作成</h1>
+      <div className="flex flex-col items-center justify-start w-full flex-grow mt-20">
+        <form onSubmit={handleSubmit} className="mt-5">
+          <div>
+            <h2>リスト名</h2>
+            <ListNameInput
+              listname={listname}
+              onChange={onListnameChange}
+              error={error}
+              setError={setError}
+              width="300px"
+              height="50px"
+            />
+            <h2>リストタイプ</h2>
+            <ListSelect 
+              options={listTypeOptions} 
+              onSelect={handleSelectChange} 
+              style={{ width: "300px", height: "50px" }}
+            />
+            <h2>投票開始日時設定</h2>
+            <DateTimePicker/>
+          </div>
+          <button type="submit" className="mt-5">送信</button>
+        </form>
+      </div>
     </div>
   );
 };

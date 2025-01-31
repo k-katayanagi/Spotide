@@ -41,13 +41,13 @@ const ListNameInput = ({
       <InputBox
         type="text"
         placeholder="リスト名を入力してください"
-        className="bg-white border-2 border-black p-2 rounded"
+        className="border border-black rounded-md"
         width={width}
         height={height}
         value={listname} // listnameが10文字を超えても表示されるように
         onChange={handleChange}
         onBlur={() => validateListName(listname)} // フォーカスを外したときにバリデーション
-        disabled={listname.length > 100} // 100文字を超えた場合非活性化
+        disabled={listname.length > 100}
       />
       {error && <p style={{ color: "red" }}>{error}</p>} {/* エラーメッセージ表示 */}
     </div>
