@@ -25,7 +25,7 @@ const LoginButton = () => {
       className='gsi-material-button'
       text={(
         <div className="gsi-material-button-content-wrapper flex items-center">
-          <div className="gsi-material-button-icon" style={{ marginLeft: '16px', marginRight: '12px' }}>
+          <div className="gsi-material-button-icon">
             <svg
               version="1.1"
               xmlns="http://www.w3.org/2000/svg"
