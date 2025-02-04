@@ -50,8 +50,9 @@ const DateTimePicker = () => {
         ref={datePickerRef}
         id="time"
         selected={selectedDate}
-        onChange={(date: Date) => setSelectedDate(date)}
+        onChange={(date: Date | null) => setSelectedDate(date)}
         showTimeSelect
+        showPreviousMonths={false} 
         minDate={now}
         minTime={selectedDate && selectedDate.toDateString() === now.toDateString() ? now : new Date(0, 0, 0, 0, 0)} // 今日以外の場合は全時間帯から選べる
         maxTime={new Date(0, 0, 0, 23, 59)}

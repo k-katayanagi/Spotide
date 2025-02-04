@@ -6,6 +6,7 @@ import ListNameInput from "@components/inputbox/ListNameInput";
 import ListSelect from '@/components/ListSelect';
 import { listTypeOptions } from '@/consts/OptionList';
 import DateTimePicker from '@/components/dateTimePicker/DateTimePicker';
+import SubmitButton from '@/components/buttons/SubmitButton';
 
 type User = {
   id: number;
@@ -62,7 +63,7 @@ const ListCreate = () => {
     }
 
     // フォーム送信のロジック（仮）
-    console.log('送信するデータ:', { listname, userId });
+    console.log('送信するデータ:', { userId,listname,selectedType});
     // サーバーに送信する処理を書く
   };
 
@@ -71,9 +72,10 @@ const ListCreate = () => {
     <div className="flex flex-col w-full min-h-screen pt-5 pl-5">
       <h1 className="text-xl font-bold mt-0">リスト新規作成</h1>
       <div className="flex flex-col items-center justify-start w-full flex-grow mt-20">
-        <form onSubmit={handleSubmit} className="mt-5">
-          <div>
-            <h2>リスト名</h2>
+        <form onSubmit={handleSubmit} className="mt-5 flex flex-col items-center space-y-5">
+          {/* リスト名入力 */}
+          <div className="space-y-5">
+            <h2 className="text-lg font-medium">リスト名</h2>
             <ListNameInput
               listname={listname}
               onChange={onListnameChange}
@@ -82,16 +84,23 @@ const ListCreate = () => {
               width="300px"
               height="50px"
             />
-            <h2>リストタイプ</h2>
+          </div>
+
+          <div className="space-y-5">
+            <h2 className="text-lg font-medium">リストタイプ</h2>
             <ListSelect 
               options={listTypeOptions} 
               onSelect={handleSelectChange} 
               style={{ width: "300px", height: "50px" }}
             />
-            <h2>投票開始日時設定</h2>
-            <DateTimePicker/>
           </div>
-          <button type="submit" className="mt-5">送信</button>
+          <div className="space-y-5">
+            <h2 className="text-lg font-medium">投票開始日時設定</h2>
+            <DateTimePicker />
+          </div>
+          <div className="flex justify-center mt-5">
+            <SubmitButton />
+          </div>
         </form>
       </div>
     </div>
