@@ -1,10 +1,10 @@
-type PaginationProps = {
+type Props = {
     currentPage: number;
     totalPages: number;
     onPageChange: (page: number) => void;
   };
   
-  const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) => {
+  const Pagination = ({ currentPage, totalPages, onPageChange }: Props) => {
     return (
       <div className="flex justify-center items-center mt-6 space-x-3">
         <button
