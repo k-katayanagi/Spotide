@@ -70,7 +70,7 @@ const IndividualList = () => {
 
       {/* リスト部分をスクロール可能に */}
       <div className="overflow-auto max-h-[60vh] p-2 border border-gray-300 rounded-lg">
-        <div className="flex flex-wrap gap-4 justify-center sm:justify-between md:justify-around lg:justify-evenly">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {currentLists.map((list) => (
             <ListCard key={list.id} list={list} />
           ))}
