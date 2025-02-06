@@ -30,9 +30,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
       </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Providers>
           <ResponsiveHeader />
           <main>

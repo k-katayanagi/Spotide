@@ -1,3 +1,9 @@
+import DeleteButton from '@/components/buttons/DeleteButton';
+import EditButton from '../buttons/EditButton ';
+import ViewingButton from '../buttons/ViewingButton';
+
+
+
 type List = {
   id: number;
   list_name: string;
@@ -13,11 +19,15 @@ type List = {
 const ListCard = ({ list }: { list: List }) => {
   return (
     <div className="bg-white border border-gray-300 shadow-md rounded-lg p-4 h-auto min-h-[320px] flex flex-col justify-between">
+   <div className="flex justify-center items-center mb-4">
+        <EditButton className='mx-2' />
+        <ViewingButton className='mx-2'/>
+        <DeleteButton className='mx-2'/>
+      </div>
       <div className="flex-1">
         <img src="/images/image.gif" alt="画像" className="w-full h-[160px] object-cover rounded-lg mb-4"/>
         <h2 className="text-lg font-bold">{list.list_name}</h2>
 
-        {/* ラベルと値のペアを横並びにしつつ、はみ出したら縦に並べる */}
         <div className="flex flex-wrap gap-x-4 gap-y-2 mt-2 min-w-0">
           <div className="flex sm:inline-flex flex-col sm:flex-row">
             <p className="text-gray-600 whitespace-nowrap">投票開始日時:</p>
