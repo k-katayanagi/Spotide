@@ -68,7 +68,7 @@ const IndividualList = () => {
 
 
   return (
-    <div className="p-5 min-h-screen overflow-auto">
+    <div className="p-5  overflow-auto">
       <h1 className="text-2xl font-bold mb-5" >{user.name}さんの個人リスト</h1>
 
       {/* リスト部分をスクロール可能に */}
