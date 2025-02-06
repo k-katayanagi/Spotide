@@ -3,7 +3,7 @@ type Props = {
     totalPages: number;
     onPageChange: (page: number) => void;
   };
-  
+
   const Pagination = ({ currentPage, totalPages, onPageChange }: Props) => {
     return (
       <div className="flex justify-center items-center mt-6 space-x-3">
@@ -14,9 +14,8 @@ type Props = {
         >
           前へ
         </button>
-  
+
         <span className="text-lg font-bold">{currentPage} / {totalPages}</span>
-  
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
