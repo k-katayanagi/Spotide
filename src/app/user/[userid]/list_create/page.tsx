@@ -19,8 +19,8 @@ const ListCreate = () => {
   const params = useParams();
   const { userid } = params;
 
+  // 最初に条件チェックを行う
   const userId = Number(userid);
-
   if (isNaN(userId)) {
     return <p>ユーザーIDが無効です。</p>;
   }
@@ -34,25 +34,20 @@ const ListCreate = () => {
     return <p>ユーザーが見つかりません</p>;
   }
 
-
-  // 入力値とエラーメッセージの状態
+  // 条件チェックが終わった後にuseStateを呼ぶ
   const [listname, setListname] = useState('');
   const [error, setError] = useState('');
   const [selectedType, setSelectedType] = useState<string>("simple");
 
-
-
-   // リスト名変更（文字列を直接受け取る）
-   const onListnameChange = (value: string) => {
+  // 入力値変更ハンドラ
+  const onListnameChange = (value: string) => {
     setListname(value);
   };
-  
-    //リスト選択変更
-    const handleSelectChange = (value: string) => {
-      setSelectedType(value);
-      console.log(value)
-    };
-  
+
+  const handleSelectChange = (value: string) => {
+    setSelectedType(value);
+    console.log(value)
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,17 +57,14 @@ const ListCreate = () => {
     }
 
     // フォーム送信のロジック（仮）
-    console.log('送信するデータ:', { userId,listname,selectedType});
-    // サーバーに送信する処理を書く
+    console.log('送信するデータ:', { userId, listname, selectedType });
   };
-
 
   return (
     <div className="flex flex-col w-full min-h-screen pt-5 pl-5">
       <h1 className="text-xl font-bold mt-0">リスト新規作成</h1>
       <div className="flex flex-col items-center justify-start w-full flex-grow mt-20">
         <form onSubmit={handleSubmit} className="mt-5 flex flex-col items-center space-y-5">
-          {/* リスト名入力 */}
           <div className="space-y-5">
             <h2 className="text-lg font-medium">リスト名</h2>
             <ListNameInput
@@ -87,9 +79,9 @@ const ListCreate = () => {
 
           <div className="space-y-5">
             <h2 className="text-lg font-medium">リストタイプ</h2>
-            <ListSelect 
-              options={listTypeOptions} 
-              onSelect={handleSelectChange} 
+            <ListSelect
+              options={listTypeOptions}
+              onSelect={handleSelectChange}
               style={{ width: "300px", height: "50px" }}
             />
           </div>
