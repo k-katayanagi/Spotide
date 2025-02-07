@@ -5,6 +5,9 @@ import { useParams } from 'next/navigation';
 import ListCard from '@/components/card/ListCard';
 import Pagination from '@/components/pagination/Pagination';
 import { testList } from './testlistdata';
+import IconListCreatePlusButton from'@/components/buttons/IconListCreatePlusButton'
+import FilterButton from '@/components/buttons/FilterButton';
+import SortButton from '@/components/buttons/SortButton';
 
 type User = {
   id: number;
@@ -69,7 +72,14 @@ const IndividualList = () => {
 
   return (
     <div className="p-5  overflow-auto">
-      <h1 className="text-2xl font-bold mb-5" >{user.name}さんの共有リスト一覧</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">{user.name}さんの共有リスト一覧</h1>
+        <div  className="flex gap-3 mb-5 justify-end">
+          <IconListCreatePlusButton />
+          <FilterButton/>
+          <SortButton/>
+        </div>
+      </div>
 
       {/* リスト部分をスクロール可能に */}
       <div className="overflow-auto max-h-[60vh] p-2 border border-gray-300 rounded-lg" ref={listContainerRef} >
