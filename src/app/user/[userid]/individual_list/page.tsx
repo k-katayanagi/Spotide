@@ -56,7 +56,7 @@ const IndividualList = () => {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-  
+
     // ページネーション時にスクロールを最上部に戻す
     if (listContainerRef.current) {
       listContainerRef.current.scrollTo({
