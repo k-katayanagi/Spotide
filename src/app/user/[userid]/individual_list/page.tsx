@@ -30,6 +30,7 @@ type List = {
 const IndividualList = () => {
   const params = useParams();
   const userId = Number(params?.userid);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [lists, setLists] = useState<List[]>(testList);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
