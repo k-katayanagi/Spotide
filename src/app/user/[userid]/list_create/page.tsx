@@ -19,7 +19,12 @@ const ListCreate = () => {
   const params = useParams();
   const { userid } = params;
 
-  // 最初に条件チェックを行う
+  // 最初にuseStateを呼び出す
+  const [listname, setListname] = useState('');
+  const [error, setError] = useState('');
+  const [selectedType, setSelectedType] = useState<string>("simple");
+
+  // 条件をチェックして早期リターンを行う
   const userId = Number(userid);
   if (isNaN(userId)) {
     return <p>ユーザーIDが無効です。</p>;
@@ -34,11 +39,6 @@ const ListCreate = () => {
     return <p>ユーザーが見つかりません</p>;
   }
 
-  // 条件チェックが終わった後にuseStateを呼ぶ
-  const [listname, setListname] = useState('');
-  const [error, setError] = useState('');
-  const [selectedType, setSelectedType] = useState<string>("simple");
-
   // 入力値変更ハンドラ
   const onListnameChange = (value: string) => {
     setListname(value);
@@ -46,7 +46,7 @@ const ListCreate = () => {
 
   const handleSelectChange = (value: string) => {
     setSelectedType(value);
-    console.log(value)
+    console.log(value);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
