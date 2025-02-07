@@ -2,7 +2,6 @@
 
 import Button from '@components/Button';
 import { signIn } from 'next-auth/react';
-import Image from 'next/image';
 
 const RegistrationButton = () => {
   const handleRegistration = () => {

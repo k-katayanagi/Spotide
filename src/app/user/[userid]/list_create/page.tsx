@@ -34,7 +34,6 @@ const ListCreate = () => {
     return <p>ユーザーが見つかりません</p>;
   }
 
-  const user = users[userId];
 
   // 入力値とエラーメッセージの状態
   const [listname, setListname] = useState('');
