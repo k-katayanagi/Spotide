@@ -1,4 +1,4 @@
-// components/Navigation/HeaderNavigation.tsx
+'use client'
 const HeaderNavigation = () => {
     return (
       <nav className="desktop-nav flex justify-center items-center w-full">

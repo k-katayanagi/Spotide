@@ -1,8 +1,7 @@
+'use client'
 import DeleteButton from '@/components/buttons/DeleteButton';
 import EditButton from '../buttons/EditButton ';
 import ViewingButton from '../buttons/ViewingButton';
-
-
 
 type List = {
   id: number;
@@ -13,8 +12,6 @@ type List = {
   create_date: number;
   update_date: number;
 };
-
-
 
 const ListCard = ({ list }: { list: List }) => {
   return (

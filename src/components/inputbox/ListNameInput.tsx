@@ -1,3 +1,4 @@
+'use client'
 import InputBox from "@components/InputBox";
 
 const ListNameInput = ({

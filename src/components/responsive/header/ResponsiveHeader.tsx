@@ -1,3 +1,4 @@
+'use client'
 import HeaderNavigation from '@/components/navigation/HeaderNavigation';
 import LoginButton from '@/components/buttons/LoginButton';
 
