@@ -17,7 +17,7 @@ const ResponsiveHeader = () => {
       {/* PC用ナビゲーション */}
       <div className="nav-pc hidden lg:flex space-x-4">
         <HeaderNavigation />
-        <LoginButton imageWidth={300} imageHeight={300} />
+        <LoginButton />
       </div>
     </header>
   );

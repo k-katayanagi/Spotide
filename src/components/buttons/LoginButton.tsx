@@ -4,6 +4,13 @@ import Button from '@components/Button';
 import { useToast } from '@chakra-ui/react';
 import "@/components/buttons/GoogleButton.css";
 
+
+
+// type Props = {
+//   imageWidth?: number;
+//   imageHeight?: number;
+// };
+
 const LoginButton = () => {
   const toast = useToast();
 
