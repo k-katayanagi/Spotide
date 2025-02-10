@@ -27,7 +27,7 @@ type List = {
   update_date: number;
 };
 
-const IndividualList = () => {
+const ShareList = () => {
   const params = useParams();
   const userId = Number(params?.userid);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -38,8 +38,8 @@ const IndividualList = () => {
 
 
   const users: Record<number, User> = {
-    1: { id: 1, name: 'kanon', list_name: 'リスト①', vote_start_date: 20250204, list_type: 'individual_list' },
-    2: { id: 2, name: 'katayanagi', list_name: 'リスト②', vote_start_date: 20250204, list_type: 'individual_list' },
+    1: { id: 1, name: 'kanon', list_name: 'リスト①', vote_start_date: 20250204, list_type: 'share_list' },
+    2: { id: 2, name: 'katayanagi', list_name: 'リスト②', vote_start_date: 20250204, list_type: 'share_list' },
   };
 
   if (isNaN(userId)) {
@@ -70,9 +70,10 @@ const IndividualList = () => {
     }
   };
 
+
   return (
     <div className="p-5  overflow-auto">
-      <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">{user.name}さんの共有リスト一覧</h1>
         <div  className="flex gap-3 mb-5 justify-end">
           <IconListCreatePlusButton />
@@ -100,4 +101,4 @@ const IndividualList = () => {
   );
 };
 
-export default IndividualList;
+export default ShareList;
