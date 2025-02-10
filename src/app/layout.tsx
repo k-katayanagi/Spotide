@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import ResponsiveHeader from "@/components/responsive/header/ResponsiveHeader";
 import ResponsiveFooter from "@/components/responsive/footer/ResponsiveFooter";
 import { Providers } from './providers';
+import { ListProvider } from "@/contexts/ListContext";
 import "@/app/styles/globals.css";
 
 
@@ -31,13 +32,15 @@ export default function RootLayout({
       <head>
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Providers>
-          <ResponsiveHeader />
-          <main>
-            {children}
-          </main>
-          <ResponsiveFooter/>
-        </Providers>
+        <ListProvider>
+          <Providers>
+            <ResponsiveHeader />
+            <main>
+              {children}
+            </main>
+            <ResponsiveFooter/>
+          </Providers>
+        </ListProvider>
       </body>
     </html>
   );

@@ -1,13 +1,14 @@
 'use client';
 
-import { useState,useRef } from 'react';
+import { useState,useRef, } from 'react';
 import { useParams } from 'next/navigation';
+import { useListContext } from '@/contexts/ListContext';
 import ListCard from '@/components/card/ListCard';
 import Pagination from '@/components/pagination/Pagination';
-import { testList } from './testlistdata';
 import IconListCreatePlusButton from'@/components/buttons/IconListCreatePlusButton'
 import FilterButton from '@/components/buttons/FilterButton';
 import SortButton from '@/components/buttons/SortButton';
+import DirectoryFilterDropdown from '@/components/filterDropdown/DirectoryFilterDropdown';
 
 type User = {
   id: number;
@@ -31,7 +32,8 @@ const IndividualList = () => {
   const params = useParams();
   const userId = Number(params?.userid);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [lists, setLists] = useState<List[]>(testList);
+  const { lists, setLists, sortLists, setSortLists } = useListContext();
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const listContainerRef = useRef<HTMLDivElement>(null); // スクロール位置を制御するためのref
@@ -70,6 +72,10 @@ const IndividualList = () => {
     }
   };
 
+  const toggleDropdown = () => {
+    setIsDropdownVisible(prevState => !prevState);
+    console.log(isDropdownVisible)
+  };
 
   return (
     <div className="p-5  overflow-auto">
@@ -77,10 +83,18 @@ const IndividualList = () => {
         <h1 className="text-2xl font-bold">{user.name}さんの個人リスト一覧</h1>
         <div  className="flex gap-3 mb-5 justify-end">
           <IconListCreatePlusButton />
-          <FilterButton/>
+          <FilterButton onClick={toggleDropdown} />
           <SortButton/>
         </div>
       </div>
+
+
+          {/* ドロップダウンが表示されている場合のみ表示 */}
+          {isDropdownVisible && (
+        <div className="absolute mt-2 left-0 z-10">
+          <DirectoryFilterDropdown />
+        </div>
+      )}
 
       {/* リスト部分をスクロール可能に */}
       <div className="overflow-auto max-h-[60vh] p-2 border border-gray-300 rounded-lg" ref={listContainerRef} >

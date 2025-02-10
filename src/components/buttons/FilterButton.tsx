@@ -1,24 +1,20 @@
 'use client';
 
 import Button from '@components/Button';
-import useNavigation from "@/hooks/useNavigation";
+import { useState } from 'react';
 
 interface Props {
-    className?: string; 
+  className?: string;
+  onClick: () => void; // 親から渡されたクリック時のハンドラーを受け取る
 }
 
-const FilterButton = ({ className }: Props) => {
-  const { handleNavigateTo } = useNavigation();
+const FilterButton = ({ className, onClick }: Props) => {
   return (
     <Button
-    className={`items-center justify-center mt-5 text-black ${className}`}
+      className={`items-center justify-center mt-5 text-black ${className}`}
       style={{ width: '50px', height: '50px' }}
-      onClick={() => handleNavigateTo('/')}
-      text={
-        <>
-          ↓↑
-        </>
-      }
+      onClick={onClick} // 親から渡されたクリックイベントを呼び出す
+      text={<>{'↓↑'}</>}
     />
   );
 };

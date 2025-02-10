@@ -68,6 +68,7 @@ const ListCreate = () => {
           <div className="space-y-5">
             <h2 className="text-lg font-medium">リスト名</h2>
             <ListNameInput
+              placeholder="リスト名を入力してください"
               listname={listname}
               onChange={onListnameChange}
               error={error}
