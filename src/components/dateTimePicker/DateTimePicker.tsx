@@ -51,6 +51,7 @@ const DateTimePicker = () => {
         selected={selectedDate}
         onChange={(date: Date | null) => setSelectedDate(date)}
         showTimeSelect
+        timeCaption="時間"  
         showPreviousMonths={false} 
         minDate={now}
         minTime={selectedDate && selectedDate.toDateString() === now.toDateString() ? now : new Date(0, 0, 0, 0, 0)} // 今日以外の場合は全時間帯から選べる

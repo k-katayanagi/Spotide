@@ -1,5 +1,29 @@
 /* dateTimePicker.css */
 
+/* カレンダーとタイムピッカーを横並びにする */
+.react-datepicker {
+  display: flex !important;
+}
+
+/* カレンダーの幅を調整 */
+.react-datepicker__month-container {
+  width: auto;
+}
+
+/* タイムピッカーを右側に配置 */
+.react-datepicker__time-container {
+  width: 85px !important;
+  position: relative !important;
+  right: 0 !important;
+}
+
+.react-datepicker__time {
+  position: absolute;
+  right: 0;
+  background: white;
+}
+
+
 /* カレンダー外枠 */
 .react-datepicker-wrapper,
 .react-datepicker__input-container {
