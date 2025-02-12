@@ -2,17 +2,21 @@
 import InputBox from "@components/InputBox";
 
 const ListNameInput = ({
+  placeholder,
   listname,
   onChange,
   error,
   setError,
+  className,
   width,
   height,
 }: {
+  placeholder:string
   listname: string;
   onChange: (value: string) => void;
   error: string;
   setError: React.Dispatch<React.SetStateAction<string>>;
+  className?:string
   width?: string;
   height?: string;
 }) => {
@@ -41,8 +45,8 @@ const ListNameInput = ({
     <div>
       <InputBox
         type="text"
-        placeholder="リスト名を入力してください"
-        className="border border-black rounded-md"
+        placeholder={placeholder}
+        className={`border border-black rounded-md ${className}`}
         width={width}
         height={height}
         value={listname} // listnameが10文字を超えても表示されるように

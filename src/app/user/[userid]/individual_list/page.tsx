@@ -78,20 +78,19 @@ const IndividualList = () => {
   };
 
   return (
-    <div className="p-5  overflow-auto">
-          <div className="flex items-center justify-between">
+    <div className="p-5 overflow-auto relative">
+        <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">{user.name}さんの個人リスト一覧</h1>
-        <div  className="flex gap-3 mb-5 justify-end">
-          <IconListCreatePlusButton />
+        <div className="flex gap-2 mb- justify-end relative z-10">
           <FilterButton onClick={toggleDropdown} />
           <SortButton/>
         </div>
       </div>
 
 
-          {/* ドロップダウンが表示されている場合のみ表示 */}
-          {isDropdownVisible && (
-        <div className="absolute mt-2 left-0 z-10">
+        {/* ドロップダウンが表示されている場合のみ表示 */}
+        {isDropdownVisible && (
+         <div className="absolute top-[60px] left-1/2 transform -translate-x-1/2 z-20 w-full max-w-[1024px]">
           <DirectoryFilterDropdown />
         </div>
       )}
