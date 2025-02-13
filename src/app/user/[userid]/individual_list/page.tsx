@@ -17,15 +17,6 @@ type User = {
   list_type: string;
 };
 
-type List = {
-  id: number;
-  list_name: string;
-  vote_start_date: number;
-  status: string;
-  lastUpdatedBy: string;
-  create_date: number;
-  update_date: number;
-};
 
 const IndividualList = () => {
   const params = useParams();
