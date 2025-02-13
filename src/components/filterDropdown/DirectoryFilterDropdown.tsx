@@ -6,7 +6,7 @@ import { useListContext } from '@/contexts/ListContext';
 const DirectoryFilterDropdown = () => {
   const [listname, setListname] = useState('');
   const [error, setError] = useState('');
-  const { lists, setLists, sortLists, setSortLists } = useListContext();
+  // const { lists, setLists, sortLists, setSortLists } = useListContext();
 
   // 入力値変更ハンドラ
   const onListnameChange = (value: string) => {
