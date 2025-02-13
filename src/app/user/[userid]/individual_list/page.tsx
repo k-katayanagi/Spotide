@@ -5,7 +5,6 @@ import { useParams } from 'next/navigation';
 import { useListContext } from '@/contexts/ListContext';
 import ListCard from '@/components/card/ListCard';
 import Pagination from '@/components/pagination/Pagination';
-import IconListCreatePlusButton from'@/components/buttons/IconListCreatePlusButton'
 import FilterButton from '@/components/buttons/FilterButton';
 import SortButton from '@/components/buttons/SortButton';
 import DirectoryFilterDropdown from '@/components/filterDropdown/DirectoryFilterDropdown';
