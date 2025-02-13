@@ -1,7 +1,6 @@
 'use client';
 
 import Button from '@components/Button';
-import { useState } from 'react';
 
 interface Props {
   className?: string;
