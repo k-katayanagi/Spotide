@@ -26,40 +26,53 @@ const DirectoryFilterDropdown = () => {
 
 
   return (
-  <div className="bg-white border border-gray-300 rounded-lg p-6 shadow-md
-                w-full max-w-[1024px] min-h-[30vh] max-h-[70vh] flex flex-col items-center justify-center">
-    <div className="w-full max-w-[900px] flex flex-col items-center justify-center">
-      <div className="w-full max-w-[400px] flex flex-col gap-2 sm:flex-row sm:items-center">
-        <ListNameInput
-          placeholder="検索するリスト名を入力してください"
-          listname={listname}
-          onChange={onListnameChange}
-          error={error}
-          setError={setError}
-          className="text-lg sm:w-80 w-full mt-2 sm:mt-0"
-        />
-
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
-            <CalendarPicker title="登録日"/>
-            <span className="my-auto">~</span>
-            <CalendarPicker title=""/>
+    <div className="bg-white border border-gray-300 rounded-lg p-6 shadow-md w-full max-w-[1024px] min-h-[30vh] max-h-[70vh] flex flex-col items-center mx-auto">
+      <div className="w-full flex flex-col gap-4">
+        {/* リスト名入力 */}
+        <div className="flex justify-center w-full">
+          <div className="w-full max-w-[400px] flex flex-col items-start">
+            <ListNameInput
+              placeholder="検索するリスト名を入力してください"
+              listname={listname}
+              onChange={onListnameChange}
+              error={error}
+              setError={setError}
+              className="text-lg w-full"
+            />
+          </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
-            <CalendarPicker title="更新日"/>
+        {/* 登録日 */}
+        <div className="flex justify-center w-full">
+          <div className="w-full max-w-[400px] flex flex-col sm:flex-row items-start gap-2 justify-center">
+            <CalendarPicker title="登録日" className="w-full max-w-[180px] text-center" />
             <span className="my-auto">~</span>
-            <CalendarPicker title=""/>
+            <CalendarPicker className="w-full max-w-[180px] text-center" />
+          </div>
         </div>
 
-        <ListSelect
-            title="進捗状況"
-            options={listStatusOptions}
-            onSelect={handleSelectChange}
-            style={{ width: "300px", height: "50px" }}
-          />
+        {/* 更新日 */}
+        <div className="flex justify-center w-full">
+          <div className="w-full max-w-[400px] flex flex-col sm:flex-row items-start gap-2 justify-center">
+            <CalendarPicker title="更新日" className="w-full max-w-[180px] text-center" />
+            <span className="my-auto">~</span>
+            <CalendarPicker className="w-full max-w-[180px] text-center" />
+          </div>
+        </div>
+
+        {/* 進捗状況 */}
+        <div className="flex justify-center w-full">
+          <div className="w-full max-w-[400px] flex flex-col sm:flex-row items-start gap-2 justify-center">
+            <ListSelect
+              title="進捗状況"
+              options={listStatusOptions}
+              onSelect={handleSelectChange}
+              className="w-full w-[75px] h-[40px] max-w-[250px]"
+            />
+          </div>
+        </div>
       </div>
     </div>
-  </div>
    );
 };
 export default DirectoryFilterDropdown;

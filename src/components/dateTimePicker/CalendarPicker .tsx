@@ -12,26 +12,27 @@ import { ja } from "date-fns/locale";
 registerLocale("ja", ja);
 
 type Props = {
-  title: string; 
+  title?: string; 
+  className?:string
 };
 
-const CalendarPicker = ({title}:Props) => {
+const CalendarPicker = ({title,className}:Props) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   return (
-    <div className="m-auto">
-      <label className="block">{title}</label>
-    <FormControl>
+    <div className="flex flex-col items-start w-full">
+    <label className="block w-[100px] min-h-[20px]">{title || " "}</label>
+    <FormControl className="w-full">
       <DatePicker
         id="date"
         selected={selectedDate}
         onChange={(date: Date | null) => setSelectedDate(date)}
         dateFormat="yyyy/MM/dd"
         locale="ja"
-        className="react-datepicker__input text-gray-800 p-2 border border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className={`react-datepicker__input text-gray-800 p-2 border border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full ${className}`}
       />
     </FormControl>
-    </div>
+  </div>
   );
 };
 
