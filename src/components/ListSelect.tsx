@@ -20,7 +20,7 @@ const ListSelect: React.FC<Props> = ({ options, title,onSelect, className, style
     <label className="block w-[100px]">{title}</label>
     <select
       onChange={(e) => onSelect(e.target.value)}
-      className={`border border-black rounded-md  h-10 ${className}`}
+      className={`border border-black rounded-md ${className}`}
     >
       {options.map((option) => (
         <option key={option.value} value={option.value}>
