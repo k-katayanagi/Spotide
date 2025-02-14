@@ -18,7 +18,7 @@ const DirectoryFilterDropdown = () => {
                 w-full max-w-[1024px] min-h-[30vh] max-h-[70vh] flex flex-col items-center justify-center">
     <div className="w-full max-w-[900px] flex flex-col items-center justify-center">
       <div className="w-full max-w-[400px] flex flex-col gap-2 sm:flex-row sm:items-center">
-        <span className="text-xl font-semibold text-left sm:mr-2 sm:w-auto w-full">リスト名</span>
+        {/* <span className="text-xl font-semibold text-left sm:mr-2 sm:w-auto w-full">リスト名</span> */}
         <ListNameInput
           placeholder="検索するリスト名を入力してください"
           listname={listname}
