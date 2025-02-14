@@ -66,7 +66,6 @@ const ListCreate = () => {
       <div className="flex flex-col items-center justify-start w-full flex-grow mt-20">
         <form onSubmit={handleSubmit} className="mt-5 flex flex-col items-center space-y-5">
           <div className="space-y-5">
-            <h2 className="text-lg font-medium">リスト名</h2>
             <ListNameInput
               placeholder="リスト名を入力してください"
               listname={listname}
@@ -79,16 +78,15 @@ const ListCreate = () => {
           </div>
 
           <div className="space-y-5">
-            <h2 className="text-lg font-medium">リストタイプ</h2>
             <ListSelect
               options={listTypeOptions}
               onSelect={handleSelectChange}
               style={{ width: "300px", height: "50px" }}
+              title = "リストタイプ"
             />
           </div>
           <div className="space-y-5">
-            <h2 className="text-lg font-medium">投票開始日時設定</h2>
-            <DateTimePicker />
+            <DateTimePicker title="投票開始日時設定"/>
           </div>
           <div className="flex justify-center mt-5">
             <SubmitButton />

@@ -42,7 +42,8 @@ const ListNameInput = ({
   };
 
   return (
-    <div>
+    <div className="m-auto">
+      <label className="block">リスト名</label>
       <InputBox
         type="text"
         placeholder={placeholder}

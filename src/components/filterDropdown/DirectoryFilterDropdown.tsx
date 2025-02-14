@@ -26,41 +26,40 @@ const DirectoryFilterDropdown = () => {
 
 
   return (
-    <div className="bg-white border border-gray-300 rounded-lg p-6 shadow-md w-full max-w-[1024px] min-h-[30vh] max-h-[70vh] flex flex-col items-center justify-center">
-      <div className="w-full max-w-[900px] flex flex-col items-center justify-center">
-        <div className="w-full max-w-[400px] flex flex-col gap-2">
-          <span className="text-xl font-semibold text-left sm:mr-2 sm:w-auto w-full">リスト名</span>
-          <ListNameInput
-            placeholder="検索するリスト名を入力してください"
-            listname={listname}
-            onChange={onListnameChange}
-            error={error}
-            setError={setError}
-            className="text-lg sm:w-80 w-full mt-2 sm:mt-0"
-          />
+  <div className="bg-white border border-gray-300 rounded-lg p-6 shadow-md
+                w-full max-w-[1024px] min-h-[30vh] max-h-[70vh] flex flex-col items-center justify-center">
+    <div className="w-full max-w-[900px] flex flex-col items-center justify-center">
+      <div className="w-full max-w-[400px] flex flex-col gap-2 sm:flex-row sm:items-center">
+        <ListNameInput
+          placeholder="検索するリスト名を入力してください"
+          listname={listname}
+          onChange={onListnameChange}
+          error={error}
+          setError={setError}
+          className="text-lg sm:w-80 w-full mt-2 sm:mt-0"
+        />
 
-          <span className="text-xl font-semibold text-left sm:mr-2 sm:w-auto w-full">登録日</span>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
-            <CalendarPicker />
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
+            <CalendarPicker title="登録日"/>
             <span className="my-auto">~</span>
-            <CalendarPicker />
-          </div>
+            <CalendarPicker title=""/>
+        </div>
 
-          <span className="text-xl font-semibold text-left sm:mr-2 sm:w-auto w-full">更新日</span>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
-            <CalendarPicker />
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
+            <CalendarPicker title="更新日"/>
             <span className="my-auto">~</span>
-            <CalendarPicker />
-          </div>
+            <CalendarPicker title=""/>
+        </div>
 
-          <ListSelect
+        <ListSelect
+            title="進捗状況"
             options={listStatusOptions}
             onSelect={handleSelectChange}
             style={{ width: "300px", height: "50px" }}
           />
-        </div>
       </div>
     </div>
+  </div>
    );
 };
 export default DirectoryFilterDropdown;
