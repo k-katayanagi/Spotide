@@ -9,9 +9,7 @@ import { listStatusOptions } from "@/consts/OptionList";
 const DirectoryFilterDropdown = () => {
   const [listName, setListName] = useState("");
   const [error, setError] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState<number>(
-    listStatusOptions[0]?.value ?? 0
-  );
+  const [selectedStatus, setSelectedStatus] = useState<string>("未完了");
 
   // const { lists, setLists, sortLists, setSortLists } = useListContext();
 
@@ -21,9 +19,8 @@ const DirectoryFilterDropdown = () => {
     console.log("変更されたリスト名:", listName);
   };
 
-  const handleSelectChange = (selectedStatus: string) => {
-    setSelectedStatus(selectedStatus);
-    console.log("選択された進捗状況:", selectedStatus);
+  const handleSelectChange = (value: string) => {
+    setSelectedStatus(value);
   };
 
   return (
