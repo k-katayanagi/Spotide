@@ -1,13 +1,20 @@
 'use client'
 import HeaderNavigation from '@/components/navigation/HeaderNavigation';
 import LoginButton from '@/components/buttons/LoginButton';
+import Image from 'next/image';
 
 const ResponsiveHeader = () => {
   return (
-    <header className="flex justify-between items-center p-4 bg-gray-800 text-white w-full">
+    <header className="flex justify-between items-center p-2  text-white w-full">
       {/* 共通のSpotide部分 */}
       <div>
-        Spotide<span>「集める、シェアする、決める。すべてSpotide。」</span>
+        <Image 
+          src="/images/spotideLogo.svg" 
+          alt="ユーザー名変更アイコン" 
+          width={200} 
+          height={100} 
+          priority 
+        />
       </div>
 
       {/* モバイル用ナビゲーション */}

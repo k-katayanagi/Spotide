@@ -1,6 +1,7 @@
 'use client';
 
 import { useParams } from 'next/navigation';
+import Image from 'next/image';
 
 type User = {
   id: number;
@@ -36,6 +37,44 @@ const Mypage = () => {
   return (
     <div>
       <h1>{user.name}さんのマイページ</h1>
+      <div className="grid grid-cols-2 gap-5 max-w-xs mx-auto justify-items-start">
+
+  {/* TOPカード */}
+  <div className="flex flex-col items-center text-center p-4 bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-full md:max-w-xl">
+    <h2 className="text-lg font-bold">TOP</h2>
+    <Image 
+      src="/images/top.svg" 
+      alt="TOPアイコン" 
+      width={80} 
+      height={80} 
+      priority 
+    />
+  </div>
+
+  {/* リスト作成カード */}
+  <div className="flex flex-col items-center text-center p-4 bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-full md:max-w-xl">
+    <h2 className="text-lg font-bold">リスト作成</h2>
+    <Image 
+      src="/images/createList.svg" 
+      alt="リスト作成アイコン" 
+      width={80} 
+      height={80} 
+      priority 
+    />
+  </div>
+
+  {/* ユーザー名変更カード */}
+  <div className="flex flex-col items-center text-center p-4 bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-full md:max-w-xl">
+    <h2 className="text-lg font-bold">ユーザー名変更</h2>
+    <Image 
+      src="/images/userNameChange.svg" 
+      alt="ユーザー名変更アイコン" 
+      width={80} 
+      height={80} 
+      priority 
+    />
+  </div>
+</div>
     </div>
   );
 };
