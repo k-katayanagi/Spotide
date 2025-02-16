@@ -42,21 +42,17 @@ const ListNameInput = ({
   };
 
   return (
-    <div className="m-auto">
-      <label className="block">リスト名</label>
-      <InputBox
-        type="text"
-        placeholder={placeholder}
-        className={`border border-black rounded-md ${className}`}
-        width={width}
-        height={height}
-        value={listname} // listnameが10文字を超えても表示されるように
-        onChange={handleChange}
-        onBlur={() => validateListName(listname)} // フォーカスを外したときにバリデーション
-        disabled={listname.length > 100}
-      />
-      {error && <p style={{ color: "red" }}>{error}</p>} {/* エラーメッセージ表示 */}
-    </div>
+    <div className="w-full flex flex-col items-start">
+    <label className="block w-[100px]">リスト名</label>
+    <InputBox
+      type="text"
+      placeholder={placeholder}
+      className={`border border-black rounded-md w-full ${className}`}
+      value={listname}
+      onChange={(e) => onChange(e.target.value)}
+    />
+    {error && <p className="text-red-500">{error}</p>}
+  </div>
   );
 };
 
