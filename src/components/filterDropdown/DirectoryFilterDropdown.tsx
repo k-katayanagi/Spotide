@@ -7,20 +7,23 @@ import { listStatusOptions } from "@/consts/OptionList";
 // import { useListContext } from '@/contexts/ListContext';
 
 const DirectoryFilterDropdown = () => {
-  const [listname, setListname] = useState("");
+  const [listName, setListName] = useState("");
   const [error, setError] = useState("");
-  const [selectedType, setSelectedType] = useState<string>("simple");
+  const [selectedStatus, setSelectedStatus] = useState<number>(
+    listStatusOptions[0]?.value ?? 0
+  );
 
   // const { lists, setLists, sortLists, setSortLists } = useListContext();
 
   // 入力値変更ハンドラ
-  const onListnameChange = (value: string) => {
-    setListname(value);
+  const onListNameChange = (listName: string) => {
+    setListName(listName);
+    console.log("変更されたリスト名:", listName);
   };
 
-  const handleSelectChange = (value: string) => {
-    setSelectedType(value);
-    console.log(value);
+  const handleSelectChange = (selectedStatus: string) => {
+    setSelectedStatus(selectedStatus);
+    console.log("選択された進捗状況:", selectedStatus);
   };
 
   return (
@@ -30,9 +33,8 @@ const DirectoryFilterDropdown = () => {
           <div className="flex justify-center w-fit">
             <div className="w-full max-w-[400px] self-start">
               <ListNameInput
-                placeholder="検索するリスト名を入力してください"
-                listname={listname}
-                onChange={onListnameChange}
+                listName={listName}
+                onChange={onListNameChange}
                 error={error}
                 setError={setError}
                 className="text-lg w-full"

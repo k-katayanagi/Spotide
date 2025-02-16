@@ -14,7 +14,7 @@ type Props = {
   style?: React.CSSProperties;
 };
 
-const ListSelect: React.FC<Props> = ({ options, title,onSelect, className, style }) => { 
+const ListSelect: React.FC<Props> = ({ options, title,onSelect, className}) => { 
   return (
     <div className="w-full flex flex-col items-start">
     <label className="block w-[100px]">{title}</label>

@@ -20,7 +20,7 @@ const ListCreate = () => {
   const { userid } = params;
 
   // 最初にuseStateを呼び出す
-  const [listname, setListname] = useState('');
+  const [listName, setListName] = useState('');
   const [error, setError] = useState('');
   const [selectedType, setSelectedType] = useState<string>("simple");
 
@@ -40,8 +40,8 @@ const ListCreate = () => {
   }
 
   // 入力値変更ハンドラ
-  const onListnameChange = (value: string) => {
-    setListname(value);
+  const onListNameChange = (value: string) => {
+    setListName(value);
   };
 
   const handleSelectChange = (value: string) => {
@@ -51,13 +51,13 @@ const ListCreate = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!listname || error) {
+    if (!listName || error) {
       setError('リスト名を入力してください');
       return;
     }
 
     // フォーム送信のロジック（仮）
-    console.log('送信するデータ:', { userId, listname, selectedType });
+    console.log('送信するデータ:', { userId, listName, selectedType });
   };
 
   return (
@@ -67,9 +67,8 @@ const ListCreate = () => {
         <form onSubmit={handleSubmit} className="mt-5 flex flex-col items-center space-y-5">
           <div className="space-y-5">
             <ListNameInput
-              placeholder="リスト名を入力してください"
-              listname={listname}
-              onChange={onListnameChange}
+              listName={listName}
+              onChange={onListNameChange}
               error={error}
               setError={setError}
               width="300px"
@@ -96,5 +95,4 @@ const ListCreate = () => {
     </div>
   );
 };
-
 export default ListCreate;
