@@ -24,7 +24,7 @@ const DirectoryFilterDropdown = () => {
   };
 
   return (
-    <div className="bg-[#FFE0B2] bg-opacity-95 border border-[#FF5722] rounded-lg p-6 shadow-md min-h-[30vh] max-h-[70vh] flex flex-col items-center mx-auto">
+    <div className="bg-gradient-to-b from-[rgba(255,224,178,0.98)] to-[rgba(255,183,77,0.98)] border-4 border-[#FF9800] rounded-lg p-6 shadow-md min-h-[30vh] max-h-[70vh] flex flex-col items-center mx-auto">
       <div className="m-auto">
         <div className="w-full flex flex-col gap-4">
           <div className="flex justify-center w-fit">
