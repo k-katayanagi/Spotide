@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useState,useRef, } from 'react';
-import { useParams } from 'next/navigation';
-import { useListContext } from '@/contexts/ListContext';
-import ListCard from '@/components/card/ListCard';
-import Pagination from '@/components/pagination/Pagination';
-import FilterButton from '@/components/buttons/FilterButton';
-import SortButton from '@/components/buttons/SortButton';
-import DirectoryFilterDropdown from '@/components/filterDropdown/DirectoryFilterDropdown';
+import { useState, useRef } from "react";
+import { useParams } from "next/navigation";
+import { useListContext } from "@/contexts/ListContext";
+import ListCard from "@/components/card/ListCard";
+import Pagination from "@/components/pagination/Pagination";
+import FilterButton from "@/components/buttons/FilterButton";
+import SortButton from "@/components/buttons/SortButton";
+import DirectoryFilterDropdown from "@/components/filterDropdown/DirectoryFilterDropdown";
 
 type User = {
   id: number;
@@ -16,7 +16,6 @@ type User = {
   vote_start_date: number;
   list_type: string;
 };
-
 
 const IndividualList = () => {
   const params = useParams();
@@ -28,10 +27,21 @@ const IndividualList = () => {
   const itemsPerPage = 10;
   const listContainerRef = useRef<HTMLDivElement>(null); // スクロール位置を制御するためのref
 
-
   const users: Record<number, User> = {
-    1: { id: 1, name: 'kanon', list_name: 'リスト①', vote_start_date: 20250204, list_type: 'individual_list' },
-    2: { id: 2, name: 'katayanagi', list_name: 'リスト②', vote_start_date: 20250204, list_type: 'individual_list' },
+    1: {
+      id: 1,
+      name: "kanon",
+      list_name: "リスト①",
+      vote_start_date: 20250204,
+      list_type: "individual_list",
+    },
+    2: {
+      id: 2,
+      name: "katayanagi",
+      list_name: "リスト②",
+      vote_start_date: 20250204,
+      list_type: "individual_list",
+    },
   };
 
   if (isNaN(userId)) {
@@ -49,7 +59,6 @@ const IndividualList = () => {
   const currentLists = lists.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(lists.length / itemsPerPage);
 
-
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
 
@@ -57,36 +66,38 @@ const IndividualList = () => {
     if (listContainerRef.current) {
       listContainerRef.current.scrollTo({
         top: 0, // 最上部にスクロール
-        behavior: 'smooth', // スムーズにスクロール
+        behavior: "smooth", // スムーズにスクロール
       });
     }
   };
 
   const toggleDropdown = () => {
-    setIsDropdownVisible(prevState => !prevState);
-    console.log(isDropdownVisible)
+    setIsDropdownVisible((prevState) => !prevState);
+    console.log(isDropdownVisible);
   };
 
   return (
     <div className="p-5 overflow-auto relative">
-        <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">{user.name}さんの個人リスト一覧</h1>
         <div className="flex gap-2 mb- justify-end relative z-10">
           <FilterButton onClick={toggleDropdown} />
-          <SortButton/>
+          <SortButton />
         </div>
       </div>
 
-
-        {/* ドロップダウンが表示されている場合のみ表示 */}
-        {isDropdownVisible && (
-         <div className="absolute top-[60px] left-1/2 transform -translate-x-1/2 z-20 w-full max-w-[1024px]">
+      {/* ドロップダウンが表示されている場合のみ表示 */}
+      {isDropdownVisible && (
+        <div className="absolute top-[60px] left-1/2 transform -translate-x-1/2 z-20 w-full max-w-[1024px]">
           <DirectoryFilterDropdown />
         </div>
       )}
 
       {/* リスト部分をスクロール可能に */}
-      <div className="overflow-auto max-h-[60vh] p-2 border border-gray-300 rounded-lg" ref={listContainerRef} >
+      <div
+        className="overflow-auto max-h-[60vh] p-2 border border-gray-300 rounded-lg"
+        ref={listContainerRef}
+      >
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {currentLists.map((list) => (
             <ListCard key={list.id} list={list} />
@@ -97,7 +108,11 @@ const IndividualList = () => {
       {/* ページネーション */}
       {totalPages > 1 && (
         <div className="mt-6">
-          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
         </div>
       )}
     </div>
