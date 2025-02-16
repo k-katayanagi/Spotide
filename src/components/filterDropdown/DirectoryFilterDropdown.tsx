@@ -72,6 +72,7 @@ const DirectoryFilterDropdown = () => {
                 onSelect={handleSelectChange}
                 className="w-full w-[75px] h-[40px] max-w-[75px]"
               />
+              <p>選択された進捗状況: {selectedStatus}</p>
             </div>
           </div>
         </div>
