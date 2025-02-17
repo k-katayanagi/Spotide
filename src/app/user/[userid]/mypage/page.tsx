@@ -37,9 +37,9 @@ const Mypage = () => {
   return (
     <div>
       <h1>{user.name}さんのマイページ</h1>
-      <div className="grid grid-cols-2 gap-5 max-w-xs mx-auto justify-items-start">
+      <div className="grid grid-cols-2 gap-x-[300px] gap-y-[100px] max-w-xs mx-auto justify-items-start">
         {/* TOPカード */}
-        <div className="flex flex-col items-center text-center p-4 bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-full md:max-w-xl">
+        <div className="flex flex-col items-center text-center p-6 bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-[100px] md:w-[200px]">
           <h2 className="text-lg font-bold">TOP</h2>
           <Image
             src="/images/top.svg"
@@ -51,7 +51,7 @@ const Mypage = () => {
         </div>
 
         {/* リスト作成カード */}
-        <div className="flex flex-col items-center text-center p-4 bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-full md:max-w-xl">
+        <div className="flex flex-col items-center text-center p-6 bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-[100px] md:w-[200px]">
           <h2 className="text-lg font-bold">リスト作成</h2>
           <Image
             src="/images/createList.svg"
@@ -63,7 +63,7 @@ const Mypage = () => {
         </div>
 
         {/* ユーザー名変更カード */}
-        <div className="flex flex-col items-center text-center p-4 bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-full md:max-w-xl">
+        <div className="flex flex-col items-center text-center p-6 bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-[100px] md:w-[200px]">
           <h2 className="text-lg font-bold">ユーザー名変更</h2>
           <Image
             src="/images/userNameChange.svg"
