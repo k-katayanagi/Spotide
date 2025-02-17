@@ -4,6 +4,7 @@ import ListNameInput from "../inputbox/ListNameInput";
 import CalendarPicker from "../dateTimePicker/CalendarPicker ";
 import ListSelect from "../ListSelect";
 import { listStatusOptions } from "@/consts/OptionList";
+import OkButton from "../buttons/OkButton";
 // import { useListContext } from '@/contexts/ListContext';
 
 const DirectoryFilterDropdown = () => {
@@ -27,6 +28,7 @@ const DirectoryFilterDropdown = () => {
     <div className="bg-gradient-to-b from-[rgba(255,224,178,0.98)] to-[rgba(255,183,77,0.98)] border-4 border-[#FF9800] rounded-lg p-6 shadow-md min-h-[30vh] max-h-[70vh] flex flex-col items-center mx-auto">
       <div className="m-auto">
         <div className="w-full flex flex-col gap-4">
+
           <div className="flex justify-center w-fit">
             <div className="w-full max-w-[400px] self-start">
               <ListNameInput
@@ -45,7 +47,7 @@ const DirectoryFilterDropdown = () => {
                 title="登録日"
                 className="w-full max-w-[180px] text-center"
               />
-              <span className="my-auto">~</span>
+              <span className="my-auto">から</span>
               <CalendarPicker className="w-full max-w-[180px] text-center" />
             </div>
           </div>
@@ -56,7 +58,7 @@ const DirectoryFilterDropdown = () => {
                 title="更新日"
                 className="w-full max-w-[180px] text-center"
               />
-              <span className="my-auto">~</span>
+              <span className="my-auto">から</span>
               <CalendarPicker className="w-full max-w-[180px] text-center" />
             </div>
           </div>
@@ -71,6 +73,9 @@ const DirectoryFilterDropdown = () => {
               />
               <p>選択された進捗状況: {selectedStatus}</p>
             </div>
+          </div>
+          <div className="flex justify-end w-full">
+            <OkButton />
           </div>
         </div>
       </div>
