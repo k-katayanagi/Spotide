@@ -64,7 +64,7 @@ const DirectoryFilterDropdown = () => {
           </div>
 
           <div className="flex justify-center w-fit">
-            <div className="w-full max-w-[400px] self-start">
+            <div className="w-full max-w-[400px] self-start  items-start">
               <ListSelect
                 title="進捗状況"
                 options={listStatusOptions}

@@ -21,7 +21,7 @@ const ListSelect: React.FC<Props> = ({
   className,
 }) => {
   return (
-    <div className="w-full flex flex-col items-start">
+    <div className="w-full flex flex-col">
       <label className="block w-[100px]">{title}</label>
       <select
         onChange={(e) => onSelect(e.target.value)}

@@ -77,12 +77,11 @@ const ListCreate = () => {
             />
           </div>
 
-          <div className="w-full flex flex-col">
+          <div className=" flex flex-col items-start">
             <ListSelect
-            options={listTypeOptions}
-            onSelect={handleSelectChange}
-            style={{ width: "100%", height: "50px" }}
-            title = "リストタイプ"
+              options={listTypeOptions}
+              onSelect={handleSelectChange}
+              title="リストタイプ"
             />
           </div>
 
