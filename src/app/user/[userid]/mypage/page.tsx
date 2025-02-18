@@ -37,7 +37,7 @@ const Mypage = () => {
   return (
     <div>
       <h1>{user.name}さんのマイページ</h1>
-      <div className="grid grid-cols-2 gap-x-[300px] gap-y-[100px] max-w-xs mx-auto justify-items-start">
+      <div className="grid grid-cols-3 gap-x-[200px] gap-y-[100px] max-w-xs mx-auto justify-items-center">
         {/* TOPカード */}
         <div className="flex flex-col items-center text-center p-6 bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-[100px] md:w-[200px]">
           <h2 className="text-lg font-bold">TOP</h2>
@@ -68,6 +68,50 @@ const Mypage = () => {
           <Image
             src="/images/userNameChange.svg"
             alt="ユーザー名変更アイコン"
+            width={80}
+            height={80}
+            priority
+          />
+        </div>
+
+        <div className="flex flex-col items-center text-center p-6 bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-[100px] md:w-[200px]">
+          <h2 className="text-lg font-bold">個人リスト</h2>
+          <Image
+            src="/images/individualList.svg"
+            alt="個人リスト"
+            width={80}
+            height={80}
+            priority
+          />
+        </div>
+
+        <div className="flex flex-col items-center text-center p-6 bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-[100px] md:w-[200px]">
+          <h2 className="text-lg font-bold">共有リスト</h2>
+          <Image
+            src="/images/shareList.svg"
+            alt="共有リスト"
+            width={80}
+            height={80}
+            priority
+          />
+        </div>
+
+        <div className="flex flex-col items-center text-center p-6 bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-[100px] md:w-[200px]">
+          <h2 className="text-lg font-bold">ログアウト</h2>
+          <Image
+            src="/images/logout.svg"
+            alt="ログアウト"
+            width={80}
+            height={80}
+            priority
+          />
+        </div>
+
+        <div className="flex flex-col items-center text-center p-6 bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-[100px] md:w-[200px]">
+          <h2 className="text-lg font-bold">退会</h2>
+          <Image
+            src="/images/withdrawal.svg"
+            alt="退会"
             width={80}
             height={80}
             priority

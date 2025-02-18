@@ -47,7 +47,7 @@ const DirectoryFilterDropdown = () => {
                 title="登録日"
                 className="w-full max-w-[180px] text-center"
               />
-              <span className="my-auto">から</span>
+              <span className="my-auto">～</span>
               <CalendarPicker className="w-full max-w-[180px] text-center" />
             </div>
           </div>
@@ -58,7 +58,7 @@ const DirectoryFilterDropdown = () => {
                 title="更新日"
                 className="w-full max-w-[180px] text-center"
               />
-              <span className="my-auto">から</span>
+              <span className="my-auto">～</span>
               <CalendarPicker className="w-full max-w-[180px] text-center" />
             </div>
           </div>
