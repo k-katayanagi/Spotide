@@ -108,7 +108,7 @@ const IndividualList = () => {
 
       {/* ページネーション */}
       {totalPages > 1 && (
-        <div className="mt-6">
+        <div className="mt-6 relative z-20">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
