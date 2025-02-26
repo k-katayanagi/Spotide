@@ -25,10 +25,13 @@ const DirectoryFilterDropdown = () => {
   };
 
   return (
-    <div className="bg-gradient-to-b from-[rgba(255,224,178,0.98)] to-[rgba(255,183,77,0.98)] border-4 border-[#FF9800] rounded-lg p-6 shadow-md min-h-[30vh] max-h-[70vh] flex flex-col items-center mx-auto">
+    <div
+      className="bg-gradient-to-b from-[rgba(255,224,178,0.98)] to-[rgba(255,183,77,0.98)] border-4 border-[#FF9800] rounded-lg p-6 shadow-md 
+                min-h-[50vh] max-h-[80vh] lg:min-h-[30vh] lg:max-h-[70vh] 
+                flex flex-col items-center mx-auto"
+    >
       <div className="m-auto">
         <div className="w-full flex flex-col gap-4">
-
           <div className="flex justify-center w-fit">
             <div className="w-full max-w-[400px] self-start">
               <ListNameInput
@@ -42,24 +45,36 @@ const DirectoryFilterDropdown = () => {
           </div>
 
           <div className="flex justify-center w-fit">
-            <div className="w-full max-w-[400px] flex flex-col sm:flex-row gap-2 justify-center self-start">
-              <CalendarPicker
-                title="登録日"
-                className="w-full max-w-[180px] text-center"
-              />
-              <span className="my-auto">～</span>
-              <CalendarPicker className="w-full max-w-[180px] text-center" />
+            <div className="w-full max-w-[400px] flex flex-col sm:flex-row gap-1 justify-center self-start">
+              <div className="flex flex-col items-start w-full">
+                <CalendarPicker
+                  title="登録日"
+                  className="w-full max-w-[180px] text-center"
+                />
+              </div>
+              <span className="flex justify-center lg:justify-end items-end">
+                ～
+              </span>
+              <div className="flex flex-col justify-end items-end w-full">
+                <CalendarPicker className="w-full max-w-[180px] text-center" />
+              </div>
             </div>
           </div>
 
           <div className="flex justify-center w-fit">
-            <div className="w-full max-w-[400px] flex flex-col sm:flex-row gap-2 justify-center self-start">
-              <CalendarPicker
-                title="更新日"
-                className="w-full max-w-[180px] text-center"
-              />
-              <span className="my-auto">～</span>
-              <CalendarPicker className="w-full max-w-[180px] text-center" />
+            <div className="w-full max-w-[400px] flex flex-col sm:flex-row gap-1 justify-center self-start">
+              <div className="flex flex-col items-start w-full">
+                <CalendarPicker
+                  title="更新日"
+                  className="w-full max-w-[180px] text-center"
+                />
+              </div>
+              <span className="flex justify-center lg:justify-end items-end">
+                ～
+              </span>
+              <div className="flex flex-col justify-end items-end w-full">
+                <CalendarPicker className="w-full max-w-[180px] text-center" />
+              </div>
             </div>
           </div>
 

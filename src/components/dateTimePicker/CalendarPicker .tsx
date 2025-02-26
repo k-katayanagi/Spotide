@@ -20,8 +20,10 @@ const CalendarPicker = ({title,className}:Props) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   return (
-   <div className="flex flex-col items-start w-full">
-      <label className="block w-[100px] min-h-[20px]">{title || " "}</label>
+   <div>
+     {title && (
+        <label className="block w-[100px] min-h-[20px]">{title}</label>
+      )}
       <FormControl className="w-full">
         <DatePicker
           id="date"

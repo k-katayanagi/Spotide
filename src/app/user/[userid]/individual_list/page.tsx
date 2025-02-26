@@ -88,7 +88,7 @@ const IndividualList = () => {
 
       {/* ドロップダウンが表示されている場合のみ表示 */}
       {isDropdownVisible && (
-        <div className="absolute top-[60px] left-1/2 transform -translate-x-1/2 z-20 w-full max-w-[1024px]">
+        <div className="absolute top-[60px] left-1/2 transform -translate-x-1/2 z-20 w-full max-w-[1024px] ">
           <DirectoryFilterDropdown />
         </div>
       )}

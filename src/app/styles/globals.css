@@ -22,7 +22,7 @@ html {
 }
 
 body {
-  font-family: 'Geist', sans-serif;
+  font-family: "Geist", sans-serif;
   margin: 0;
   padding: 0;
   display: flex;
@@ -36,7 +36,7 @@ body {
 main {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; 
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
   flex-grow: 1;
@@ -45,11 +45,9 @@ main {
   overflow-y: auto; /* コンテンツが多いときだけスクロール可能 */
 }
 
-
 /* スマホ表示 */
 @media (max-width: 640px) {
   main {
     padding-top: 1rem;
   }
 }
-
