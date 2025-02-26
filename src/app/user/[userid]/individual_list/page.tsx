@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import { useParams } from "next/navigation";
 import { useListContext } from "@/contexts/ListContext";
+import { useBottomNav } from "@/contexts/BottomNavContext";
 import ListCard from "@/components/card/ListCard";
 import Pagination from "@/components/pagination/Pagination";
 import FilterButton from "@/components/buttons/FilterButton";
@@ -20,28 +21,16 @@ type User = {
 const IndividualList = () => {
   const params = useParams();
   const userId = Number(params?.userid);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { lists } = useListContext();
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const { isBottomNavOpen } = useBottomNav();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
-  const listContainerRef = useRef<HTMLDivElement>(null); // スクロール位置を制御するためのref
+  const listContainerRef = useRef<HTMLDivElement>(null);
 
   const users: Record<number, User> = {
-    1: {
-      id: 1,
-      name: "kanon",
-      list_name: "リスト①",
-      vote_start_date: 20250204,
-      list_type: "individual_list",
-    },
-    2: {
-      id: 2,
-      name: "katayanagi",
-      list_name: "リスト②",
-      vote_start_date: 20250204,
-      list_type: "individual_list",
-    },
+    1: { id: 1, name: "kanon", list_name: "リスト①", vote_start_date: 20250204, list_type: "individual_list" },
+    2: { id: 2, name: "katayanagi", list_name: "リスト②", vote_start_date: 20250204, list_type: "individual_list" },
   };
 
   if (isNaN(userId)) {
@@ -53,7 +42,6 @@ const IndividualList = () => {
   }
 
   const user = users[userId];
-
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentLists = lists.slice(indexOfFirstItem, indexOfLastItem);
@@ -61,13 +49,8 @@ const IndividualList = () => {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-
-    // ページネーション時にスクロールを最上部に戻す
     if (listContainerRef.current) {
-      listContainerRef.current.scrollTo({
-        top: 0, // 最上部にスクロール
-        behavior: "smooth", // スムーズにスクロール
-      });
+      listContainerRef.current.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
@@ -75,6 +58,9 @@ const IndividualList = () => {
     setIsDropdownVisible((prevState) => !prevState);
     console.log(isDropdownVisible);
   };
+
+  // **🔹 ページネーションの z-index を決定**
+  const paginationZIndex = !isBottomNavOpen && !isDropdownVisible ? "z-40" : "z-20";
 
   return (
     <div className="p-5 overflow-auto relative">
@@ -93,7 +79,7 @@ const IndividualList = () => {
         </div>
       )}
 
-      {/* リスト部分をスクロール可能に */}
+      {/* リスト部分 */}
       <div
         className="overflow-auto max-h-[60vh] p-2 border border-gray-300 rounded-lg  bg-gradient-to-br from-[#FFE0B2] to-[#FFCC80]
                 scrollbar-thin scrollbar-thumb-[#FF5722] scrollbar-track-[#FFE0B2]"
@@ -108,12 +94,8 @@ const IndividualList = () => {
 
       {/* ページネーション */}
       {totalPages > 1 && (
-        <div className="mt-6 relative z-20">
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
+        <div className={`mt-6 relative ${paginationZIndex}`}>
+          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
         </div>
       )}
     </div>
