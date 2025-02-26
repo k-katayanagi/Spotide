@@ -19,6 +19,7 @@ const ListSelect: React.FC<Props> = ({
   title,
   onSelect,
   className,
+  style,
 }) => {
   return (
     <div className="w-full flex flex-col">
@@ -26,6 +27,7 @@ const ListSelect: React.FC<Props> = ({
       <select
         onChange={(e) => onSelect(e.target.value)}
         className={`border border-black rounded-md ${className}`}
+        style={style}
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>
