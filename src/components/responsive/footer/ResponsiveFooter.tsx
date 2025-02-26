@@ -33,7 +33,7 @@ const ResponsiveFooter = () => {
 
         {/* BottomNavigationが非表示のとき、再表示用ハンドル */}
         {!isVisible && (
-          <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2 mb-2 z-30">
+          <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2 mb-2 z-30 lg:hidden">
             <div
               onClick={() => setIsVisible(true)}
               className="w-16 h-2 bg-[#FF5722] rounded-full cursor-pointer"
