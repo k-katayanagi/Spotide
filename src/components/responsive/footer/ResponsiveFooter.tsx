@@ -20,7 +20,7 @@ const ResponsiveFooter = () => {
         <div onClick={hideBottomNav} className="fixed inset-0 z-10" />
       )}
 
-      <footer className="fixed bottom-0 left-0 w-full z-20">
+      <footer className="fixed bottom-0 left-0 w-full z-30">
         {/* モバイル用 */}
         <div
           onClick={stopPropagation}
