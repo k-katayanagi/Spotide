@@ -81,7 +81,7 @@ const IndividualList = () => {
 
       {/* リスト部分 */}
       <div
-        className="overflow-auto max-h-[60vh] p-2 border border-gray-300 rounded-lg  bg-gradient-to-br from-[#FFE0B2] to-[#FFCC80]
+        className="overflow-auto max-h-[60vh] p-2 border border-[#FF5722] rounded-lg  bg-gradient-to-br from-[#FFE0B2] to-[#FFCC80]
                 scrollbar-thin scrollbar-thumb-[#FF5722] scrollbar-track-[#FFE0B2]"
         ref={listContainerRef}
       >
