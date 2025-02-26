@@ -95,7 +95,8 @@ const IndividualList = () => {
 
       {/* リスト部分をスクロール可能に */}
       <div
-        className="overflow-auto max-h-[60vh] p-2 border border-gray-300 rounded-lg"
+        className="overflow-auto max-h-[60vh] p-2 border border-gray-300 rounded-lg  bg-gradient-to-br from-[#FFE0B2] to-[#FFCC80]
+                scrollbar-thin scrollbar-thumb-[#FF5722] scrollbar-track-[#FFE0B2]"
         ref={listContainerRef}
       >
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

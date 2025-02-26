@@ -35,16 +35,15 @@ const Mypage = () => {
   const user = users[userId];
 
   return (
-    <div className="overflow-auto relative">
+    <div className="overflow-auto relative scrollbar-thin scrollbar-thumb-[#FF5722] scrollbar-track-[#FFE0B2]">
       <div className="flex items-center justify-between mb-[30px]">
         <h1 className="text-2xl font-bold">{user.name}さんのマイページ</h1>
       </div>
 
       <div className="h-[70vh] mt-[30px]">
-      <div className="grid grid-cols-2 md:grid-cols-3 grid-rows-1 gap-5 md:gap-x-2 md:gap-y-[100px] justify-items-center lg:scale-90">
+        <div className="grid grid-cols-2 md:grid-cols-3 grid-rows-1 gap-5 md:gap-x-2 md:gap-y-[100px] justify-items-center lg:scale-90">
           {/* TOPカード */}
           <div className="flex flex-col items-center text-center bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-full max-w-[240px]  md:w-96 md:justify-self-end">
-
             <div className="w-full flex flex-col items-center">
               <h2 className="text-lg font-bold">TOP</h2>
               <Image
@@ -73,7 +72,6 @@ const Mypage = () => {
 
           {/* ユーザー名変更カード */}
           <div className="flex flex-col items-center text-center bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-full max-w-[240px]  md:w-96 md:justify-self-start">
-
             <div className="w-full flex flex-col items-center">
               <h2 className="text-lg font-bold">ユーザー名変更</h2>
               <Image
