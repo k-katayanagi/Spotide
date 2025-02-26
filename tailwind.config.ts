@@ -14,5 +14,5 @@ export default {
       },
     },
   },
-  plugins: [require("tailwind-scrollbar")],
+  plugins: [require("tailwind-scrollbar"), require("autoprefixer")],
 } satisfies Config;
