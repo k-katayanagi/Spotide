@@ -5,9 +5,9 @@ import Image from "next/image";
 
 const ResponsiveHeader = () => {
   return (
-    <header className="flex justify-between items-center p-2  text-white w-full">
+    <header className="flex items-center justify-between lg:justify-start p-2 text-white w-full">
       {/* 共通のSpotide部分 */}
-      <div>
+      <div className="flex-1 flex justify-center lg:justify-start">
         <Image
           src="/images/spotideLogo.svg"
           alt="ユーザー名変更アイコン"
