@@ -11,8 +11,8 @@ const ResponsiveHeader = () => {
         <Image
           src="/images/spotideLogo.svg"
           alt="ユーザー名変更アイコン"
-          width={200}
-          height={100}
+          width={350}
+          height={250}
           priority
         />
       </div>
