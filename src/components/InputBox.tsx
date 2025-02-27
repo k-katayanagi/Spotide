@@ -1,13 +1,11 @@
-'use client'
+"use client";
 import React from "react";
 
 type Props = {
   type?: "text" | "email" | "password" | "search";
   placeholder?: string;
   value?: string;
-  onChange?:(e: React.ChangeEvent<HTMLInputElement>) => void; 
-  width?: string;
-  height?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   disabled?: boolean;
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
@@ -17,10 +15,7 @@ const InputBox: React.FC<Props> = ({
   value,
   onChange,
   className = "",
-  width = "200px",
-  height = "40px",
   disabled = false,
-  style,
   ...restProps
 }) => {
   return (
@@ -29,9 +24,8 @@ const InputBox: React.FC<Props> = ({
       placeholder={placeholder}
       value={value}
       onChange={onChange}
-      className={`input ${className}`}  // ここで TailwindCSS のクラスを適用
-      style={{ width, height, ...style }} // 親コンポーネントから渡された width と height を適用
-      disabled={disabled} 
+      className={`input ${className}`} // ここで TailwindCSS のクラスを適用
+      disabled={disabled}
       {...restProps}
     />
   );

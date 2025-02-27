@@ -6,16 +6,12 @@ const ListNameInput = ({
   onChange,
   error,
   setError,
-  width,
-  height,
   className,
 }: {
   listName: string;
   onChange: (value: string) => void;
   error: string;
   setError: React.Dispatch<React.SetStateAction<string>>;
-  width?: string;
-  height?: string;
   className?: string;
 }) => {
   // 文字数が10文字を超えた場合にエラーメッセージをセット
@@ -39,14 +35,12 @@ const ListNameInput = ({
   };
 
   return (
-    <div className="m-auto">
+    <div>
       <label className="block">リスト名</label>
       <InputBox
         type="text"
         placeholder="リスト名を入力してください"
         className={`border border-black rounded-md ${className}`}
-        width={width}
-        height={height}
         value={listName} // listnameが100文字を超えても表示されるように
         onChange={handleChange}
         onBlur={() => validateListName(listName)} // フォーカスを外したときにバリデーション

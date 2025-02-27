@@ -1,24 +1,21 @@
-'use client';
+"use client";
 
-import Button from '@components/Button';
-import useNavigation from "@/hooks/useNavigation";
+import Button from "@components/Button";
 
 interface Props {
-    className?: string; 
+  className?: string;
+  disabled?:boolean;
+  onClick: () => void;
 }
 
-const SortButton = ({ className }: Props) => {
-  const { handleNavigateTo } = useNavigation();
+const SortButton = ({ className,disabled,onClick }: Props) => {
   return (
     <Button
       className={`items-center justify-center mt-5 text-black ${className}`}
-      style={{ width: '50px', height: '50px' }}
-      onClick={() => handleNavigateTo('/')}
-      text={
-        <>
-          ↓↑三
-        </>
-      }
+      style={{ width: "50px", height: "50px" }}
+      disabled={disabled}
+      onClick={onClick}
+      text={<>↓↑三</>}
     />
   );
 };

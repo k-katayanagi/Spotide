@@ -8,7 +8,7 @@ type Option = {
 
 type Props = {
   options: Option[];
-  title: string;
+  title?: string;
   onSelect: (value: string) => void;
   className?: string;
   style?: React.CSSProperties;

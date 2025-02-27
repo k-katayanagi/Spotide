@@ -31,15 +31,15 @@ const DirectoryFilterDropdown = () => {
                 flex flex-col items-center mx-auto"
     >
       <div className="m-auto">
-        <div className="w-full flex flex-col gap-4">
+        <div className="flex flex-col gap-4">
           <div className="flex justify-center w-fit">
-            <div className="w-full max-w-[400px] self-start">
+            <div className="self-start">
               <ListNameInput
                 listName={listName}
                 onChange={onListNameChange}
                 error={error}
                 setError={setError}
-                className="text-lg w-full"
+                className="text-lg w-[180px] sm:w-[300px] md:w-[380px] h-[40px]"
               />
             </div>
           </div>
