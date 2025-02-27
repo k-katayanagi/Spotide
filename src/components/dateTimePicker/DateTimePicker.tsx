@@ -48,7 +48,7 @@ const DateTimePicker = ({title}:Props) => {
   }, [selectedDate]);
 
   return (
-    <div className="m-auto">
+    <div>
       <label className="block">{title}</label>
         <FormControl>
           <DatePicker
