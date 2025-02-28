@@ -78,11 +78,11 @@ const IndividualList = () => {
     console.log(isSort);
   };
 
-  // **🔹 ページネーションの z-index を決定**
+
   const paginationZIndex = !isBottomNavOpen && !isFilter ? "z-40" : "z-20";
 
   return (
-    <div className="p-5 overflow-auto relative">
+    <div className="p-3 overflow-auto relative">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">{user.name}さんの個人リスト一覧</h1>
         <div className="flex gap-2 mb- justify-end relative z-10">

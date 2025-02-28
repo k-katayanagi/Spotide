@@ -66,7 +66,7 @@ const ListCreate = () => {
       <div className="flex flex-col items-center justify-start w-full flex-grow mt-20">
         <form
           onSubmit={handleSubmit}
-          className="mt-5 flex flex-col items-center space-y-5 w-full max-w-[400px]"
+          className="mt-5 flex flex-col items-center space-y-10 w-full max-w-[400px]"
         >
           <div className="w-full flex flex-col self-start">
             <ListNameInput
