@@ -20,4 +20,5 @@
 GitHub のリポジトリの documents ディレクトリ内にテーブル定義書/ER図についてまとめた md ファイルを作成し図を記載してください。
 
 
-[Spotide.20250302xlsm.xlsx](https://github.com/user-attachments/files/19041465/Spotide.20250302xlsm.xlsx)
+
+[Uploading 【Spotide】テーブル定義書 .20250302xlsm.xlsx…]()
