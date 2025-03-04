@@ -10,6 +10,7 @@ import FilterButton from "@/components/buttons/FilterButton";
 import SortButton from "@/components/buttons/SortButton";
 import DirectoryFilterDropdown from "@/components/filterDropdown/DirectoryFilterDropdown";
 import DirectorySortDropdown from "@/components/sortDropdown/DirectorySortDropdown";
+import { List } from "@/types/ListTypes";
 
 type User = {
   id: number;
