@@ -2,7 +2,7 @@ export const testList = [
   {
     id: 1,
     list_name: `リスト1`,
-    vote_start_date: new Date(2025, 1, 6),
+    vote_start_date: new Date(2025, 1, 6, 14, 30), // 2025/02/06 14:30
     status: 0,
     lastUpdatedBy: "kanon",
     outing_date: new Date(2025, 2, 1),
@@ -12,7 +12,7 @@ export const testList = [
   {
     id: 2,
     list_name: `テスト`,
-    vote_start_date: new Date(2025, 1, 10),
+    vote_start_date: new Date(2025, 1, 10, 9, 15), // 2025/02/10 09:15
     status: 1,
     lastUpdatedBy: "kanon",
     outing_date: new Date(2025, 2, 10),
@@ -22,7 +22,7 @@ export const testList = [
   {
     id: 3,
     list_name: `リスト2`,
-    vote_start_date: new Date(2025, 2, 21),
+    vote_start_date: new Date(2025, 2, 21, 16, 0), // 2025/03/21 16:00
     status: 1,
     lastUpdatedBy: "kanon",
     outing_date: new Date(2025, 2, 25),
@@ -32,7 +32,7 @@ export const testList = [
   {
     id: 4,
     list_name: "フィルター",
-    vote_start_date: new Date(2025, 3, 12), // YYYY, MM-1, DD
+    vote_start_date: new Date(2025, 3, 12, 20, 45), // 2025/04/12 20:45
     status: 2,
     lastUpdatedBy: "kanon",
     outing_date: new Date(2025, 3, 15),
@@ -42,7 +42,7 @@ export const testList = [
   {
     id: 5,
     list_name: "フィルターテスト",
-    vote_start_date: new Date(2025, 2, 2),
+    vote_start_date: new Date(2025, 2, 2, 5, 10), // 2025/03/02 05:10
     status: 2,
     lastUpdatedBy: "kanon",
     outing_date: new Date(2025, 2, 24),
@@ -50,6 +50,7 @@ export const testList = [
     update_date: new Date(2025, 2, 2),
   },
 ];
+
 
 // export const testList = [
 //     {id: 1,

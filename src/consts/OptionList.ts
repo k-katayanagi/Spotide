@@ -12,12 +12,12 @@ export const listStatusOptions = [
 ];
 
 export const listInfo = [
-  { value: 0, label: "投票開始日時" },
-  { value: 1, label: "ステータス" },
-  { value: 2, label: "最終更新者" },
-  { value: 2, label: "おでかけ日" },
-  { value: 3, label: "作成日時" },
-  { value: 4, label: "更新日時" },
+  { value: "create_date", label: "作成日時" },
+  { value: "update_date", label: "更新日時" },
+  { value: "vote_start_date", label: "投票開始日時" },
+  { value: "status", label: "ステータス" },
+  { value: "lastUpdatedBy", label: "最終更新者" },
+  { value: "outing_date", label: "おでかけ日" },
 ];
 
 export const Sort = [

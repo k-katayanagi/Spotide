@@ -30,7 +30,7 @@ const DirectoryFilterDropdown = ({ toggleFilterDropdown }: Props) => {
 
   const handleFilterApply = (e: React.FormEvent) => {
     e.preventDefault();
-    let filteredLists = lists;
+    let filteredLists = [...lists];
 
     if (listName) {
       const normalizeToHiragana = (str: string) =>

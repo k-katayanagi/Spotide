@@ -28,7 +28,7 @@ const IndividualList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const listContainerRef = useRef<HTMLDivElement>(null);
-  const { lists, sortLists } = useListContext();
+  const { lists, sortLists, setSortLists } = useListContext();
   const [displayLists, setDisplayLists] = useState<List[]>(lists);
 
   useEffect(() => {
@@ -85,6 +85,43 @@ const IndividualList = () => {
     console.log(isSort);
   };
 
+  const handleSortChange = (sortKey: keyof List, order: number) => {
+    const sortedLists = [...displayLists].sort((a, b) => {
+      let aValue = a[sortKey];
+      let bValue = b[sortKey];
+
+      const dateKeys: Array<keyof List> = [
+        "vote_start_date",
+        "create_date",
+        "update_date",
+        "outing_date",
+      ];
+      if (dateKeys.includes(sortKey)) {
+        aValue = new Date(aValue as string);
+        bValue = new Date(bValue as string);
+      }
+
+      if (typeof aValue === "number" || typeof aValue === "string") {
+        return order === 0
+          ? aValue > bValue
+            ? 1
+            : -1
+          : aValue < bValue
+            ? 1
+            : -1;
+      }
+
+      if (aValue instanceof Date && bValue instanceof Date) {
+        return order === 0
+          ? aValue.getTime() - bValue.getTime()
+          : bValue.getTime() - aValue.getTime();
+      }
+
+      return 0;
+    });
+    setSortLists(sortedLists);
+  };
+
   const paginationZIndex = !isBottomNavOpen && !isFilter ? "z-40" : "z-20";
 
   return (
@@ -107,7 +144,10 @@ const IndividualList = () => {
 
       {isSort && (
         <div className="absolute top-[60px] left-1/2 transform -translate-x-1/2 z-30 w-full max-w-[1024px]">
-          <DirectorySortDropdown />
+          <DirectorySortDropdown
+            toggleSortDropdown={toggleSortDropdown}
+            onSortChange={handleSortChange}
+          />
         </div>
       )}
 

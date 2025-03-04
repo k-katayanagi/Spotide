@@ -32,7 +32,14 @@ const ListCard = ({ list }: { list: List }) => {
           <div className="flex sm:inline-flex flex-col sm:flex-row">
             <p className="text-gray-600 whitespace-nowrap">投票開始日時:</p>
             <p className="text-gray-600 ml-1">
-              {list.vote_start_date.toLocaleDateString("ja-JP")}
+              {list.vote_start_date.toLocaleString("ja-JP", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false, 
+              })}
             </p>
           </div>
           <div className="flex sm:inline-flex flex-col sm:flex-row">
