@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef,useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { useListContext } from "@/contexts/ListContext";
 import { useBottomNav } from "@/contexts/BottomNavContext";
@@ -28,18 +28,16 @@ const IndividualList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const listContainerRef = useRef<HTMLDivElement>(null);
-  const { lists,sortLists } = useListContext();
-  const [displayLists, setDisplayLists] = useState<List[]>(lists); // 表示用リスト
+  const { lists, sortLists } = useListContext();
+  const [displayLists, setDisplayLists] = useState<List[]>(lists);
 
   useEffect(() => {
     if (sortLists.length > 0) {
-      setDisplayLists(sortLists); // フィルター適用時に sortLists をセット
+      setDisplayLists(sortLists);
     } else {
-      setDisplayLists(lists); // フィルター解除時に全リストに戻す
+      setDisplayLists(lists);
     }
-  }, [sortLists, lists]); // lists が変わったときも更新
-  
- 
+  }, [sortLists, lists]);
 
   const users: Record<number, User> = {
     1: {
@@ -101,7 +99,9 @@ const IndividualList = () => {
 
       {isFilter && (
         <div className="absolute top-[60px] left-1/2 transform -translate-x-1/2 z-30 w-full max-w-[1024px]">
-          <DirectoryFilterDropdown toggleFilterDropdown={toggleFilterDropdown}/>
+          <DirectoryFilterDropdown
+            toggleFilterDropdown={toggleFilterDropdown}
+          />
         </div>
       )}
 
