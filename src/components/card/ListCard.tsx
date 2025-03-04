@@ -29,43 +29,50 @@ const ListCard = ({ list }: { list: List }) => {
         <h2 className="text-lg font-bold">{list.list_name}</h2>
 
         <div className="flex flex-wrap gap-x-4 gap-y-2 mt-2 min-w-0">
-          <div className="flex sm:inline-flex flex-col sm:flex-row">
+          {/* 投票開始日時 */}
+          <div className="flex flex-col sm:flex-row">
             <p className="text-gray-600 whitespace-nowrap">投票開始日時:</p>
-            <p className="text-gray-600 ml-1">
-              {list.vote_start_date.toLocaleString("ja-JP", {
+            <p className="text-gray-600 sm:ml-1">
+              {new Date(list.vote_start_date).toLocaleString("ja-JP", {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
                 hour: "2-digit",
                 minute: "2-digit",
-                hour12: false, 
+                hour12: false,
               })}
             </p>
           </div>
-          <div className="flex sm:inline-flex flex-col sm:flex-row">
+
+          {/* ステータス & 最終更新者 */}
+          <div className="flex flex-col sm:flex-row">
             <p className="text-gray-600 whitespace-nowrap">ステータス:</p>
-            <p className="text-gray-600 ml-1">{getStatusLabel(list.status)}</p>
+            <p className="text-gray-600 sm:ml-1">
+              {getStatusLabel(list.status)}
+            </p>
+            <p className="text-gray-600 whitespace-nowrap sm:ml-4">
+              最終更新者:
+            </p>
+            <p className="text-gray-600 sm:ml-1">{list.lastUpdatedBy}</p>
           </div>
-          <div className="flex sm:inline-flex flex-col sm:flex-row">
-            <p className="text-gray-600 whitespace-nowrap">最終更新者:</p>
-            <p className="text-gray-600 ml-1">{list.lastUpdatedBy}</p>
-          </div>
-          <div className="flex sm:inline-flex flex-col sm:flex-row">
+
+          {/* おでかけ日 & 作成日時 */}
+          <div className="flex flex-col sm:flex-row">
             <p className="text-gray-600 whitespace-nowrap">おでかけ日:</p>
-            <p className="text-gray-600 ml-1">
-              {list.outing_date.toLocaleDateString("ja-JP")}
+            <p className="text-gray-600 sm:ml-1">
+              {new Date(list.outing_date).toLocaleDateString("ja-JP")}
+            </p>
+            <p className="text-gray-600 whitespace-nowrap sm:ml-4">作成日時:</p>
+            <p className="text-gray-600 sm:ml-1">
+              {new Date(list.create_date).toLocaleDateString("ja-JP")}
             </p>
           </div>
-          <div className="flex sm:inline-flex flex-col sm:flex-row">
-            <p className="text-gray-600 whitespace-nowrap">作成日時:</p>
-            <p className="text-gray-600 ml-1">
-              {list.create_date.toLocaleDateString("ja-JP")}
-            </p>
-          </div>
-          <div className="flex sm:inline-flex flex-col sm:flex-row">
+
+          {/* 更新日時 */}
+          <div className="flex flex-col">
             <p className="text-gray-600 whitespace-nowrap">更新日時:</p>
-            <p className="text-gray-600 ml-1">
-              {list.update_date.toLocaleDateString("ja-JP")}
+            <p className="text-gray-600">
+              {new Date(list.update_date).toLocaleDateString("ja-JP")}
             </p>
           </div>
         </div>
