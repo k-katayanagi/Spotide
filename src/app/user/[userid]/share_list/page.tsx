@@ -11,6 +11,8 @@ import SortButton from "@/components/buttons/SortButton";
 import DirectoryFilterDropdown from "@/components/filterDropdown/DirectoryFilterDropdown";
 import DirectorySortDropdown from "@/components/sortDropdown/DirectorySortDropdown";
 import { List } from "@/types/ListTypes";
+import DeleteConfirmModal from "@/components/modal/DeleteConfirmModal";
+import { useDisclosure, useToast } from "@chakra-ui/react";
 
 type User = {
   id: number;
@@ -24,12 +26,15 @@ const ShareList = () => {
   const userId = Number(params?.userid);
   const [isFilter, setIsFilter] = useState(false);
   const [isSort, setIsSort] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [selectedList, setSelectedList] = useState<List | null>(null);
   const { isBottomNavOpen } = useBottomNav();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const listContainerRef = useRef<HTMLDivElement>(null);
-  const { lists, sortLists, setSortLists } = useListContext();
+  const { lists, sortLists, setSortLists } = useListContext(); //Listは仮データあとでDBから取得
   const [displayLists, setDisplayLists] = useState<List[]>(lists);
+  const toast = useToast();
 
   useEffect(() => {
     if (sortLists.length > 0) {
@@ -122,6 +127,29 @@ const ShareList = () => {
     setSortLists(sortedLists);
   };
 
+  const handleDeleteClick = (list: List) => {
+    setSelectedList(list);
+    onOpen();
+  };
+
+  const handleDelete = () => {
+    if (selectedList) {
+      // リストから削除
+      setDisplayLists((prevLists) =>
+        prevLists.filter((list) => list.id !== selectedList.id)
+      );
+
+      toast({
+        title: `"${selectedList.list_name}" を削除しました`,
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+      onClose();
+    }
+  };
+
   const paginationZIndex = !isBottomNavOpen && !isFilter ? "z-40" : "z-20";
 
   return (
@@ -159,10 +187,22 @@ const ShareList = () => {
       >
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {currentLists.map((list) => (
-            <ListCard key={list.id} list={list} />
+            <ListCard
+              key={list.id}
+              list={list}
+              onDelete={() => handleDeleteClick(list)}
+            />
           ))}
         </div>
       </div>
+
+      {/*削除確認モーダル*/}
+      <DeleteConfirmModal
+        isOpen={isOpen}
+        onClose={onClose}
+        onConfirm={handleDelete}
+        selectedListName={selectedList?.list_name || ""}
+      />
 
       {/* ページネーション */}
       {totalPages > 1 && (

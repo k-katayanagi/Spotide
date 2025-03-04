@@ -5,7 +5,12 @@ import ViewingButton from "../buttons/ViewingButton";
 import { listStatusOptions } from "@/consts/OptionList";
 import { List } from "@/types/ListTypes";
 
-const ListCard = ({ list }: { list: List }) => {
+interface Props {
+  list: List;
+  onDelete: () => void; 
+}
+
+const ListCard = ({ list, onDelete }: Props) => {
   const getStatusLabel = (status: number): string => {
     const statusObj = listStatusOptions.find(
       (option) => option.value === status
@@ -13,12 +18,13 @@ const ListCard = ({ list }: { list: List }) => {
     return statusObj ? statusObj.label : "不明";
   };
 
+
   return (
     <div className="bg-white border border-orange-300 shadow-md rounded-lg p-4 h-auto min-h-[320px] flex flex-col justify-between">
       <div className="flex justify-center items-center mb-4 space-x-2 sm:space-x-6 md:space-x-10 lg:space-x-16 xl:space-x-20">
         <EditButton className="mx-2" />
         <ViewingButton className="mx-2" />
-        <DeleteButton className="mx-2" />
+        <DeleteButton className="mx-2" onClick={onDelete} />
       </div>
       <div className="flex-1">
         <img
