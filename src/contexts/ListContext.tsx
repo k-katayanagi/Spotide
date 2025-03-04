@@ -1,16 +1,7 @@
 'use client';
 import { createContext, useContext, useState, ReactNode } from 'react';
 import { testList } from '@/app/user/[userid]/individual_list/testlistdata';
-
-type List = {
-  id: number;
-  list_name: string;
-  vote_start_date: number;
-  status: string;
-  lastUpdatedBy: string;
-  create_date: number;
-  update_date: number;
-};
+import { List } from '@/types/ListTypes';
 
 type ListContextType = {
   lists: List[];

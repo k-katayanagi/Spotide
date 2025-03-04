@@ -1,8 +1,12 @@
-'use client';
+"use client";
 
-import Button from '@components/Button';
+import Button from "@components/Button";
 
-const OkButton = () => {
+interface Props {
+  onClick?: () => void; // ← クリック時の関数を受け取る
+}
+
+const OkButton = ({ onClick }: Props) => {
   return (
     <Button
       className="group relative inline-flex h-16 items-center justify-center overflow-hidden rounded-full 
@@ -15,6 +19,8 @@ const OkButton = () => {
           <span>OK</span>
         </>
       }
+      type="submit"
+      onClick={onClick}
     />
   );
 };

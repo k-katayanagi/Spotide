@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef,useEffect } from "react";
 import { useParams } from "next/navigation";
 import { useListContext } from "@/contexts/ListContext";
 import { useBottomNav } from "@/contexts/BottomNavContext";
@@ -15,34 +15,42 @@ type User = {
   id: number;
   name: string;
   list_name: string;
-  vote_start_date: number;
   list_type: string;
 };
 
 const IndividualList = () => {
   const params = useParams();
   const userId = Number(params?.userid);
-  const { lists } = useListContext();
   const [isFilter, setIsFilter] = useState(false);
   const [isSort, setIsSort] = useState(false);
   const { isBottomNavOpen } = useBottomNav();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const listContainerRef = useRef<HTMLDivElement>(null);
+  const { lists,sortLists } = useListContext();
+  const [displayLists, setDisplayLists] = useState<List[]>(lists); // 表示用リスト
+
+  useEffect(() => {
+    if (sortLists.length > 0) {
+      setDisplayLists(sortLists); // フィルター適用時に sortLists をセット
+    } else {
+      setDisplayLists(lists); // フィルター解除時に全リストに戻す
+    }
+  }, [sortLists, lists]); // lists が変わったときも更新
+  
+ 
 
   const users: Record<number, User> = {
     1: {
       id: 1,
       name: "kanon",
       list_name: "リスト①",
-      vote_start_date: 20250204,
       list_type: "individual_list",
     },
     2: {
       id: 2,
       name: "katayanagi",
       list_name: "リスト②",
-      vote_start_date: 20250204,
       list_type: "individual_list",
     },
   };
@@ -58,8 +66,8 @@ const IndividualList = () => {
   const user = users[userId];
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentLists = lists.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(lists.length / itemsPerPage);
+  const currentLists = displayLists.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(displayLists.length / itemsPerPage);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -78,7 +86,6 @@ const IndividualList = () => {
     console.log(isSort);
   };
 
-
   const paginationZIndex = !isBottomNavOpen && !isFilter ? "z-40" : "z-20";
 
   return (
@@ -86,14 +93,14 @@ const IndividualList = () => {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">{user.name}さんの個人リスト一覧</h1>
         <div className="flex gap-2 mb- justify-end relative z-10">
-          <FilterButton onClick={toggleFilterDropdown} disabled={isSort}/>
-          <SortButton onClick={toggleSortDropdown}　disabled={isFilter}/>
+          <FilterButton onClick={toggleFilterDropdown} disabled={isSort} />
+          <SortButton onClick={toggleSortDropdown} disabled={isFilter} />
         </div>
       </div>
 
       {isFilter && (
         <div className="absolute top-[60px] left-1/2 transform -translate-x-1/2 z-30 w-full max-w-[1024px]">
-          <DirectoryFilterDropdown />
+          <DirectoryFilterDropdown toggleFilterDropdown={toggleFilterDropdown}/>
         </div>
       )}
 
