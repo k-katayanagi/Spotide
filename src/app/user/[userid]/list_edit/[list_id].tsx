@@ -33,7 +33,7 @@ const ListEdit = () => {
     } else {
       setDisplayListItems(listItems);
     }
-  }, [listItems]);
+  }, [sortLists.length]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
