@@ -4,13 +4,15 @@ import EditButton from "../buttons/EditButton ";
 import ViewingButton from "../buttons/ViewingButton";
 import { listStatusOptions } from "@/consts/OptionList";
 import { List } from "@/types/ListTypes";
+import Image from "next/image";
 
 interface Props {
   list: List;
-  onDelete: () => void; 
+  onDelete: () => void;
+  onEdit: () => void;
 }
 
-const ListCard = ({ list, onDelete }: Props) => {
+const ListCard = ({ list, onDelete, onEdit }: Props) => {
   const getStatusLabel = (status: number): string => {
     const statusObj = listStatusOptions.find(
       (option) => option.value === status
@@ -18,19 +20,21 @@ const ListCard = ({ list, onDelete }: Props) => {
     return statusObj ? statusObj.label : "不明";
   };
 
-
   return (
     <div className="bg-white border border-orange-300 shadow-md rounded-lg p-4 h-auto min-h-[320px] flex flex-col justify-between">
       <div className="flex justify-center items-center mb-4 space-x-2 sm:space-x-6 md:space-x-10 lg:space-x-16 xl:space-x-20">
-        <EditButton className="mx-2" />
+        <EditButton className="mx-2" onClick={onEdit} />
         <ViewingButton className="mx-2" />
         <DeleteButton className="mx-2" onClick={onDelete} />
       </div>
       <div className="flex-1">
-        <img
+        <Image
           src="/images/image.gif"
           alt="画像"
+          width={0} // 自動調整のため0に設定
+          height={160}
           className="w-full h-[160px] object-cover rounded-lg mb-4"
+          unoptimized
         />
         <h2 className="text-lg font-bold">{list.list_name}</h2>
 

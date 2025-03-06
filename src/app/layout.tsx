@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import ResponsiveHeader from "@/components/responsive/header/ResponsiveHeader";
 import ResponsiveFooter from "@/components/responsive/footer/ResponsiveFooter";
-import { Providers } from './providers';
+import { Providers } from "./providers";
 import { ListProvider } from "@/contexts/ListContext";
+import { ListItemProvider } from "@/contexts/ListItemContext";
 import "@/app/styles/globals.css";
-
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,17 +29,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-      </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <head></head>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
         <ListProvider>
-          <Providers>
-            <ResponsiveHeader />
-            <main>
-              {children}
-            </main>
-            <ResponsiveFooter/>
-          </Providers>
+          <ListItemProvider>
+            <Providers>
+              <ResponsiveHeader />
+              <main>{children}</main>
+              <ResponsiveFooter />
+            </Providers>
+          </ListItemProvider>
         </ListProvider>
       </body>
     </html>

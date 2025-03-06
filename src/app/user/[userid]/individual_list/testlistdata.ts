@@ -1,7 +1,7 @@
 export const testList = [
   {
     id: 1,
-    list_name: `リスト1`,
+    list_name: "リスト1",
     vote_start_date: new Date(2025, 1, 6, 14, 30), // 2025/02/06 14:30
     status: 0,
     lastUpdatedBy: "kanon",
@@ -11,7 +11,7 @@ export const testList = [
   },
   {
     id: 2,
-    list_name: `テスト`,
+    list_name: "テスト",
     vote_start_date: new Date(2025, 1, 10, 9, 15), // 2025/02/10 09:15
     status: 1,
     lastUpdatedBy: "kanon",
@@ -21,7 +21,7 @@ export const testList = [
   },
   {
     id: 3,
-    list_name: `リスト2`,
+    list_name: "リスト2",
     vote_start_date: new Date(2025, 2, 21, 16, 0), // 2025/03/21 16:00
     status: 1,
     lastUpdatedBy: "kanon",
@@ -50,6 +50,94 @@ export const testList = [
     update_date: new Date(2025, 2, 2),
   },
 ];
+
+// あと20件追加
+for (let i = 6; i <= 30; i++) {
+  testList.push({
+    id: i,
+    list_name: `リスト${i}`,
+    vote_start_date: new Date(2025, i % 12, i % 28, 10, 30), // 適当にバラけるように設定
+    status: i % 3, // 0, 1, 2 の繰り返し
+    lastUpdatedBy: "kanon",
+    outing_date: new Date(2025, (i + 1) % 12, (i + 5) % 28),
+    create_date: new Date(2025, (i - 2) % 12, (i - 4) % 28),
+    update_date: new Date(2025, (i - 1) % 12, (i - 3) % 28),
+  });
+}
+
+
+
+export const testListItem = [
+  {
+    item_id: 1,
+    list_id: 1,
+    store_name: "レストランA",
+    station: "新宿",
+    google_rating: 4.5,
+    custom_rating: 4.0,
+    memo: "人気のイタリアン",
+    address: "東京都新宿区1-1-1",
+    prefecture: "東京都",
+    city: "新宿区",
+    time_to_station: 5,
+    business_hours: "11:00 - 22:00",
+    regular_holiday: "水曜日",
+    category: "レストラン",
+    sub_category: "イタリアン",
+    photo_id: 101,
+    add_by_id: 1,
+    created_at: new Date(2025, 0, 10),
+    updated_at: new Date(2025, 0, 15),
+  },
+  {
+    item_id: 2,
+    list_id: 1,
+    store_name: "カフェB",
+    station: "渋谷",
+    google_rating: 4.2,
+    custom_rating: 3.8,
+    memo: "落ち着いた雰囲気",
+    address: "東京都渋谷区2-2-2",
+    prefecture: "東京都",
+    city: "渋谷区",
+    time_to_station: 8,
+    business_hours: "08:00 - 20:00",
+    regular_holiday: "なし",
+    category: "カフェ",
+    sub_category: "コーヒー専門店",
+    photo_id: 102,
+    add_by_id: 2,
+    created_at: new Date(2025, 0, 12),
+    updated_at: new Date(2025, 0, 18),
+  },
+];
+
+// 追加で28件作成
+for (let i = 3; i <= 30; i++) {
+  testListItem.push({
+    item_id: i,
+    list_id: (i % 5) + 1,
+    store_name: `店舗${i}`,
+    station: `駅${i}`,
+    google_rating: parseFloat((Math.random() * 2 + 3).toFixed(1)),
+    custom_rating: parseFloat((Math.random() * 2 + 3).toFixed(1)),
+    memo: `テストデータ${i}`,
+    address: `東京都テスト区${i}-${i}-${i}`,
+    prefecture: "東京都",
+    city: "テスト区",
+    time_to_station: Math.floor(Math.random() * 15) + 1,
+    business_hours: `${8 + (i % 5)}:00 - ${18 + (i % 6)}:00`,
+    regular_holiday: ["なし", "日曜日", "月曜日", "火曜日", "水曜日"][i % 5],
+    category: ["レストラン", "カフェ", "バー"][i % 3],
+    sub_category: ["和食", "洋食", "中華"][i % 3],
+    photo_id: 100 + i,
+    add_by_id: i % 5,
+    created_at: new Date(2025, (i - 2) % 12, (i - 4) % 28),
+    updated_at: new Date(2025, (i - 1) % 12, (i - 3) % 28),
+  });
+}
+
+
 
 
 // export const testList = [
