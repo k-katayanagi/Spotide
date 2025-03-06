@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useListContext } from "@/contexts/ListContext";
 import { useBottomNav } from "@/contexts/BottomNavContext";
 import ListCard from "@/components/card/ListCard";
@@ -21,7 +21,8 @@ type User = {
   list_type: string;
 };
 
-const ShareList = () => {
+const SharelList = () => {
+  const router = useRouter();
   const params = useParams();
   const userId = Number(params?.userid);
   const [isFilter, setIsFilter] = useState(false);
@@ -132,6 +133,11 @@ const ShareList = () => {
     onOpen();
   };
 
+  // 編集ページに遷移する関数（ここでルーティングを管理）
+  const handleEditClick = (listId: number) => {
+    router.push(`/user/${userId}/individual_list/${listId}/list_edit`);
+  };
+
   const handleDelete = () => {
     if (selectedList) {
       // リストから削除
@@ -191,6 +197,7 @@ const ShareList = () => {
               key={list.id}
               list={list}
               onDelete={() => handleDeleteClick(list)}
+              onEdit={() => handleEditClick(list.id)}
             />
           ))}
         </div>
@@ -218,4 +225,4 @@ const ShareList = () => {
   );
 };
 
-export default ShareList;
+export default SharelList;
