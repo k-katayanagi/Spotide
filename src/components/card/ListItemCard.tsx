@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+// import { useState } from "react";
 import DeleteButton from "@/components/buttons/DeleteButton";
 import EditButton from "../buttons/EditButton ";
 import ViewingButton from "../buttons/ViewingButton";
@@ -30,14 +30,8 @@ interface Props {
 }
 
 const ListItemCard = ({ listItem, onDelete, onEdit }: Props) => {
-  const [selectedFields, setSelectedFields] = useState(defaultFields);
+  // const [selectedFields, setSelectedFields] = useState(defaultFields);
 
-  // const getStatusLabel = (status: number): string => {
-  //   const statusObj = listStatusOptions.find(
-  //     (option) => option.value === status
-  //   );
-  //   return statusObj ? statusObj.label : "不明";
-  // };
 
   return (
     <div className="bg-white border border-orange-300 shadow-md rounded-lg p-4 h-auto min-h-[320px] flex flex-col justify-between">
