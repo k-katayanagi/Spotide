@@ -102,8 +102,8 @@ const ListEdit = () => {
       {isMenu && (
         <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 z-10 flex justify-center">
           <button
-            className="absolute top-6 right-6 w-12 h-12 flex items-center justify-center bg-white rounded-full shadow-xl 
-                 hover:bg-gray-200 transition-all duration-200"
+            className="absolute top-6 right-6 sm:right-2 w-12 h-12 flex items-center justify-center bg-white rounded-full shadow-xl 
+           hover:bg-gray-200 transition-all duration-200"
             onClick={toggleMenuDropdown}
           >
             <CloseIcon boxSize={5} />
