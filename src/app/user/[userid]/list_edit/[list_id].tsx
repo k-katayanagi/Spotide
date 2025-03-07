@@ -101,15 +101,15 @@ const ListEdit = () => {
       {/*absoluteにしてリストの上に被せる */}
       {isMenu && (
         <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 z-10 flex justify-center">
+          <MenuBar onClick={toggleMenuDropdown} />
           <button
-            className="absolute top-6 right-6 sm:right-2 w-12 h-12 flex items-center justify-center bg-white rounded-full shadow-xl 
-           hover:bg-gray-200 transition-all duration-200"
+            className="w-12 h-12 flex items-center justify-center bg-white rounded-full shadow-xl 
+                 hover:bg-gray-200 transition-all duration-200 z-20 
+                 sm:absolute sm:top-6 sm:right-6 mt-4 ml-4 sm:mt-0"
             onClick={toggleMenuDropdown}
           >
             <CloseIcon boxSize={5} />
           </button>
-
-          <MenuBar onClick={toggleMenuDropdown} />
         </div>
       )}
 
