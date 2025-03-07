@@ -208,7 +208,7 @@ const SharelList = () => {
         isOpen={isOpen}
         onClose={onClose}
         onConfirm={handleDelete}
-        selectedListName={selectedList?.list_name || ""}
+        selectedName={selectedList?.list_name || ""}
       />
 
       {/* ページネーション */}
