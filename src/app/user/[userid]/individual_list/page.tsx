@@ -160,7 +160,7 @@ const IndividualList = () => {
 
   return (
     <div className="p-3 overflow-auto relative">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-5 w-full">
         <h1 className="text-2xl font-bold">{user.name}さんの個人リスト一覧</h1>
         <div className="flex gap-2 mb- justify-end relative z-10">
           <FilterButton onClick={toggleFilterDropdown} disabled={isSort} />

@@ -2,8 +2,6 @@
 
 // import { useState } from "react";
 import DeleteButton from "@/components/buttons/DeleteButton";
-import EditButton from "../buttons/EditButton ";
-import ViewingButton from "../buttons/ViewingButton";
 import { ListItem } from "@/types/ListTypes";
 import Image from "next/image";
 
@@ -29,15 +27,13 @@ interface Props {
   onEdit?: () => void;
 }
 
-const ListItemCard = ({ listItem, onDelete, onEdit }: Props) => {
+const ListItemCard = ({ listItem, onDelete}: Props) => {
   // const [selectedFields, setSelectedFields] = useState(defaultFields);
 
 
   return (
     <div className="bg-white border border-orange-300 shadow-md rounded-lg p-4 h-auto min-h-[320px] flex flex-col justify-between">
       <div className="flex justify-center items-center mb-4 space-x-2 sm:space-x-6 md:space-x-10 lg:space-x-16 xl:space-x-20">
-        <EditButton className="mx-2" onClick={onEdit} />
-        <ViewingButton className="mx-2" />
         <DeleteButton className="mx-2" onClick={onDelete} />
       </div>
       <div className="flex-1">
