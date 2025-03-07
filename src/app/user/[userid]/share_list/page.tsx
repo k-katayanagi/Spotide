@@ -135,7 +135,7 @@ const SharelList = () => {
 
   // 編集ページに遷移する関数（ここでルーティングを管理）
   const handleEditClick = (listId: number) => {
-    router.push(`/user/${userId}/individual_list/${listId}/list_edit`);
+    router.push(`/user/${userId}/share_list/${listId}/list_edit`);
   };
 
   const handleDelete = () => {

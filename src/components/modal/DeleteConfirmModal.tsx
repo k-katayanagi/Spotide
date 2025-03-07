@@ -17,14 +17,14 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
-  selectedListName: string;
+  selectedName: string;
 }
 
 const DeleteConfirmModal = ({
   isOpen,
   onClose,
   onConfirm,
-  selectedListName,
+  selectedName,
 }: Props) => {
   const cancelRef = useRef<HTMLButtonElement>(null);
 
@@ -43,7 +43,7 @@ const DeleteConfirmModal = ({
           <AlertDialogHeader fontSize="lg" fontWeight="bold">
             削除確認
           </AlertDialogHeader>
-          <p>「{selectedListName}」</p>
+          <p>「{selectedName}」</p>
           <AlertDialogBody>削除しますか？</AlertDialogBody>
 
           <AlertDialogFooter>

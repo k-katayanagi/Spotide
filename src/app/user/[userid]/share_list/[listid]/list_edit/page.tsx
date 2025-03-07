@@ -1,6 +1,6 @@
 "use client";
 
-import ListEdit from "../../../list_edit/[list_id]";
+import ListEdit from "../../../list_edit/ListEdit";
 
 const ShareListEdit = () => {
   return <ListEdit />;
