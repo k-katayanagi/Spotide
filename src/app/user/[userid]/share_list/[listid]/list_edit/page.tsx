@@ -6,4 +6,4 @@ const ShareListEdit = () => {
   return <ListEdit />;
 };
 
-export default ShareListEdit;
+export default ShareListEdit;S
