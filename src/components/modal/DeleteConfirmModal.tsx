@@ -10,8 +10,6 @@ import {
 } from "@chakra-ui/react";
 import { useRef } from "react";
 
-// FocusableElement を定義する（もしくはインポートする）必要がある場合、以下のように変更することができます
-// type FocusableElement = HTMLElement;
 
 interface Props {
   isOpen: boolean;

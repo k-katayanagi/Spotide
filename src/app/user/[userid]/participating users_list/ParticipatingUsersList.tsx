@@ -10,6 +10,7 @@ import DetailButton from "@/components/buttons/DetailButton";
 import UserAddButton from "@/components/buttons/UserAddButton";
 import Pagination from "@/components/pagination/Pagination";
 import ParticipatingUsersAddModal from "@/components/modal/ParticipatingUsersAddModal";
+import ParticipatingUsersEditModal from "@/components/modal/ParticipatingUsersEditModal";
 import DeleteConfirmModal from "@/components/modal/DeleteConfirmModal";
 import { IconButton } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
@@ -28,7 +29,23 @@ const ParticipatingUsersList = () => {
   const [selectedUser, setSelectedUser] = useState<TParticipantingUser | null>(
     null
   );
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isAddModalOpen,
+    onOpen: onAddModalOpen,
+    onClose: onAddModalClose,
+  } = useDisclosure();
+
+  const {
+    isOpen: isEditModalOpen,
+    onOpen: onEditModalOpen,
+    onClose: onEditModalClose,
+  } = useDisclosure();
+
+  const {
+    isOpen: isDeleteModalOpen,
+    onOpen: onDeleteModalOpen,
+    onClose: onDeleteModalClose,
+  } = useDisclosure();
   const [isMenu, setIsMenu] = useState(false);
   const toast = useToast();
 
@@ -47,7 +64,7 @@ const ParticipatingUsersList = () => {
   };
 
   const handleUserAddClick = () => {
-    onOpen();
+    onAddModalOpen();
   };
 
   const handleUserAdd = (username: string, password: string) => {
@@ -63,9 +80,63 @@ const ParticipatingUsersList = () => {
     });
   };
 
+  const handleUserEditClick = (user: TParticipantingUser) => {
+    setSelectedUser(user);
+    onEditModalOpen();
+  };
+
+  const handleUserEdit = async (
+    editedUsername: string,
+    editedPassword: string
+  ) => {
+    if (!selectedUser) return;
+
+    try {
+      // DB の値を更新
+      // await fetch("/api/participants/update", {
+      //   method: "POST",
+      //   headers: { "Content-Type": "application/json" },
+      //   body: JSON.stringify({
+      //     participant_id: selectedUser.participant_id,
+      //     participant_name: editedUsername,
+      //     password: editedPassword || null,
+      //   }),
+      // });
+
+      //フロント側のデータ（displayUserNames）を更新
+      setDisplayUserNames((prevUsers) =>
+        prevUsers.map((user) =>
+          user.participant_id === selectedUser.participant_id
+            ? { ...user, participant_name: editedUsername }
+            : user
+        )
+      );
+
+      toast({
+        title: "情報を更新しました",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+
+      setSelectedUser(null);
+      onEditModalClose();
+    } catch (error) {
+      console.error("更新エラー:", error);
+      toast({
+        title: "更新に失敗しました",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+    }
+  };
+
   const handleDeleteClick = (user: TParticipantingUser) => {
     setSelectedUser(user);
-    onOpen();
+    onDeleteModalOpen();
   };
 
   const handleDelete = () => {
@@ -83,7 +154,7 @@ const ParticipatingUsersList = () => {
         position: "top",
       });
       setSelectedUser(null);
-      onClose();
+      onDeleteModalClose();
     }
   };
 
@@ -152,7 +223,7 @@ const ParticipatingUsersList = () => {
               <div className="flex justify-center items-center space-x-2">
                 <EditButton
                   className="flex items-center justify-center h-[45px] w-[50px] md:h-[40px] md:w-[90px] sm:h-[35px] sm:w-[80px] min-w-0 xs:h-[30px] xs:w-[70px]"
-                  onClick={() => editUser(user.participant_id)}
+                  onClick={() => handleUserEditClick(user)}
                 />
                 <DetailButton className="flex items-center justify-center h-[45px] w-[50px] md:h-[40px] md:w-[90px] sm:h-[35px] sm:w-[80px] min-w-0 xs:h-[30px] xs:w-[70px]" />
                 <DeleteButton
@@ -169,17 +240,25 @@ const ParticipatingUsersList = () => {
 
       {/* 削除確認モーダル */}
       <DeleteConfirmModal
-        isOpen={isOpen}
-        onClose={onClose}
+        isOpen={isDeleteModalOpen}
+        onClose={onDeleteModalClose}
         onConfirm={handleDelete}
         selectedName={selectedUser?.participant_name || ""}
       />
 
       {/* ユーザー追加モーダル */}
       <ParticipatingUsersAddModal
-        isOpen={isOpen}
-        onClose={onClose}
+        isOpen={isAddModalOpen}
+        onClose={onAddModalClose}
         onConfirm={handleUserAdd}
+      />
+
+      {/* ユーザー編集モーダル */}
+      <ParticipatingUsersEditModal
+        isOpen={isEditModalOpen}
+        onClose={onEditModalClose}
+        onConfirm={handleUserEdit}
+        selectedUser={selectedUser || null}
       />
 
       {/* ページネーション */}
