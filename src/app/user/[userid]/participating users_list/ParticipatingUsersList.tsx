@@ -210,7 +210,7 @@ const ParticipatingUsersList = () => {
         </div>
 
         {isMenu && (
-          <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 z-10 flex justify-center">
+       <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 z-10 flex justify-center">
             <MenuBar onClick={toggleMenuDropdown} menuItems={menuItems} />
             <button
               className="w-12 h-12 flex items-center justify-center bg-white rounded-full shadow-xl 

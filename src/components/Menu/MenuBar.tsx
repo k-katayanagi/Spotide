@@ -19,6 +19,7 @@ const MenuBar = ({ onClick, menuItems }: Props) => {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -30 }}
         transition={{ duration: 0.3, ease: "easeOut" }}
+        className="w-[300px] min-h-[200px]" // サイズ固定
       >
         {/* メニュー項目 */}
         <div className="mt-6 w-full">
