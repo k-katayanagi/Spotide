@@ -83,12 +83,10 @@ const IndividualList = () => {
 
   const toggleFilterDropdown = () => {
     setIsFilter((prevState) => !prevState);
-    console.log(isFilter);
   };
 
   const toggleSortDropdown = () => {
     setIsSort((prevState) => !prevState);
-    console.log(isSort);
   };
 
   const handleSortChange = (sortKey: keyof List, order: number) => {

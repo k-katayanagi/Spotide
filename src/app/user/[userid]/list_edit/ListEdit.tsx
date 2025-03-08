@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { useParams} from "next/navigation";
+import { useParams } from "next/navigation";
 import { useListContext } from "@/contexts/ListContext";
 import { useListItemContext } from "@/contexts/ListItemContext";
 import { useBottomNav } from "@/contexts/BottomNavContext";
@@ -10,6 +10,7 @@ import FilterButton from "@/components/buttons/FilterButton";
 import SortButton from "@/components/buttons/SortButton";
 import { ListItem } from "@/types/ListTypes";
 import ListItemCard from "@/components/card/ListItemCard";
+import EditFilterDropdown from "@/components/filterDropdown/EditFilterDropdown ";
 import IssueViewButton from "@/components/buttons/IssueViewButton";
 import { motion } from "framer-motion";
 import { IconButton } from "@chakra-ui/react";
@@ -35,11 +36,12 @@ const ListEdit = () => {
   const [displayListItems, setDisplayListItems] =
     useState<ListItem[]>(listItems);
 
-
-
   const menuItems = [
     { label: "場所を検索", url: "/search" },
-    { label: "共有ユーザー設定", url: `/user/${userid}/${listType}/${listid}/list_edit/participating_users_list`},
+    {
+      label: "共有ユーザー設定",
+      url: `/user/${userid}/${listType}/${listid}/list_edit/participating_users_list`,
+    },
     { label: "表示ラベル設定", url: "/settings/labels" },
     { label: "投票開始日設定", url: "/settings/voting" },
   ];
@@ -109,6 +111,14 @@ const ListEdit = () => {
           </div>
         </div>
       </div>
+
+      {isFilter && (
+        <div className="absolute top-[60px] left-1/2 transform -translate-x-1/2 z-30 w-full max-w-[1024px]">
+          <EditFilterDropdown
+            toggleFilterDropdown={toggleFilterDropdown}
+          />
+        </div>
+      )}
 
       {/*absoluteにしてリストの上に被せる */}
       {isMenu && (
