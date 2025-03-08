@@ -11,6 +11,7 @@ import UserAddButton from "@/components/buttons/UserAddButton";
 import Pagination from "@/components/pagination/Pagination";
 import ParticipatingUsersAddModal from "@/components/modal/ParticipatingUsersAddModal";
 import ParticipatingUsersEditModal from "@/components/modal/ParticipatingUsersEditModal";
+import ParticipatingUsersDetailModal from "@/components/modal/ParticipatingUsersDetailModal";
 import DeleteConfirmModal from "@/components/modal/DeleteConfirmModal";
 import { IconButton } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
@@ -29,6 +30,7 @@ const ParticipatingUsersList = () => {
   const [selectedUser, setSelectedUser] = useState<TParticipantingUser | null>(
     null
   );
+
   const {
     isOpen: isAddModalOpen,
     onOpen: onAddModalOpen,
@@ -46,6 +48,12 @@ const ParticipatingUsersList = () => {
     onOpen: onDeleteModalOpen,
     onClose: onDeleteModalClose,
   } = useDisclosure();
+  const {
+    isOpen: isDetailModalOpen,
+    onOpen: onDetailModalOpen,
+    onClose: onDetailModalClose,
+  } = useDisclosure();
+
   const [isMenu, setIsMenu] = useState(false);
   const toast = useToast();
 
@@ -87,7 +95,7 @@ const ParticipatingUsersList = () => {
 
   const handleUserEdit = async (
     editedUsername: string,
-    editedPassword: string
+    // editedPassword: string
   ) => {
     if (!selectedUser) return;
 
@@ -158,6 +166,11 @@ const ParticipatingUsersList = () => {
     }
   };
 
+  const handleUserDetailClick = (user: TParticipantingUser) => {
+    setSelectedUser(user);
+    onDetailModalOpen();
+  };
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentUserNames = displayUserNames.slice(
@@ -225,7 +238,10 @@ const ParticipatingUsersList = () => {
                   className="flex items-center justify-center h-[45px] w-[50px] md:h-[40px] md:w-[90px] sm:h-[35px] sm:w-[80px] min-w-0 xs:h-[30px] xs:w-[70px]"
                   onClick={() => handleUserEditClick(user)}
                 />
-                <DetailButton className="flex items-center justify-center h-[45px] w-[50px] md:h-[40px] md:w-[90px] sm:h-[35px] sm:w-[80px] min-w-0 xs:h-[30px] xs:w-[70px]" />
+                <DetailButton
+                  className="flex items-center justify-center h-[45px] w-[50px] md:h-[40px] md:w-[90px] sm:h-[35px] sm:w-[80px] min-w-0 xs:h-[30px] xs:w-[70px]"
+                  onClick={() => handleUserDetailClick(user)}
+                />
                 <DeleteButton
                   className="flex items-center justify-center h-[45px] w-[50px] md:h-[40px] md:w-[90px] sm:h-[35px] sm:w-[80px] min-w-0 xs:h-[30px] xs:w-[70px]"
                   onClick={() => handleDeleteClick(user)}
@@ -258,6 +274,13 @@ const ParticipatingUsersList = () => {
         isOpen={isEditModalOpen}
         onClose={onEditModalClose}
         onConfirm={handleUserEdit}
+        selectedUser={selectedUser || null}
+      />
+
+      {/* ユーザー詳細モーダル */}
+      <ParticipatingUsersDetailModal
+        isOpen={isDetailModalOpen}
+        onClose={onDetailModalClose}
         selectedUser={selectedUser || null}
       />
 

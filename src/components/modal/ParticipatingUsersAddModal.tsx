@@ -74,7 +74,6 @@ const ParticipatingUsersAddModal = ({ isOpen, onClose, onConfirm }: Props) => {
                 h="55px"
                 fontSize="xl"
                 w="full"
-                borderRadius="full"
               />
             </div>
 
@@ -95,7 +94,6 @@ const ParticipatingUsersAddModal = ({ isOpen, onClose, onConfirm }: Props) => {
                 fontSize="xl"
                 w="full"
                 type="text"
-                borderRadius="full"
               />
             </div>
 
