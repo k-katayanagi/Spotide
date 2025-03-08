@@ -21,6 +21,7 @@ const ListEdit = () => {
   const params = useParams();
   const { lists, sortLists } = useListContext();
   const { userid, listid } = params;
+  const listType = useListType();
   const { listItems } = useListItemContext();
   const listId = params?.listid ? Number(params.listid) : null;
   const list = lists.find((i) => i.id === listId);
@@ -34,7 +35,6 @@ const ListEdit = () => {
   const [displayListItems, setDisplayListItems] =
     useState<ListItem[]>(listItems);
 
-    const listType = useListType();
 
 
   const menuItems = [
