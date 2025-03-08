@@ -65,6 +65,7 @@ const ParticipatingUsersList = () => {
     },
     { label: "表示ラベル設定", url: "/settings/labels" },
     { label: "投票開始日設定", url: "/settings/voting" },
+    { label: "編集リストに戻る",url: `/user/${userid}/${listType}/${listid}/list_edit`, }
   ];
 
   const toggleMenuDropdown = () => {
