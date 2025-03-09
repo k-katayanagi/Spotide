@@ -7,7 +7,6 @@ import {
   stationOptions,
   categories,
   subCategories,
-  regularHolidays,
   hours,
 } from "@/consts/OptionList";
 import OkButton from "../buttons/OkButton";
@@ -25,12 +24,30 @@ const EditFilterDropdown = ({ toggleFilterDropdown }: Props) => {
   // const [listItemsName, setListItemsName] = useState("");
   const [googleRating, setGoogleRating] = useState<number>(0);
   const [customRating, setCustomRating] = useState<number>(0);
-
+  const [selectedHolidays, setSelectedHolidays] = useState<string[]>([]);
+  // const [selectedTimeToStation, setSelectedTimeToStation] =
+  //   useState<string>("");
+  const [selectedStatus, setSelectedStatus] = useState<string>("");
   const addAllOption = (options: { value: string; label: string }[]) => [
     { value: "", label: "すべて" },
     ...options,
   ];
-  const [selectedStatus, setSelectedStatus] = useState<string>("");
+  const daysOfWeek = [
+    { value: "monday", label: "月" },
+    { value: "tuesday", label: "火" },
+    { value: "wednesday", label: "水" },
+    { value: "thursday", label: "木" },
+    { value: "friday", label: "金" },
+    { value: "saturday", label: "土" },
+    { value: "sunday", label: "日" },
+  ];
+  const handleHolidayChange = (holiday: string) => {
+    setSelectedHolidays((prev) =>
+      prev.includes(holiday)
+        ? prev.filter((h) => h !== holiday)
+        : [...prev, holiday]
+    );
+  };
 
   const handleFilterApply = (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,7 +68,7 @@ const EditFilterDropdown = ({ toggleFilterDropdown }: Props) => {
               <InputBox
                 placeholder="検索するキーワードを入力"
                 // onChange={setListName}
-                className="border border-black rounded-md text-lg w-[180px] sm:w-[300px] md:w-[380px] h-[40px]"
+                className="border border-black rounded-md text-lg w-[180px] sm:w-[250px] md:w-[350px] h-[40px]"
               />
             </div>
 
@@ -61,22 +78,21 @@ const EditFilterDropdown = ({ toggleFilterDropdown }: Props) => {
                 title="都道府県"
                 options={addAllOption(prefectures)}
                 onSelect={setSelectedStatus}
-                className="w-[120px] h-[40px]"
+                className="w-[100px] sm:w-[120px] h-[40px]"
               />
               {selectedStatus}
               <ListSelect
                 title="市区"
                 options={addAllOption(cityOptions)}
                 onSelect={setSelectedStatus}
-                className="w-[120px] h-[40px]"
+                className="w-[100px] sm:w-[120px] h-[40px]"
               />
               <ListSelect
                 title="駅"
                 options={addAllOption(stationOptions)}
                 onSelect={setSelectedStatus}
-                className="w-[120px] h-[40px]"
+                className="w-[100px] sm:w-[120px] h-[40px]"
               />
-            
             </div>
 
             {/* カテゴリ・サブカテゴリ */}
@@ -85,13 +101,13 @@ const EditFilterDropdown = ({ toggleFilterDropdown }: Props) => {
                 title="カテゴリ"
                 options={addAllOption(categories)}
                 onSelect={setSelectedStatus}
-                className="w-[160px] h-[40px]"
+                className="w-[140px] sm:w-[160px] h-[40px]"
               />
               <ListSelect
                 title="サブカテゴリ"
                 options={addAllOption(subCategories)}
                 onSelect={setSelectedStatus}
-                className="w-[160px] h-[40px]"
+                className="w-[140px] sm:w-[160px] h-[40px]"
               />
             </div>
 
@@ -101,7 +117,7 @@ const EditFilterDropdown = ({ toggleFilterDropdown }: Props) => {
                 title="営業時間"
                 options={addAllOption(hours)}
                 onSelect={setSelectedStatus}
-                className="w-[120px] h-[40px]"
+                className="w-[100px] sm:w-[120px] h-[40px]"
               />
               <span className="flex justify-center lg:justify-end items-end mb-5">
                 ～
@@ -110,24 +126,70 @@ const EditFilterDropdown = ({ toggleFilterDropdown }: Props) => {
                 <ListSelect
                   options={addAllOption(hours)}
                   onSelect={setSelectedStatus}
-                  className="w-[120px] h-[40px]"
+                  className="w-[100px] sm:w-[120px] h-[40px]"
                 />
               </div>
             </div>
 
             {/* 定休日 */}
             <div className="flex justify-center w-fit">
-              <ListSelect
-                title="定休日"
-                options={addAllOption(regularHolidays)}
-                onSelect={setSelectedStatus}
-                className="w-[160px] h-[40px]"
-              />
+              <div className="flex flex-col">
+                <span className="mb-2">定休日</span>
+                <div className="grid grid-cols-7 gap-2">
+                  {daysOfWeek.map((day) => (
+                    <label key={day.value} className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        value={day.value}
+                        checked={selectedHolidays.includes(day.value)}
+                        onChange={() => handleHolidayChange(day.value)}
+                      />
+                      {day.label}
+                    </label>
+                  ))}
+                </div>
+              </div>
             </div>
 
-            <div className="flex justify-between items-end w-full">
+            {/* 所要時間 */}
+            <div className="flex justify-center gap-2 w-fit">
+              <div className="flex flex-col justify-center">
+                <span>最寄駅からの所要時間</span>
+                <ListSelect
+                  options={[
+                    { value: "10", label: "10分" },
+                    { value: "20", label: "20分" },
+                    { value: "30", label: "30分" },
+                  ]}
+                  onSelect={setSelectedStatus}
+                  className="w-[100px] sm:w-[120px] h-[40px]"
+                />
+              </div>
+
+              {/* コメントアウトした部分 */}
+              {/* <div className="flex items-end gap-2">
+              <span className="flex justify-center  items-end">
+                ～ 
+              </span>
+              <div className="flex flex-col justify-end items-end w-full">
+                <ListSelect
+                  options={[
+                    { value: "10", label: "10分" },
+                    { value: "20", label: "20分" },
+                    { value: "30", label: "30分" },
+                  ]}
+                  onSelect={setSelectedTimeToStation}
+                  className="w-[120px] h-[40px]"
+                />
+              </div>
+            </div> */}
+            </div>
+
+            <div className="flex justify-between items-end w-full flex-wrap">
+              {" "}
+              {/* flex-wrap を追加 */}
               {/* Google評価 */}
-              <div className="flex flex-col items-start">
+              <div className="flex flex-col items-start mr-4">
                 <span>Google評価</span>
                 <StarRating
                   count={5}
@@ -135,9 +197,8 @@ const EditFilterDropdown = ({ toggleFilterDropdown }: Props) => {
                   onChange={setGoogleRating}
                 />
               </div>
-
               {/* カスタム評価 */}
-              <div className="flex flex-col items-start">
+              <div className="flex flex-col items-start mr-4">
                 <span>カスタム評価</span>
                 <StarRating
                   count={5}
@@ -145,10 +206,12 @@ const EditFilterDropdown = ({ toggleFilterDropdown }: Props) => {
                   onChange={setCustomRating}
                 />
               </div>
-            </div>
-
-            <div className="flex justify-end w-full">
-              <OkButton />
+              {/* OKボタン */}
+              <div className="flex items-end ml-auto w-full sm:w-auto justify-end mt-4">
+                {" "}
+                {/* mt-4 で下に余白を追加 */}
+                <OkButton />
+              </div>
             </div>
           </div>
         </div>

@@ -23,7 +23,7 @@ const ListSelect: React.FC<Props> = ({
 }) => {
   return (
     <div className="w-full flex flex-col">
-      <label className="block w-[100px]">{title}</label>
+      <label className="block w-auto max-w-full">{title}</label>
       <select
         onChange={(e) => onSelect(e.target.value)}
         className={`border border-black rounded-md ${className}`}

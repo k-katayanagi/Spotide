@@ -20,6 +20,18 @@ export const listInfo = [
   { value: "outing_date", label: "おでかけ日" },
 ];
 
+export const listItemInfo = [
+  { value: "store_name", label: "店舗名" },
+  { value: "google_rating", label: "Google評価" },
+  { value: "custom_rating", label: "カスタム評価" },
+  { value: "time_to_station", label: "最寄駅までの時間（分）" },
+  { value: "business_start_hours", label: "営業開始時間" },
+  { value: "business_end_hours", label: "営業終了時間" },
+  { value: "created_at", label: "作成日時" },
+  { value: "updated_at", label: "更新日時" }
+];
+
+
 export const Sort = [
   { value: 0, label: "昇順" },
   { value: 1, label: "降順" },

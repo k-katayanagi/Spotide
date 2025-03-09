@@ -11,6 +11,7 @@ import SortButton from "@/components/buttons/SortButton";
 import { ListItem } from "@/types/ListTypes";
 import ListItemCard from "@/components/card/ListItemCard";
 import EditFilterDropdown from "@/components/filterDropdown/EditFilterDropdown ";
+import EditSortDropdown from "@/components/sortDropdown/EditSortDropdown";
 import IssueViewButton from "@/components/buttons/IssueViewButton";
 import { motion } from "framer-motion";
 import { IconButton } from "@chakra-ui/react";
@@ -21,9 +22,9 @@ import useListType from "@/hooks/useListType";
 const ListEdit = () => {
   const params = useParams();
   const { lists, sortLists } = useListContext();
+  const { listItems } = useListItemContext();
   const { userid, listid } = params;
   const listType = useListType();
-  const { listItems } = useListItemContext();
   const listId = params?.listid ? Number(params.listid) : null;
   const list = lists.find((i) => i.id === listId);
   const [isFilter, setIsFilter] = useState(false);
@@ -69,6 +70,8 @@ const ListEdit = () => {
     }
   };
 
+
+
   const toggleFilterDropdown = () => {
     setIsFilter((prevState) => !prevState);
     console.log(isFilter);
@@ -79,7 +82,6 @@ const ListEdit = () => {
     console.log(isSort);
   };
 
-  // 🆕 追加: メニューの開閉関数
   const toggleMenuDropdown = () => {
     setIsMenu((prevState) => !prevState);
   };
@@ -120,6 +122,15 @@ const ListEdit = () => {
         </div>
       )}
 
+            {isSort && (
+              <div className="absolute top-[60px] left-1/2 transform -translate-x-1/2 z-30 w-full max-w-[1024px]">
+                <EditSortDropdown
+                  toggleSortDropdown={toggleSortDropdown}
+                  // onSortChange={handleSortChange}
+                />
+              </div>
+            )}
+      
       {/*absoluteにしてリストの上に被せる */}
       {isMenu && (
         <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 z-10 flex justify-center">
