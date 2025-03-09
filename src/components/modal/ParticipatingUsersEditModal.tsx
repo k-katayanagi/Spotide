@@ -12,7 +12,6 @@ import {
   Flex,
 } from "@chakra-ui/react";
 
-
 interface Props {
   isOpen: boolean;
   onClose: () => void;
@@ -41,13 +40,15 @@ const ParticipatingUsersEditModal = ({
   const cancelRef = useRef<HTMLButtonElement>(null);
 
   // ✅ モーダルが開くたびに `username` をセット
-  const [username, setUsername] = useState(selectedUser?.participant_name || "");
-  const [password, setPassword] = useState(selectedUser?.password|| "");
+  const [username, setUsername] = useState(
+    selectedUser?.participant_name || ""
+  );
+  const [password, setPassword] = useState(selectedUser?.password || "");
 
   useEffect(() => {
     if (selectedUser) {
       setUsername(selectedUser.participant_name);
-      setPassword(selectedUser.password); 
+      setPassword(selectedUser.password);
     }
   }, [selectedUser, isOpen]);
 
@@ -68,8 +69,17 @@ const ParticipatingUsersEditModal = ({
       onClose={onClose}
     >
       <AlertDialogOverlay>
-        <AlertDialogContent maxWidth="500px" p={6} borderRadius="xl">
-          <AlertDialogHeader fontSize="2xl" fontWeight="bold">
+        <AlertDialogContent
+          maxWidth={{ base: "80%", md: "500px" }} // スマホ時は90%、PC時は最大500px
+          minH={{ base: "30vh", md: "50vh" }} 
+          maxH="90vh"
+          p={{ base: 4, md: 6 }} // スマホ時は余白を小さく
+          borderRadius="xl"
+        >
+          <AlertDialogHeader
+            fontSize={{ base: "lg", md: "2xl" }}
+            fontWeight="bold"
+          >
             ユーザー情報変更
           </AlertDialogHeader>
 
