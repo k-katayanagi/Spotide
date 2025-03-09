@@ -5,12 +5,12 @@ import { listItemInfo, Sort } from "@/consts/OptionList";
 import OkButton from "../buttons/OkButton";
 import { ListItem } from "@/types/ListTypes";
 
-type Props = {
-  toggleSortDropdown: () => void;
-  onSortChange?: (sortKey: keyof ListItem, order: number) => void;
-};
+// type Props = {
+//   toggleSortDropdown?: () => void;
+//   onSortChange?: (sortKey: keyof ListItem, order: number) => void;
+// };
 
-const EditSortDropdown = ({ toggleSortDropdown, onSortChange }: Props) => {
+const EditSortDropdown = () => {
   const filteredListInfo = listItemInfo.filter(
     (item) => item.value !== "status" && item.value !== "lastUpdatedBy"
   );

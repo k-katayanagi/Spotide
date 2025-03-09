@@ -125,7 +125,7 @@ const ListEdit = () => {
             {isSort && (
               <div className="absolute top-[60px] left-1/2 transform -translate-x-1/2 z-30 w-full max-w-[1024px]">
                 <EditSortDropdown
-                  toggleSortDropdown={toggleSortDropdown}
+                  // toggleSortDropdown={toggleSortDropdown}
                   // onSortChange={handleSortChange}
                 />
               </div>
