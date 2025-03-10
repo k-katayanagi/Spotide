@@ -50,7 +50,7 @@ const ListEdit = () => {
   const [isSort, setIsSort] = useState(false);
   const [isMenu, setIsMenu] = useState(false);
   const [isLabelSettingOpen, setIsLabelSettingOpen] = useState(false);
-  
+
   // モーダル用の useDisclosure
   const {
     isOpen: isEditModalOpen,
@@ -78,7 +78,10 @@ const ListEdit = () => {
   );
 
   const menuItems = [
-    { label: "場所を検索", url: "/search" },
+    {
+      label: "場所を検索",
+      url: `/user/${userid}/${listType}/${listid}/list_edit/spot_search`,
+    },
     {
       label: "共有ユーザー設定",
       url: `/user/${userid}/${listType}/${listid}/list_edit/participating_users_list`,
@@ -126,7 +129,7 @@ const ListEdit = () => {
 
   const handleEditClick = (item: ListItem) => {
     setSelectedListItem(item);
-    onEditModalOpen(); 
+    onEditModalOpen();
   };
 
   const handleDeleteClick = (item: ListItem) => {

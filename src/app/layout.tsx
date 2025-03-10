@@ -5,6 +5,7 @@ import ResponsiveFooter from "@/components/responsive/footer/ResponsiveFooter";
 import { Providers } from "./providers";
 import { ListProvider } from "@/contexts/ListContext";
 import { ListItemProvider } from "@/contexts/ListItemContext";
+import { SearchSpotProvider } from "@/contexts/SearchSpotContext";
 import "@/app/styles/globals.css";
 
 const geistSans = Geist({
@@ -35,11 +36,13 @@ export default function RootLayout({
       >
         <ListProvider>
           <ListItemProvider>
-            <Providers>
-              <ResponsiveHeader />
-              <main>{children}</main>
-              <ResponsiveFooter />
-            </Providers>
+            <SearchSpotProvider>
+              <Providers>
+                <ResponsiveHeader />
+                <main>{children}</main>
+                <ResponsiveFooter />
+              </Providers>
+            </SearchSpotProvider>
           </ListItemProvider>
         </ListProvider>
       </body>
