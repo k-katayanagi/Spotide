@@ -93,28 +93,28 @@ const SpotSearch = () => {
   const paginationZIndex = !isBottomNavOpen && !isFilter ? "z-40" : "z-20";
   return (
     <div className="p-3 overflow-auto relative">
-      <div className="flex items-center justify-between mb-5 w-full">
-        <div className="flex-1 flex items-end justify-center gap-2">
-          <InputBox
-            placeholder="検索するキーワードを入力"
-            className="border border-gray-400 rounded-md p-2 w-[200px] sm:w-[350px] h-12"
-          />
-          <SearchButton className="h-12" />
-        </div>
+<div className="flex items-center justify-between mb-5 w-full">
+  <div className="flex-1 flex items-end justify-center gap-2">
+    <InputBox
+      placeholder="検索するキーワードを入力"
+      className="border border-gray-400 rounded-md p-2 w-[200px] h-10 sm:w-[300px] sm:h-12" // スマホ時に幅と高さを小さくする
+    />
+    <SearchButton className="sm:h-12 h-10 w-[50px] sm:w-[70px]" />  
+  </div>
 
-        <div className="flex items-center gap-2">
-          <FilterButton onClick={toggleFilterDropdown} disabled={isSort} />
-          <SortButton onClick={toggleSortDropdown} disabled={isFilter} />
-          <IconButton
-            icon={<HamburgerIcon boxSize={5} />}
-            variant="unstyled"
-            aria-label="メニュー"
-            className="flex items-center justify-center text-black"
-            style={{ width: "50px", height: "50px" }}
-            onClick={toggleMenuDropdown}
-          />
-        </div>
-      </div>
+  <div className="flex items-center gap-2">
+    <FilterButton onClick={toggleFilterDropdown} disabled={isSort}  className="sm:w-12 sm:h-12 w-8 h-8"/>
+    <SortButton onClick={toggleSortDropdown} disabled={isFilter} />
+    <IconButton
+      icon={<HamburgerIcon boxSize={5} />}
+      variant="unstyled"
+      aria-label="メニュー"
+      className="flex items-center justify-center text-black w-[25px] h-[25px] sm:w-[50px] sm:h-[50px]"
+    />
+  </div>
+</div>
+
+
 
       {isFilter && (
         <div className="absolute top-[60px] left-1/2 transform -translate-x-1/2 z-30 w-full max-w-[1024px]">

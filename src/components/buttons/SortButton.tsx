@@ -11,8 +11,7 @@ interface Props {
 const SortButton = ({ className,disabled,onClick }: Props) => {
   return (
     <Button
-      className={`items-center justify-center text-black ${className}`}
-      style={{ width: "50px", height: "50px" }}
+      className={`items-center justify-center text-black w-[25px] h-[25px] sm:w-[50px] sm:h-[50px]  ${className}`}
       disabled={disabled}
       onClick={onClick}
       text={<>↓↑三</>}

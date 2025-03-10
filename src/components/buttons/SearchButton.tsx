@@ -11,9 +11,9 @@ const SearchButton = ({ onClick, className }: Props) => {
   return (
     <Button
       className={`group relative inline-flex items-center justify-center overflow-hidden rounded-full 
-                 bg-white border-4 border-[#FF5722] px-6 font-medium text-black transition-all duration-300 
+                 bg-white border-4 border-[#FF5722]  font-medium text-black transition-all duration-300 
                  hover:bg-gradient-to-r hover:from-[#FF7043] hover:via-[#FF5722] hover:to-[#F4511E] 
-                 hover:shadow-2xl transform hover:scale-[1.02] ${className}`} // px-6 で幅を狭く
+                 hover:shadow-2xl transform hover:scale-[1.02] text-sm sm:text-lg ${className}`}
       text={
         <>
           <span className="absolute h-0 w-0 rounded-full bg-[#FF8A65] transition-all duration-300 group-hover:h-56 group-hover:w-32"></span>
