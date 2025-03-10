@@ -14,9 +14,11 @@ import EditFilterDropdown from "@/components/filterDropdown/EditFilterDropdown "
 import EditSortDropdown from "@/components/sortDropdown/EditSortDropdown";
 import ViewLabelSettingModal from "@/components/modal/ViewLabelSettingModal";
 import CustomLabelEditModal from "@/components/modal/CustomLabelEditModal";
+import DeleteConfirmModal from "@/components/modal/DeleteConfirmModal";
 import IssueViewButton from "@/components/buttons/IssueViewButton";
 import { motion } from "framer-motion";
 import { IconButton } from "@chakra-ui/react";
+import { useDisclosure,useToast } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import MenuBar from "@/components/Menu/MenuBar";
 import useListType from "@/hooks/useListType";
@@ -49,6 +51,11 @@ const ListEdit = () => {
   const [isMenu, setIsMenu] = useState(false);
   const [isLabelSettingOpen, setIsLabelSettingOpen] = useState(false);
   const [isCustomSettingOpen, setIsCustomSettingOpen] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [selectedListItem, setSelectedListItem] = useState<ListItem | null>(
+    null
+  );
+  const toast = useToast();
   const { isBottomNavOpen } = useBottomNav();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -66,7 +73,10 @@ const ListEdit = () => {
       url: `/user/${userid}/${listType}/${listid}/list_edit/participating_users_list`,
     },
     { label: "表示ラベル設定", onClick: () => setIsLabelSettingOpen(true) },
-    { label: "カスタムラベル設定", onClick: () => setIsCustomSettingOpen(true) },
+    {
+      label: "カスタムラベル設定",
+      onClick: () => setIsCustomSettingOpen(true),
+    },
     { label: "投票開始日設定", onClick: () => setIsLabelSettingOpen(true) },
   ];
 
@@ -76,7 +86,7 @@ const ListEdit = () => {
     } else {
       setDisplayListItems(listItems);
     }
-  }, [sortLists.length]);
+  }, [sortLists.length, listItems]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -105,6 +115,29 @@ const ListEdit = () => {
 
   const toggleMenuDropdown = () => {
     setIsMenu((prevState) => !prevState);
+  };
+
+  const handleDeleteClick = (item: ListItem) => {
+    console.log(item)
+    setSelectedListItem(item);
+    onOpen();
+  };
+
+  const handleDelete = () => {
+    if (selectedListItem) {
+      setDisplayListItems((prevItem) =>
+        prevItem.filter((item) => item.item_id !== selectedListItem.item_id)
+      );
+
+      toast({
+        title: `"${selectedListItem.store_name}" を削除しました`,
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+      onClose();
+    }
   };
 
   const paginationZIndex = !isBottomNavOpen && !isFilter ? "z-40" : "z-20";
@@ -173,10 +206,18 @@ const ListEdit = () => {
         setSelectedFields={setSelectedFields}
       />
 
-        {/* カスタム設定モーダル */}
-        <CustomLabelEditModal
+      {/* カスタム設定モーダル */}
+      <CustomLabelEditModal
         isOpen={isCustomSettingOpen}
         onClose={() => setIsCustomSettingOpen(false)}
+      />
+
+      {/*削除確認モーダル*/}
+      <DeleteConfirmModal
+        isOpen={isOpen}
+        onClose={onClose}
+        onConfirm={handleDelete}
+        selectedName={selectedListItem?.store_name || ""}
       />
 
       <motion.div
@@ -197,6 +238,7 @@ const ListEdit = () => {
                 key={listItem.item_id}
                 listItem={listItem}
                 selectedFields={selectedFields}
+                onDelete={() => handleDeleteClick(listItem)}
               />
             ))}
           </div>

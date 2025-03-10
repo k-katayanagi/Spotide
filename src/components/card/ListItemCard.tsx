@@ -51,7 +51,7 @@ const ListItemCard = ({ listItem, onDelete, selectedFields }: Props) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
           {selectedFields.map((key) => {
             const field = fieldsMap.get(key);
-            if (!field) return null; // フィールドが存在しない場合は何も表示しない
+            if (!field) return null;
 
             return (
               <div key={field.key} className="flex text-base">
