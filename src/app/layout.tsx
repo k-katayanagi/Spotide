@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import ResponsiveHeader from "@/components/responsive/header/ResponsiveHeader";
 import ResponsiveFooter from "@/components/responsive/footer/ResponsiveFooter";
-import { Providers } from './providers';
+import { Providers } from "./providers";
+import { ListProvider } from "@/contexts/ListContext";
+import { ListItemProvider } from "@/contexts/ListItemContext";
+import { SearchSpotProvider } from "@/contexts/SearchSpotContext";
 import "@/app/styles/globals.css";
-
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,18 +30,21 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-      </head>
+      <head></head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Providers>
-          <ResponsiveHeader />
-          <main>
-            {children}
-          </main>
-          <ResponsiveFooter/>
-        </Providers>
+        <ListProvider>
+          <ListItemProvider>
+            <SearchSpotProvider>
+              <Providers>
+                <ResponsiveHeader />
+                <main>{children}</main>
+                <ResponsiveFooter />
+              </Providers>
+            </SearchSpotProvider>
+          </ListItemProvider>
+        </ListProvider>
       </body>
     </html>
   );

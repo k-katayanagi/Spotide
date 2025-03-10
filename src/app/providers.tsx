@@ -1,11 +1,12 @@
-'use client'
+"use client";
 
-import { ChakraProvider } from '@chakra-ui/react'
+import { ChakraProvider } from "@chakra-ui/react";
+import { BottomNavProvider } from "@/contexts/BottomNavContext";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <ChakraProvider>
-      {children}
+      <BottomNavProvider>{children}</BottomNavProvider>
     </ChakraProvider>
-  )
+  );
 }
