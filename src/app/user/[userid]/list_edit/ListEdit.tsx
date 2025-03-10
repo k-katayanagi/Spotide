@@ -18,7 +18,7 @@ import DeleteConfirmModal from "@/components/modal/DeleteConfirmModal";
 import IssueViewButton from "@/components/buttons/IssueViewButton";
 import { motion } from "framer-motion";
 import { IconButton } from "@chakra-ui/react";
-import { useDisclosure,useToast } from "@chakra-ui/react";
+import { useDisclosure, useToast } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import MenuBar from "@/components/Menu/MenuBar";
 import useListType from "@/hooks/useListType";
@@ -50,8 +50,19 @@ const ListEdit = () => {
   const [isSort, setIsSort] = useState(false);
   const [isMenu, setIsMenu] = useState(false);
   const [isLabelSettingOpen, setIsLabelSettingOpen] = useState(false);
-  const [isCustomSettingOpen, setIsCustomSettingOpen] = useState(false);
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  
+  // モーダル用の useDisclosure
+  const {
+    isOpen: isEditModalOpen,
+    onOpen: onEditModalOpen,
+    onClose: onEditModalClose,
+  } = useDisclosure();
+
+  const {
+    isOpen: isDeleteModalOpen,
+    onOpen: onDeleteModalOpen,
+    onClose: onDeleteModalClose,
+  } = useDisclosure();
   const [selectedListItem, setSelectedListItem] = useState<ListItem | null>(
     null
   );
@@ -73,10 +84,6 @@ const ListEdit = () => {
       url: `/user/${userid}/${listType}/${listid}/list_edit/participating_users_list`,
     },
     { label: "表示ラベル設定", onClick: () => setIsLabelSettingOpen(true) },
-    {
-      label: "カスタムラベル設定",
-      onClick: () => setIsCustomSettingOpen(true),
-    },
     { label: "投票開始日設定", onClick: () => setIsLabelSettingOpen(true) },
   ];
 
@@ -117,10 +124,14 @@ const ListEdit = () => {
     setIsMenu((prevState) => !prevState);
   };
 
-  const handleDeleteClick = (item: ListItem) => {
-    console.log(item)
+  const handleEditClick = (item: ListItem) => {
     setSelectedListItem(item);
-    onOpen();
+    onEditModalOpen(); 
+  };
+
+  const handleDeleteClick = (item: ListItem) => {
+    setSelectedListItem(item);
+    onDeleteModalOpen();
   };
 
   const handleDelete = () => {
@@ -136,7 +147,7 @@ const ListEdit = () => {
         isClosable: true,
         position: "top",
       });
-      onClose();
+      onDeleteModalOpen();
     }
   };
 
@@ -208,14 +219,15 @@ const ListEdit = () => {
 
       {/* カスタム設定モーダル */}
       <CustomLabelEditModal
-        isOpen={isCustomSettingOpen}
-        onClose={() => setIsCustomSettingOpen(false)}
+        isOpen={isEditModalOpen}
+        onClose={onEditModalClose}
+        selectedName={selectedListItem?.store_name || ""}
       />
 
       {/*削除確認モーダル*/}
       <DeleteConfirmModal
-        isOpen={isOpen}
-        onClose={onClose}
+        isOpen={isDeleteModalOpen}
+        onClose={onDeleteModalClose}
         onConfirm={handleDelete}
         selectedName={selectedListItem?.store_name || ""}
       />
@@ -238,6 +250,7 @@ const ListEdit = () => {
                 key={listItem.item_id}
                 listItem={listItem}
                 selectedFields={selectedFields}
+                onEdit={() => handleEditClick(listItem)}
                 onDelete={() => handleDeleteClick(listItem)}
               />
             ))}

@@ -16,12 +16,13 @@ import {
 import StarRating from "../UI/StarRating";
 
 interface Props {
+  selectedName: string;
   isOpen: boolean;
   onClose: () => void;
   onSave?: (memo: string, customRating: number) => void;
 }
 
-const CustomLabelEditModal = ({ isOpen, onClose }: Props) => {
+const CustomLabelEditModal = ({ isOpen, onClose, selectedName }: Props) => {
   const cancelRef = useRef<HTMLButtonElement>(null);
   const [memo, setMemo] = useState<string>("");
   const [customRating, setCustomRating] = useState<number>(0);
@@ -40,7 +41,7 @@ const CustomLabelEditModal = ({ isOpen, onClose }: Props) => {
       <AlertDialogOverlay>
         <AlertDialogContent>
           <AlertDialogHeader fontSize="lg" fontWeight="bold">
-            カスタムラベル設定
+            {selectedName}のカスタムラベル設定
           </AlertDialogHeader>
           <AlertDialogBody>
             <Text fontSize="lg" fontWeight="medium" mb={2}>
