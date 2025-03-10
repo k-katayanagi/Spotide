@@ -13,6 +13,7 @@ import ListItemCard from "@/components/card/ListItemCard";
 import EditFilterDropdown from "@/components/filterDropdown/EditFilterDropdown ";
 import EditSortDropdown from "@/components/sortDropdown/EditSortDropdown";
 import ViewLabelSettingModal from "@/components/modal/ViewLabelSettingModal";
+import CustomLabelEditModal from "@/components/modal/CustomLabelEditModal";
 import IssueViewButton from "@/components/buttons/IssueViewButton";
 import { motion } from "framer-motion";
 import { IconButton } from "@chakra-ui/react";
@@ -47,6 +48,7 @@ const ListEdit = () => {
   const [isSort, setIsSort] = useState(false);
   const [isMenu, setIsMenu] = useState(false);
   const [isLabelSettingOpen, setIsLabelSettingOpen] = useState(false);
+  const [isCustomSettingOpen, setIsCustomSettingOpen] = useState(false);
   const { isBottomNavOpen } = useBottomNav();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -55,7 +57,7 @@ const ListEdit = () => {
     useState<ListItem[]>(listItems);
   const [selectedFields, setSelectedFields] = useState<string[]>(
     defaultFields.map((f) => f.key)
-  ); // ここで初期化
+  );
 
   const menuItems = [
     { label: "場所を検索", url: "/search" },
@@ -64,7 +66,8 @@ const ListEdit = () => {
       url: `/user/${userid}/${listType}/${listid}/list_edit/participating_users_list`,
     },
     { label: "表示ラベル設定", onClick: () => setIsLabelSettingOpen(true) },
-    { label: "投票開始日設定", url: "/settings/voting" },
+    { label: "カスタムラベル設定", onClick: () => setIsCustomSettingOpen(true) },
+    { label: "投票開始日設定", onClick: () => setIsLabelSettingOpen(true) },
   ];
 
   useEffect(() => {
@@ -168,6 +171,12 @@ const ListEdit = () => {
         onClose={() => setIsLabelSettingOpen(false)}
         selectedFields={selectedFields}
         setSelectedFields={setSelectedFields}
+      />
+
+        {/* カスタム設定モーダル */}
+        <CustomLabelEditModal
+        isOpen={isCustomSettingOpen}
+        onClose={() => setIsCustomSettingOpen(false)}
       />
 
       <motion.div

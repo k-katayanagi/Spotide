@@ -60,12 +60,9 @@ const ParticipatingUsersList = () => {
   const menuItems = [
     { label: "場所を検索", url: "/search" },
     {
-      label: "共有ユーザー設定",
-      url: `/user/${userid}/${listType}/${listid}/list_edit/participating_users_list`,
+      label: "編集リストに戻る",
+      url: `/user/${userid}/${listType}/${listid}/list_edit/`,
     },
-    { label: "表示ラベル設定", url: "/settings/labels" },
-    { label: "投票開始日設定", url: "/settings/voting" },
-    { label: "編集リストに戻る",url: `/user/${userid}/${listType}/${listid}/list_edit`, }
   ];
 
   const toggleMenuDropdown = () => {
