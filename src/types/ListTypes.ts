@@ -23,6 +23,7 @@ export type ListItem = {
   time_to_station: number;
   business_hours: string; 
   regular_holiday: string;
+  time_from_nearest_station: number;
   category: string;
   sub_category: string;
   photo_id: number;

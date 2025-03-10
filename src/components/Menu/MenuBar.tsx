@@ -1,7 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import { TMenu } from "@/types/MenuType";
-import { useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 
 interface Props {
   onClick: () => void;
@@ -11,7 +11,6 @@ interface Props {
 const MenuBar = ({ onClick, menuItems }: Props) => {
   const router = useRouter();
 
-
   return (
     <div>
       <motion.div
@@ -19,7 +18,7 @@ const MenuBar = ({ onClick, menuItems }: Props) => {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -30 }}
         transition={{ duration: 0.3, ease: "easeOut" }}
-        className="w-[300px] min-h-[200px]" // サイズ固定
+        className="w-[300px] min-h-[200px]" 
       >
         {/* メニュー項目 */}
         <div className="mt-6 w-full">
@@ -28,7 +27,11 @@ const MenuBar = ({ onClick, menuItems }: Props) => {
               key={index}
               className="w-full text-xl py-4 border-t border-gray-300 bg-gray-100 hover:bg-gray-200"
               onClick={() => {
-                router.push(item.url); // 遷移先URLへ移動
+                if (item.onClick) {
+                  item.onClick(); // カスタム関数を実行）
+                } else if (item.url) {
+                  router.push(item.url); // ページ遷移
+                }
                 onClick(); // メニューを閉じる
               }}
             >

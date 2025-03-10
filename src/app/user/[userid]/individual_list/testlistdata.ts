@@ -82,12 +82,13 @@ export const testListItem = [
     time_to_station: 5,
     business_hours: "11:00 - 22:00",
     regular_holiday: "水曜日",
+    time_from_nearest_station: 3,
     category: "レストラン",
     sub_category: "イタリアン",
     photo_id: 101,
     add_by_id: 1,
     created_at: new Date(2025, 0, 10),
-    updated_at: new Date(2025, 0, 15),
+    updated_at: new Date(2025, 0, 15)
   },
   {
     item_id: 2,
@@ -103,16 +104,16 @@ export const testListItem = [
     time_to_station: 8,
     business_hours: "08:00 - 20:00",
     regular_holiday: "なし",
+    time_from_nearest_station: 5,
     category: "カフェ",
     sub_category: "コーヒー専門店",
     photo_id: 102,
     add_by_id: 2,
     created_at: new Date(2025, 0, 12),
-    updated_at: new Date(2025, 0, 18),
-  },
+    updated_at: new Date(2025, 0, 18)
+  }
 ];
 
-// 追加で28件作成
 for (let i = 3; i <= 30; i++) {
   testListItem.push({
     item_id: i,
@@ -128,14 +129,16 @@ for (let i = 3; i <= 30; i++) {
     time_to_station: Math.floor(Math.random() * 15) + 1,
     business_hours: `${8 + (i % 5)}:00 - ${18 + (i % 6)}:00`,
     regular_holiday: ["なし", "日曜日", "月曜日", "火曜日", "水曜日"][i % 5],
+    time_from_nearest_station: Math.floor(Math.random() * 10) + 1,
     category: ["レストラン", "カフェ", "バー"][i % 3],
     sub_category: ["和食", "洋食", "中華"][i % 3],
     photo_id: 100 + i,
     add_by_id: i % 5,
     created_at: new Date(2025, (i - 2) % 12, (i - 4) % 28),
-    updated_at: new Date(2025, (i - 1) % 12, (i - 3) % 28),
+    updated_at: new Date(2025, (i - 1) % 12, (i - 3) % 28)
   });
 }
+
 
 
 export const testParticipants = [

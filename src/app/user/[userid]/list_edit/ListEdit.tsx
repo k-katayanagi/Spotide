@@ -12,12 +12,28 @@ import { ListItem } from "@/types/ListTypes";
 import ListItemCard from "@/components/card/ListItemCard";
 import EditFilterDropdown from "@/components/filterDropdown/EditFilterDropdown ";
 import EditSortDropdown from "@/components/sortDropdown/EditSortDropdown";
+import ViewLabelSettingModal from "@/components/modal/ViewLabelSettingModal";
 import IssueViewButton from "@/components/buttons/IssueViewButton";
 import { motion } from "framer-motion";
 import { IconButton } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import MenuBar from "@/components/Menu/MenuBar";
 import useListType from "@/hooks/useListType";
+
+const defaultFields = [
+  { key: "station", label: "駅" },
+  { key: "google_rating", label: "Google評価" },
+  { key: "custom_rating", label: "カスタム評価" },
+  { key: "address", label: "住所" },
+  { key: "time_to_station", label: "駅からの所要時間" },
+  { key: "business_hours", label: "営業時間" },
+  { key: "regular_holiday", label: "定休日" },
+  { key: "time_from_nearest_station", label: "最寄り駅からの時間" },
+  { key: "category", label: "カテゴリ" },
+  { key: "sub_category", label: "サブカテゴリ" },
+  { key: "add_by_id", label: "登録者" },
+  { key: "created_at", label: "登録日" },
+];
 
 const ListEdit = () => {
   const params = useParams();
@@ -30,12 +46,16 @@ const ListEdit = () => {
   const [isFilter, setIsFilter] = useState(false);
   const [isSort, setIsSort] = useState(false);
   const [isMenu, setIsMenu] = useState(false);
+  const [isLabelSettingOpen, setIsLabelSettingOpen] = useState(false);
   const { isBottomNavOpen } = useBottomNav();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const listContainerRef = useRef<HTMLDivElement>(null);
   const [displayListItems, setDisplayListItems] =
     useState<ListItem[]>(listItems);
+  const [selectedFields, setSelectedFields] = useState<string[]>(
+    defaultFields.map((f) => f.key)
+  ); // ここで初期化
 
   const menuItems = [
     { label: "場所を検索", url: "/search" },
@@ -43,7 +63,7 @@ const ListEdit = () => {
       label: "共有ユーザー設定",
       url: `/user/${userid}/${listType}/${listid}/list_edit/participating_users_list`,
     },
-    { label: "表示ラベル設定", url: "/settings/labels" },
+    { label: "表示ラベル設定", onClick: () => setIsLabelSettingOpen(true) },
     { label: "投票開始日設定", url: "/settings/voting" },
   ];
 
@@ -69,8 +89,6 @@ const ListEdit = () => {
       listContainerRef.current.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
-
-
 
   const toggleFilterDropdown = () => {
     setIsFilter((prevState) => !prevState);
@@ -116,21 +134,19 @@ const ListEdit = () => {
 
       {isFilter && (
         <div className="absolute top-[60px] left-1/2 transform -translate-x-1/2 z-30 w-full max-w-[1024px]">
-          <EditFilterDropdown
-            toggleFilterDropdown={toggleFilterDropdown}
+          <EditFilterDropdown toggleFilterDropdown={toggleFilterDropdown} />
+        </div>
+      )}
+
+      {isSort && (
+        <div className="absolute top-[60px] left-1/2 transform -translate-x-1/2 z-30 w-full max-w-[1024px]">
+          <EditSortDropdown
+          // toggleSortDropdown={toggleSortDropdown}
+          // onSortChange={handleSortChange}
           />
         </div>
       )}
 
-            {isSort && (
-              <div className="absolute top-[60px] left-1/2 transform -translate-x-1/2 z-30 w-full max-w-[1024px]">
-                <EditSortDropdown
-                  // toggleSortDropdown={toggleSortDropdown}
-                  // onSortChange={handleSortChange}
-                />
-              </div>
-            )}
-      
       {/*absoluteにしてリストの上に被せる */}
       {isMenu && (
         <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 z-10 flex justify-center">
@@ -146,6 +162,14 @@ const ListEdit = () => {
         </div>
       )}
 
+      {/* 表示設定モーダル */}
+      <ViewLabelSettingModal
+        isOpen={isLabelSettingOpen}
+        onClose={() => setIsLabelSettingOpen(false)}
+        selectedFields={selectedFields}
+        setSelectedFields={setSelectedFields}
+      />
+
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -160,7 +184,11 @@ const ListEdit = () => {
         >
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {currentListItems.map((listItem) => (
-              <ListItemCard key={listItem.item_id} listItem={listItem} />
+              <ListItemCard
+                key={listItem.item_id}
+                listItem={listItem}
+                selectedFields={selectedFields}
+              />
             ))}
           </div>
         </div>

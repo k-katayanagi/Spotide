@@ -1,4 +1,5 @@
 export type TMenu = {
   label: string;
-  url: string;
+  url?: string;  
+  onClick?: () => void; 
 };
