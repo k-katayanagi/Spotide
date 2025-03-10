@@ -58,7 +58,7 @@ const ParticipatingUsersList = () => {
   const toast = useToast();
 
   const menuItems = [
-    { label: "場所を検索", url: "/search" },
+    { label: "場所を検索",   url: `/user/${userid}/${listType}/${listid}/list_edit/spot_search`},
     {
       label: "編集リストに戻る",
       url: `/user/${userid}/${listType}/${listid}/list_edit/`,
