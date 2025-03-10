@@ -4,7 +4,7 @@ import Button from "@components/Button";
 
 interface Props {
   className?: string;
-  onClick?: () => void; // ← クリック時の関数を受け取る
+  onClick?: () => void;
 }
 
 const SearchButton = ({ onClick, className }: Props) => {
