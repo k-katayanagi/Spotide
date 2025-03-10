@@ -28,10 +28,10 @@ const SpotSearch = () => {
   const [isSort, setIsSort] = useState(false);
   const [isMenu, setIsMenu] = useState(false);
   const { isBottomNavOpen } = useBottomNav();
-//   const [selectedSearchSpot, setSelectedSearchSpot] = useState<Spot | null>(
-//     null
-//   );
-//   const toast = useToast();
+  //   const [selectedSearchSpot, setSelectedSearchSpot] = useState<Spot | null>(
+  //     null
+  //   );
+  //   const toast = useToast();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const listContainerRef = useRef<HTMLDivElement>(null);
