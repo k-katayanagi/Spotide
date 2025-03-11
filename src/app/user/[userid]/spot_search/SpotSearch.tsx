@@ -110,6 +110,7 @@ const SpotSearch = () => {
       variant="unstyled"
       aria-label="メニュー"
       className="flex items-center justify-center text-black w-[25px] h-[25px] sm:w-[50px] sm:h-[50px]"
+      onClick={toggleMenuDropdown}
     />
   </div>
 </div>

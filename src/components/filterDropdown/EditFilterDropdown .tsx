@@ -88,7 +88,7 @@ const EditFilterDropdown = ({ toggleFilterDropdown }: Props) => {
                 className="w-[100px] sm:w-[120px] h-[40px]"
               />
               <ListSelect
-                title="駅"
+                title="最寄駅"
                 options={addAllOption(stationOptions)}
                 onSelect={setSelectedStatus}
                 className="w-[100px] sm:w-[120px] h-[40px]"
