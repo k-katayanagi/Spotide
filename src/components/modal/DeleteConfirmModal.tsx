@@ -30,7 +30,7 @@ const DeleteConfirmModal = ({
     <AlertDialog
       isOpen={isOpen}
       // 型キャストを使って FocusableElement として扱う
-      leastDestructiveRef={cancelRef as React.RefObject<HTMLElement>} // 型キャストを行う
+      leastDestructiveRef={cancelRef as React.RefObject<HTMLElement>}
       onClose={onClose}
     >
       <AlertDialogOverlay className="fixed inset-0 flex items-center justify-center bg-black/50">
