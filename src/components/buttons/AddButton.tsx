@@ -1,14 +1,13 @@
-'use client';
+"use client";
 
-import Button from '@components/Button';
-import useNavigation from "@/hooks/useNavigation";
+import Button from "@components/Button";
 
 interface Props {
-    className?: string; 
+  className?: string;
+  onClick?: () => void;
 }
 
-const AddButton = ({ className }: Props) => {
-  const { handleNavigateTo } = useNavigation();
+const AddButton = ({ className, onClick }: Props) => {
   return (
     <Button
       className={`group relative inline-flex items-center justify-center overflow-hidden rounded-full 
@@ -17,12 +16,15 @@ const AddButton = ({ className }: Props) => {
         hover:bg-gradient-to-r hover:from-blue-400 hover:via-blue-500 
         hover:to-blue-600 hover:shadow-2xl transform hover:scale-105
         px-6 py-2 text-base md:text-lg lg:text-xl
-        min-w-[30px] w-[100px] max-w-[100px] min-h-[10px] h-[50px]  max-h-[50px] whitespace-nowrap ${className}`}
-      onClick={() => handleNavigateTo('/')}
+        min-w-[30px] w-[100px] max-w-[100px] min-h-[50px] h-[50px] max-h-[50px] whitespace-nowrap ${className}`}
+      onClick={onClick}
       text={
         <>
-          <span className="absolute h-0 w-0 rounded-full bg-blue-300 transition-all duration-300 group-hover:h-56 group-hover:w-32"></span>
-          <span className="relative flex items-center justify-center">リストに追加</span>
+          {/* 初期状態でエフェクトがボタンサイズと合うように調整 */}
+          <span className="absolute h-0 w-0 rounded-full bg-blue-300 transition-all duration-300 group-hover:h-[50px] group-hover:w-[100px]"></span>
+          <span className="relative flex items-center justify-center">
+            リストに追加
+          </span>
         </>
       }
     />

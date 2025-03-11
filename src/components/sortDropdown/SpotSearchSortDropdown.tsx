@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import ListSelect from "../ListSelect";
-import { listItemInfo, Sort } from "@/consts/OptionList";
+import { SpotItemInfo, Sort } from "@/consts/OptionList";
 import OkButton from "../buttons/OkButton";
 import { ListItem } from "@/types/ListTypes";
 
@@ -11,7 +11,7 @@ import { ListItem } from "@/types/ListTypes";
 // };
 
 const SpotSearchSortDropdown = () => {
-  const filteredListInfo = listItemInfo.filter(
+  const filteredListInfo = SpotItemInfo.filter(
     (item) => item.value !== "status" && item.value !== "lastUpdatedBy"
   );
 

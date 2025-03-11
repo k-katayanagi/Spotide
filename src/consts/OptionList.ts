@@ -31,6 +31,14 @@ export const listItemInfo = [
   { value: "updated_at", label: "更新日時" }
 ];
 
+export const SpotItemInfo = [
+  { value: "store_name", label: "店舗名" },
+  { value: "google_rating", label: "Google評価" },
+  { value: "time_to_station", label: "最寄駅までの時間（分）" },
+  { value: "business_start_hours", label: "営業開始時間" },
+  { value: "business_end_hours", label: "営業終了時間" },
+];
+
 
 export const Sort = [
   { value: 0, label: "昇順" },
