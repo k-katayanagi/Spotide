@@ -15,13 +15,16 @@ const SortButton = ({ className, disabled, onClick }: Props) => {
       className={`items-center justify-center text-black w-[25px] h-[25px] sm:w-[50px] sm:h-[50px]  ${className}`}
       disabled={disabled}
       onClick={onClick}
-    >
-      <Image
-        src="/images/sort.svg"
-        alt="ソート"
-        className="w-[25px] h-[25px] sm:w-[50px] sm:h-[50px]"
-      />
-    </Button>
+      text={
+        <Image
+          src="/images/sort.svg"
+          alt="ソート"
+          className="w-[25px] h-[25px] sm:w-[50px] sm:h-[50px]"
+          width={20}
+          height={20}
+        />
+      }
+    />
   );
 };
 

@@ -15,13 +15,16 @@ const FilterButton = ({ className, disabled, onClick }: Props) => {
       className={`items-center justify-center text-black w-[25px] h-[25px] sm:w-[50px] sm:h-[50px] ${className}`}
       disabled={disabled}
       onClick={onClick}
-    >
-      <Image
-        src="/images/filter.svg"
-        alt="フィルターボタン"
-        className="w-[25px] h-[25px] sm:w-[50px] sm:h-[50px]"
-      />
-    </Button>
+      text={
+        <Image
+          src="/images/filter.svg"
+          alt="フィルターボタン"
+          className="w-[25px] h-[25px] sm:w-[50px] sm:h-[50px]"
+          height={20}
+          width={20}
+        />
+      }
+    />
   );
 };
 
