@@ -9,16 +9,17 @@ import Pagination from "@/components/pagination/Pagination";
 import FilterButton from "@/components/buttons/FilterButton";
 import SortButton from "@/components/buttons/SortButton";
 import { ListItem } from "@/types/ListTypes";
+import { List } from "@/types/ListTypes";
 import ViewItemCard from "@/components/card/ViewItemCard";
 import EditFilterDropdown from "@/components/filterDropdown/EditFilterDropdown ";
 import EditSortDropdown from "@/components/sortDropdown/EditSortDropdown";
 import ViewLabelSettingModal from "@/components/modal/ViewLabelSettingModal";
 import { motion } from "framer-motion";
 import { IconButton } from "@chakra-ui/react";
-import { useDisclosure, useToast } from "@chakra-ui/react";
+// import { useDisclosure, useToast } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import MenuBar from "@/components/Menu/MenuBar";
-import useListType from "@/hooks/useListType";
+// import useListType from "@/hooks/useListType";
 import EditButton from "@/components/buttons/EditButton ";
 import TotallingButton from "@/components/buttons/TotallingButton";
 import AggregatedResultsButton from "@/components/buttons/AggregatedResultsButton";
@@ -44,17 +45,17 @@ const ListView = () => {
   const uuid = params?.id;
   const { lists, sortLists } = useListContext();
   const { listItems } = useListItemContext();
-  const listId = params?.listid ? Number(params.listid) : null;
-  const list = lists.find((i) => i.id === listId);
+  // const listId = params?.listid ? Number(params.listid) : null;
+  // const list = lists.find((i) => i.id === listId);
   const [isFilter, setIsFilter] = useState(false);
   const [isSort, setIsSort] = useState(false);
   const [isMenu, setIsMenu] = useState(false);
   const [isLabelSettingOpen, setIsLabelSettingOpen] = useState(false);
   const [matchedList, setMatchedList] = useState<List | null>(null);
-  const [selectedListItem, setSelectedListItem] = useState<ListItem | null>(
-    null
-  );
-  const toast = useToast();
+  // const [selectedListItem, setSelectedListItem] = useState<ListItem | null>(
+  //   null
+  // );
+  // const toast = useToast();
   const { isBottomNavOpen } = useBottomNav();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -124,7 +125,7 @@ const ListView = () => {
     } else {
       setDisplayListItems(listItems);
     }
-  }, [sortLists.length, listItems, uuid, list]); // 依存配列に `list` を追加
+  },  [lists, sortLists, listItems, uuid]); 
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
