@@ -12,7 +12,7 @@ import SearchSpotCard from "@/components/card/SearchSpotCard";
 import SpotSearchFilterDropdown from "@/components/filterDropdown/SpotSearchFilterDropdown";
 import SpotSearchSortDropdown from "@/components/sortDropdown/SpotSearchSortDropdown";
 import { IconButton } from "@chakra-ui/react";
-// import { useToast } from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import InputBox from "@/components/InputBox";
 import SearchButton from "@/components/buttons/SearchButton";
@@ -28,6 +28,7 @@ const SpotSearch = () => {
   const [isSort, setIsSort] = useState(false);
   const [isMenu, setIsMenu] = useState(false);
   const { isBottomNavOpen } = useBottomNav();
+  const toast = useToast();
   //   const [selectedSearchSpot, setSelectedSearchSpot] = useState<Spot | null>(
   //     null
   //   );
@@ -86,33 +87,48 @@ const SpotSearch = () => {
     setIsMenu((prevState) => !prevState);
   };
 
-  const handleAddListItem = () => {
-    console.log("Add");
+  const handleAddListItem = (spot: Spot) => {
+    toast({
+      title: `"${spot.store_name}" を追加しました`,
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+      position: "top",
+    });
   };
 
   const paginationZIndex = !isBottomNavOpen && !isFilter ? "z-40" : "z-20";
   return (
     <div className="p-3 overflow-auto relative">
-<div className="flex items-center justify-between mb-5 w-full">
-  <div className="flex-1 flex items-end justify-center gap-2">
-    <InputBox
-      placeholder="検索するキーワードを入力"
-      className="border border-gray-400 rounded-md p-2 w-[200px] h-10 sm:w-[300px] sm:h-12" // スマホ時に幅と高さを小さくする
-    />
-    <SearchButton className="sm:h-12 h-10 w-[50px] sm:w-[70px]" />  
-  </div>
+      <div className="flex items-center justify-between mb-5 w-full">
+        <div className="flex-1 flex items-end justify-center gap-2">
+          <InputBox
+            placeholder="検索するキーワードを入力"
+            className="border border-gray-400 rounded-md p-2 w-[200px] h-10 sm:w-[300px] sm:h-12" // スマホ時に幅と高さを小さくする
+          />
+          <SearchButton className="sm:h-12 h-10 w-[50px] sm:w-[70px]" />
+        </div>
 
-  <div className="flex items-center gap-2">
-    <FilterButton onClick={toggleFilterDropdown} disabled={isSort}  className="sm:w-12 sm:h-12 w-8 h-8"/>
-    <SortButton onClick={toggleSortDropdown} disabled={isFilter} />
-    <IconButton
-      icon={<HamburgerIcon boxSize={5} />}
-      variant="unstyled"
-      aria-label="メニュー"
-      className="flex items-center justify-center text-black w-[25px] h-[25px] sm:w-[50px] sm:h-[50px]"
-    />
-  </div>
-</div>
+        <div className="flex items-center gap-5">
+          <FilterButton
+            onClick={toggleFilterDropdown}
+            disabled={isSort}
+            className="w-[20px] h-[20px] sm:w-[30px] sm:h-[30px]"
+          />
+          <SortButton
+            onClick={toggleSortDropdown}
+            disabled={isFilter}
+            className="w-[20px] h-[20px] sm:w-[30px] sm:h-[30px]"
+          />
+          <IconButton
+            icon={<HamburgerIcon boxSize={7} />}
+            variant="unstyled"
+            aria-label="メニュー"
+            className="flex items-center justify-center text-black w-[20px] h-[20px] sm:w-[30px] sm:h-[30px]"
+            onClick={toggleMenuDropdown}
+          />
+        </div>
+      </div>
 
       {isFilter && (
         <div className="absolute top-[60px] left-1/2 transform -translate-x-1/2 z-30 w-full max-w-[1024px]">
@@ -156,7 +172,7 @@ const SpotSearch = () => {
             <SearchSpotCard
               key={Item.item_id}
               SearchSpot={Item}
-              onAdd={handleAddListItem}
+              onAdd={() => handleAddListItem(Item)}
             />
           ))}
         </div>

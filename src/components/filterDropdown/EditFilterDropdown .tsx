@@ -78,20 +78,20 @@ const EditFilterDropdown = ({ toggleFilterDropdown }: Props) => {
                 title="都道府県"
                 options={addAllOption(prefectures)}
                 onSelect={setSelectedStatus}
-                className="w-[100px] sm:w-[120px] h-[40px]"
+                className="w-[100px] sm:w-[120px] h-[20px] sm:h-[30px]"
               />
               {selectedStatus}
               <ListSelect
                 title="市区"
                 options={addAllOption(cityOptions)}
                 onSelect={setSelectedStatus}
-                className="w-[100px] sm:w-[120px] h-[40px]"
+                className="w-[100px] sm:w-[120px] h-[20px] sm:h-[30px]"
               />
               <ListSelect
-                title="駅"
+                title="最寄駅"
                 options={addAllOption(stationOptions)}
                 onSelect={setSelectedStatus}
-                className="w-[100px] sm:w-[120px] h-[40px]"
+                className="w-[100px] sm:w-[120px] h-[20px] sm:h-[30px]"
               />
             </div>
 
@@ -101,13 +101,13 @@ const EditFilterDropdown = ({ toggleFilterDropdown }: Props) => {
                 title="カテゴリ"
                 options={addAllOption(categories)}
                 onSelect={setSelectedStatus}
-                className="w-[140px] sm:w-[160px] h-[40px]"
+                className="w-[140px] sm:w-[160px] h-[20px] sm:h-[30px]"
               />
               <ListSelect
                 title="サブカテゴリ"
                 options={addAllOption(subCategories)}
                 onSelect={setSelectedStatus}
-                className="w-[140px] sm:w-[160px] h-[40px]"
+                className="w-[140px] sm:w-[160px] h-[20px] sm:h-[30px]"
               />
             </div>
 
@@ -117,7 +117,7 @@ const EditFilterDropdown = ({ toggleFilterDropdown }: Props) => {
                 title="営業時間"
                 options={addAllOption(hours)}
                 onSelect={setSelectedStatus}
-                className="w-[100px] sm:w-[120px] h-[40px]"
+                className="w-[100px] sm:w-[120px] h-[20px] sm:h-[30px]"
               />
               <span className="flex justify-center lg:justify-end items-end mb-5">
                 ～
@@ -126,7 +126,7 @@ const EditFilterDropdown = ({ toggleFilterDropdown }: Props) => {
                 <ListSelect
                   options={addAllOption(hours)}
                   onSelect={setSelectedStatus}
-                  className="w-[100px] sm:w-[120px] h-[40px]"
+                  className="w-[100px] sm:w-[120px] h-[20px] sm:h-[30px]"
                 />
               </div>
             </div>
@@ -162,7 +162,7 @@ const EditFilterDropdown = ({ toggleFilterDropdown }: Props) => {
                     { value: "30", label: "30分" },
                   ]}
                   onSelect={setSelectedStatus}
-                  className="w-[100px] sm:w-[120px] h-[40px]"
+                  className="w-[100px] sm:w-[120px] h-[20px] sm:h-[30px]"
                 />
               </div>
 
@@ -185,9 +185,7 @@ const EditFilterDropdown = ({ toggleFilterDropdown }: Props) => {
             </div> */}
             </div>
 
-            <div className="flex justify-between items-end w-full flex-wrap">
-              {" "}
-              {/* flex-wrap を追加 */}
+            <div className="flex justify-between items-start w-full flex-wrap">
               {/* Google評価 */}
               <div className="flex flex-col items-start mr-4">
                 <span>Google評価</span>
@@ -208,8 +206,6 @@ const EditFilterDropdown = ({ toggleFilterDropdown }: Props) => {
               </div>
               {/* OKボタン */}
               <div className="flex items-end ml-auto w-full sm:w-auto justify-end mt-4">
-                {" "}
-                {/* mt-4 で下に余白を追加 */}
                 <OkButton />
               </div>
             </div>

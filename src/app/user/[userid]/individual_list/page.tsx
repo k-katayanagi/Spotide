@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { useParams,useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useListContext } from "@/contexts/ListContext";
 import { useBottomNav } from "@/contexts/BottomNavContext";
 import ListCard from "@/components/card/ListCard";
@@ -131,10 +131,10 @@ const IndividualList = () => {
     onOpen();
   };
 
-    // 編集ページに遷移する関数（ここでルーティングを管理）
-    const handleEditClick = (listId: number) => {
-      router.push(`/user/${userId}/individual_list/${listId}/list_edit`);
-    };
+  // 編集ページに遷移する関数（ここでルーティングを管理）
+  const handleEditClick = (listId: number) => {
+    router.push(`/user/${userId}/individual_list/${listId}/list_edit`);
+  };
 
   const handleDelete = () => {
     if (selectedList) {
@@ -161,8 +161,16 @@ const IndividualList = () => {
       <div className="flex items-center justify-between mb-5 w-full">
         <h1 className="text-2xl font-bold">{user.name}さんの個人リスト一覧</h1>
         <div className="flex gap-2 mb- justify-end relative z-10">
-          <FilterButton onClick={toggleFilterDropdown} disabled={isSort} />
-          <SortButton onClick={toggleSortDropdown} disabled={isFilter} />
+          <FilterButton
+            onClick={toggleFilterDropdown}
+            disabled={isSort}
+            className="w-[20px] h-[20px] sm:w-[30px] sm:h-[30px]"
+          />
+          <SortButton
+            onClick={toggleSortDropdown}
+            disabled={isFilter}
+            className="w-[20px] h-[20px] sm:w-[30px] sm:h-[30px]"
+          />
         </div>
       </div>
 
