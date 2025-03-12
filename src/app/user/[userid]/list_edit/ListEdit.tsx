@@ -163,23 +163,21 @@ const ListEdit = () => {
           {list ? list.list_name : "リストが見つかりません"}
         </h1>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-5">
           <IssueViewButton />
 
           {/* フィルター & ソートボタンをアイコンと揃える */}
-          <div className="flex gap-2 items-center">
+          <div className="flex gap-5 items-center">
             <FilterButton
               onClick={toggleFilterDropdown}
               disabled={isSort}
-              className="w-[20px] h-[20px] sm:w-[30px] sm:h-[30px]"
             />
             <SortButton
               onClick={toggleSortDropdown}
               disabled={isFilter}
-              className="w-[20px] h-[20px] sm:w-[30px] sm:h-[30px]"
             />
             <IconButton
-              icon={<HamburgerIcon boxSize={5} />} // テキストと同じ高さにするため boxSize を調整
+              icon={<HamburgerIcon boxSize={7} />} // テキストと同じ高さにするため boxSize を調整
               variant="unstyled"
               aria-label="メニュー"
               className="flex items-center justify-center text-black block w-[20px] h-[20px] sm:w-[30px] sm:h-[30px]"

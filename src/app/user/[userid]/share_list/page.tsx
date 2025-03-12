@@ -163,16 +163,8 @@ const SharelList = () => {
       <div className="flex items-center justify-between mb-5 w-full">
         <h1 className="text-2xl font-bold">{user.name}さんの共有リスト一覧</h1>
         <div className="flex gap-2 mb- justify-end relative z-10">
-          <FilterButton
-            onClick={toggleFilterDropdown}
-            disabled={isSort}
-            className="w-[20px] h-[20px] sm:w-[30px] sm:h-[30px]"
-          />
-          <SortButton
-            onClick={toggleSortDropdown}
-            disabled={isFilter}
-            className="w-[20px] h-[20px] sm:w-[30px] sm:h-[30px]"
-          />
+          <FilterButton onClick={toggleFilterDropdown} disabled={isSort} />
+          <SortButton onClick={toggleSortDropdown} disabled={isFilter} />
         </div>
       </div>
 

@@ -164,12 +164,10 @@ const IndividualList = () => {
           <FilterButton
             onClick={toggleFilterDropdown}
             disabled={isSort}
-            className="w-[20px] h-[20px] sm:w-[30px] sm:h-[30px]"
           />
           <SortButton
             onClick={toggleSortDropdown}
             disabled={isFilter}
-            className="w-[20px] h-[20px] sm:w-[30px] sm:h-[30px]"
           />
         </div>
       </div>

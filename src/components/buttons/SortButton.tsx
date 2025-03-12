@@ -12,14 +12,14 @@ interface Props {
 const SortButton = ({ className, disabled, onClick }: Props) => {
   return (
     <Button
-      className={`items-center justify-center text-black w-[25px] h-[25px] sm:w-[50px] sm:h-[50px]  ${className}`}
+      className={`items-center justify-center text-black w-[20px] h-[20px] sm:w-[30px] sm:h-[30px]  ${className}`}
       disabled={disabled}
       onClick={onClick}
       text={
         <Image
           src="/images/sort.svg"
           alt="ソート"
-          className="w-[25px] h-[25px] sm:w-[50px] sm:h-[50px]"
+          className="w-[20px] h-[20px] sm:w-[30px] sm:h-[30px]"
           width={20}
           height={20}
         />
