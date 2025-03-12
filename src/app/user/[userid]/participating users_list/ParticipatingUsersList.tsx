@@ -58,7 +58,10 @@ const ParticipatingUsersList = () => {
   const toast = useToast();
 
   const menuItems = [
-    { label: "場所を検索",   url: `/user/${userid}/${listType}/${listid}/list_edit/spot_search`},
+    {
+      label: "場所を検索",
+      url: `/user/${userid}/${listType}/${listid}/list_edit/spot_search`,
+    },
     {
       label: "編集リストに戻る",
       url: `/user/${userid}/${listType}/${listid}/list_edit/`,
@@ -92,7 +95,7 @@ const ParticipatingUsersList = () => {
   };
 
   const handleUserEdit = async (
-    editedUsername: string,
+    editedUsername: string
     // editedPassword: string
   ) => {
     if (!selectedUser) return;
@@ -207,7 +210,7 @@ const ParticipatingUsersList = () => {
         </div>
 
         {isMenu && (
-       <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 z-10 flex justify-center">
+          <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 z-10 flex justify-center">
             <MenuBar onClick={toggleMenuDropdown} menuItems={menuItems} />
             <button
               className="w-12 h-12 flex items-center justify-center bg-white rounded-full shadow-xl 
@@ -221,7 +224,7 @@ const ParticipatingUsersList = () => {
         )}
       </div>
 
-      <div className="w-[80%] h-[400px] p-4 border border-orange-500 rounded-lg bg-gradient-to-br from-orange-200 to-orange-300 flex flex-col gap-y-2  mx-auto">
+      <div className="w-[90%] sm:w-[60%] h-[400px] p-4 border border-orange-500 rounded-lg bg-gradient-to-br from-orange-200 to-orange-300 flex flex-col gap-y-2  mx-auto">
         {currentUserNames.length > 0 ? (
           currentUserNames.map((user) => (
             <div
@@ -233,15 +236,15 @@ const ParticipatingUsersList = () => {
               </div>
               <div className="flex justify-center items-center space-x-2">
                 <EditButton
-                  className="flex items-center justify-center h-[45px] w-[50px] md:h-[40px] md:w-[90px] sm:h-[35px] sm:w-[80px] min-w-0 xs:h-[30px] xs:w-[70px]"
+                  className="flex items-center justify-center h-[40px] w-[70px] sm:h-[45px] sm:w-[80px]"
                   onClick={() => handleUserEditClick(user)}
                 />
                 <DetailButton
-                  className="flex items-center justify-center h-[45px] w-[50px] md:h-[40px] md:w-[90px] sm:h-[35px] sm:w-[80px] min-w-0 xs:h-[30px] xs:w-[70px]"
+                  className="flex items-center justify-center h-[40px] w-[70px] sm:h-[45px] sm:w-[80px]"
                   onClick={() => handleUserDetailClick(user)}
                 />
                 <DeleteButton
-                  className="flex items-center justify-center h-[45px] w-[50px] md:h-[40px] md:w-[90px] sm:h-[35px] sm:w-[80px] min-w-0 xs:h-[30px] xs:w-[70px]"
+                  className="flex items-center justify-center h-[40px] w-[70px] sm:h-[45px] sm:w-[80px]"
                   onClick={() => handleDeleteClick(user)}
                 />
               </div>
