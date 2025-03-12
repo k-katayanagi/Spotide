@@ -108,13 +108,20 @@ const SharelList = () => {
       }
 
       if (typeof aValue === "number" || typeof aValue === "string") {
-        return order === 0
-          ? aValue > bValue
-            ? 1
-            : -1
-          : aValue < bValue
-            ? 1
-            : -1;
+        // aValue と bValue が両方とも undefined でないことを確認
+        if (bValue !== undefined) {
+          return order === 0
+            ? aValue > bValue
+              ? 1
+              : -1
+            : aValue < bValue
+              ? 1
+              : -1;
+        }
+        // bValueがundefinedの場合の処理を追加
+        else {
+          return 0; // または適切な処理
+        }
       }
 
       if (aValue instanceof Date && bValue instanceof Date) {
