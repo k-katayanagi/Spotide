@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import { useSearchSpotContext } from "@/contexts/SearchSpotContext";
 import { useBottomNav } from "@/contexts/BottomNavContext";
 import Pagination from "@/components/pagination/Pagination";
-import FilterButton from "@/components/buttons/FilterButton";
+import Image from "next/image";
 import SortButton from "@/components/buttons/SortButton";
 import { Spot } from "@/types/ListTypes";
 import SearchSpotCard from "@/components/card/SearchSpotCard";
@@ -104,23 +104,19 @@ const SpotSearch = () => {
         <div className="flex-1 flex items-end justify-center gap-2">
           <InputBox
             placeholder="検索するキーワードを入力"
-            className="border border-gray-400 rounded-md p-2 w-[200px] h-10 sm:w-[300px] sm:h-12" // スマホ時に幅と高さを小さくする
+            className="border border-gray-400 rounded-md p-2 w-[300px] h-10 sm:w-[400px] sm:h-12 relative" 
+            onClick={toggleFilterDropdown}
+            showImage={true}
           />
-          <SearchButton className="sm:h-12 h-10 w-[50px] sm:w-[70px]" />
         </div>
 
-        <div className="flex items-center gap-2">
-          <FilterButton
-            onClick={toggleFilterDropdown}
-            disabled={isSort}
-            className="sm:w-12 sm:h-12 w-8 h-8"
-          />
+        <div className="flex items-center gap-5">
           <SortButton onClick={toggleSortDropdown} disabled={isFilter} />
           <IconButton
-            icon={<HamburgerIcon boxSize={5} />}
+            icon={<HamburgerIcon boxSize={7} />}
             variant="unstyled"
             aria-label="メニュー"
-            className="flex items-center justify-center text-black w-[25px] h-[25px] sm:w-[50px] sm:h-[50px]"
+            className="flex items-center justify-center text-black w-[20px] h-[20px] sm:w-[30px] sm:h-[30px]"
             onClick={toggleMenuDropdown}
           />
         </div>

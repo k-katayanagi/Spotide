@@ -2,7 +2,7 @@
 import React from 'react';
 
 type ButtonProps = {
-  text: React.ReactNode; // ボタン中身
+  text?: React.ReactNode; // ボタン中身
   onClick?: React.MouseEventHandler<HTMLButtonElement>; // onClick イベントの型
 } & React.ButtonHTMLAttributes<HTMLButtonElement>; // ボタン要素のその他の属性
 

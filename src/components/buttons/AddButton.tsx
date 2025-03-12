@@ -20,7 +20,6 @@ const AddButton = ({ className, onClick }: Props) => {
       onClick={onClick}
       text={
         <>
-          {/* 初期状態でエフェクトがボタンサイズと合うように調整 */}
           <span className="absolute h-0 w-0 rounded-full bg-blue-300 transition-all duration-300 group-hover:h-[50px] group-hover:w-[100px]"></span>
           <span className="relative flex items-center justify-center">
             リストに追加

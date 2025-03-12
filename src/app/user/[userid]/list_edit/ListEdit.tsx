@@ -167,15 +167,20 @@ const ListEdit = () => {
           <IssueViewButton listId={listId}/>
 
           {/* フィルター & ソートボタンをアイコンと揃える */}
-          <div className="flex gap-2 items-center">
-            <FilterButton onClick={toggleFilterDropdown} disabled={isSort} />
-            <SortButton onClick={toggleSortDropdown} disabled={isFilter} />
+          <div className="flex gap-5 items-center">
+            <FilterButton
+              onClick={toggleFilterDropdown}
+              disabled={isSort}
+            />
+            <SortButton
+              onClick={toggleSortDropdown}
+              disabled={isFilter}
+            />
             <IconButton
-              icon={<HamburgerIcon boxSize={5} />} // テキストと同じ高さにするため boxSize を調整
+              icon={<HamburgerIcon boxSize={7} />} // テキストと同じ高さにするため boxSize を調整
               variant="unstyled"
               aria-label="メニュー"
-              className="flex items-center justify-center text-black block"
-              style={{ width: "50px", height: "50px" }} // `FilterButton` と同じインラインスタイルを追加
+              className="flex items-center justify-center text-black block w-[20px] h-[20px] sm:w-[30px] sm:h-[30px]"
               onClick={toggleMenuDropdown}
             />
           </div>

@@ -9,10 +9,9 @@ import {
   subCategories,
   hours,
 } from "@/consts/OptionList";
-import OkButton from "../buttons/OkButton";
+import SearchButton from "../buttons/SearchButton";
 import StarRating from "../UI/StarRating";
 // import { useListContext } from "@/contexts/ListContext";
-import InputBox from "../InputBox";
 // import { ListItem } from "@/types/ListTypes";
 
 type Props = {
@@ -62,14 +61,6 @@ const SpotSearchFilterDropdown = ({ toggleFilterDropdown }: Props) => {
       <form onSubmit={handleFilterApply} className="flex flex-col flex-grow">
         <div className="m-auto">
           <div className="flex flex-col gap-4">
-            {/* 検索ボックス */}
-            <div className="flex justify-center w-fit">
-              <InputBox
-                placeholder="検索するキーワードを入力"
-                // onChange={setListName}
-                className="border border-black rounded-md text-lg w-[180px] sm:w-[250px] md:w-[350px] h-[40px]"
-              />
-            </div>
 
             {/* 都道府県・市区町村・駅 */}
             <div className="flex justify-center gap-2 w-fit">
@@ -195,8 +186,8 @@ const SpotSearchFilterDropdown = ({ toggleFilterDropdown }: Props) => {
               </div>
           
               {/* OKボタン */}
-              <div className="flex items-end ml-auto w-full sm:w-auto justify-end mt-4">
-                <OkButton />
+              <div　className="flex items-end ml-auto w-full justify-end">
+                <SearchButton />
               </div>
             </div>
           </div>
