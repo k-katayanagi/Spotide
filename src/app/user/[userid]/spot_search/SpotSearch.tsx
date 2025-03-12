@@ -5,7 +5,6 @@ import { useParams } from "next/navigation";
 import { useSearchSpotContext } from "@/contexts/SearchSpotContext";
 import { useBottomNav } from "@/contexts/BottomNavContext";
 import Pagination from "@/components/pagination/Pagination";
-import Image from "next/image";
 import SortButton from "@/components/buttons/SortButton";
 import { Spot } from "@/types/ListTypes";
 import SearchSpotCard from "@/components/card/SearchSpotCard";
@@ -15,7 +14,6 @@ import { IconButton } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import InputBox from "@/components/InputBox";
-import SearchButton from "@/components/buttons/SearchButton";
 import MenuBar from "@/components/Menu/MenuBar";
 import useListType from "@/hooks/useListType";
 
