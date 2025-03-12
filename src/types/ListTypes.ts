@@ -2,18 +2,18 @@ export type List = {
   id: number;
   list_name: string;
   vote_start_date: Date;
-  list_type:string;
-  status: number;
-  creator_id:number;
+  list_type?: string;
+  status: number; 
+  creator_id?: number;
   lastUpdatedBy: string;
-  editing_user_id:number;
-  is_url_issued:boolean;
-  url:string;
-  is_voting_completed:boolean;
-  is_aggregation_completed:boolean;
+  editing_user_id?: number;
+  is_url_issued?: boolean;
+  url?: string;
+  is_voting_completed?: boolean;
+  is_aggregation_completed?: boolean;
   outing_date: Date;
-  create_date: Date;
-  update_date: Date;
+  create_date: Date; 
+  update_date: Date; 
 };
 
 export type ListItem = {
