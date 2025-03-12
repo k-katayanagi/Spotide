@@ -1,9 +1,8 @@
 "use client";
 
-import DeleteButton from "@/components/buttons/DeleteButton";
-import CustomEditButton from "../buttons/CustomEditButton";
 import { ListItem } from "@/types/ListTypes";
 import Image from "next/image";
+import VotingButton from "../buttons/VotingButton";
 
 const defaultFields = [
   { key: "station", label: "駅" },
@@ -20,33 +19,35 @@ const defaultFields = [
   { key: "created_at", label: "登録日" },
 ];
 
-// defaultFields を Map に変換しておく
 const fieldsMap = new Map(defaultFields.map((field) => [field.key, field]));
 
 interface Props {
   listItem: ListItem;
-  onDelete?: () => void;
-  onEdit?: () => void;
   selectedFields: string[];
+  isVotingStart:boolean | undefined;
+  isVotingCompleted:boolean | undefined;
+  isAggregationCompleted:boolean | undefined;
 }
 
 const ViewItemCard = ({
   listItem,
-  onDelete,
-  onEdit,
   selectedFields,
+  isVotingStart,
+  isVotingCompleted,
+  isAggregationCompleted,
 }: Props) => {
   return (
     <div className="bg-white border border-orange-300 shadow-md rounded-lg p-4 h-auto min-h-[320px] flex flex-col justify-between">
       <div className="flex justify-center items-center mb-4 space-x-2 sm:space-x-6 md:space-x-10 lg:space-x-16 xl:space-x-20">
-        <CustomEditButton className="mx-2" onClick={onEdit} />
-        <DeleteButton className="mx-2" onClick={onDelete} />
+        {isVotingStart && !isVotingCompleted && !isAggregationCompleted && (
+          <VotingButton />
+        )}
       </div>
       <div className="flex-1">
         <Image
           src="/images/image.gif"
           alt="画像"
-          width={0} // 自動調整のため0に設定
+          width={0}
           height={160}
           className="w-full h-[160px] object-cover rounded-lg mb-4"
           unoptimized

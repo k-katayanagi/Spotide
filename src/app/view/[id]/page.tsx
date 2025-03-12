@@ -9,19 +9,20 @@ import Pagination from "@/components/pagination/Pagination";
 import FilterButton from "@/components/buttons/FilterButton";
 import SortButton from "@/components/buttons/SortButton";
 import { ListItem } from "@/types/ListTypes";
-import ListItemCard from "@/components/card/ListItemCard";
+import ViewItemCard from "@/components/card/ViewItemCard";
 import EditFilterDropdown from "@/components/filterDropdown/EditFilterDropdown ";
 import EditSortDropdown from "@/components/sortDropdown/EditSortDropdown";
 import ViewLabelSettingModal from "@/components/modal/ViewLabelSettingModal";
-import CustomLabelEditModal from "@/components/modal/CustomLabelEditModal";
-import DeleteConfirmModal from "@/components/modal/DeleteConfirmModal";
-import IssueViewButton from "@/components/buttons/IssueViewButton";
 import { motion } from "framer-motion";
 import { IconButton } from "@chakra-ui/react";
 import { useDisclosure, useToast } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import MenuBar from "@/components/Menu/MenuBar";
 import useListType from "@/hooks/useListType";
+import EditButton from "@/components/buttons/EditButton ";
+import TotallingButton from "@/components/buttons/TotallingButton";
+import AggregatedResultsButton from "@/components/buttons/AggregatedResultsButton";
+import UrlCopyButton from "@/components/buttons/UrlCopyButton";
 
 const defaultFields = [
   { key: "station", label: "駅" },
@@ -40,30 +41,16 @@ const defaultFields = [
 
 const ListView = () => {
   const params = useParams();
+  const uuid = params?.id;
   const { lists, sortLists } = useListContext();
   const { listItems } = useListItemContext();
-  const { userid, listid } = params;
-  console.log(listid)
-  const listType = useListType();
   const listId = params?.listid ? Number(params.listid) : null;
   const list = lists.find((i) => i.id === listId);
   const [isFilter, setIsFilter] = useState(false);
   const [isSort, setIsSort] = useState(false);
   const [isMenu, setIsMenu] = useState(false);
   const [isLabelSettingOpen, setIsLabelSettingOpen] = useState(false);
-
-  // モーダル用の useDisclosure
-  const {
-    isOpen: isEditModalOpen,
-    onOpen: onEditModalOpen,
-    onClose: onEditModalClose,
-  } = useDisclosure();
-
-  const {
-    isOpen: isDeleteModalOpen,
-    onOpen: onDeleteModalOpen,
-    onClose: onDeleteModalClose,
-  } = useDisclosure();
+  const [matchedList, setMatchedList] = useState<List | null>(null);
   const [selectedListItem, setSelectedListItem] = useState<ListItem | null>(
     null
   );
@@ -77,27 +64,67 @@ const ListView = () => {
   const [selectedFields, setSelectedFields] = useState<string[]>(
     defaultFields.map((f) => f.key)
   );
+  const [isVotingCompleted, setIsVotingCompleted] = useState<
+    boolean | undefined
+  >(undefined);
+  const [isAggregationCompleted, setIsAggregationCompleted] = useState<
+    boolean | undefined
+  >(undefined);
+  const [isVotingStart, setIsVotingStart] = useState<boolean | undefined>(
+    undefined
+  );
+  const [isEditing, setIsEditing] = useState<boolean | undefined>(
+    undefined
+  );
+  
 
   const menuItems = [
-    {
-      label: "場所を検索",
-      url: `/user/${userid}/${listType}/${listid}/list_edit/spot_search`,
-    },
-    {
-      label: "共有ユーザー設定",
-      url: `/user/${userid}/${listType}/${listid}/list_edit/participating_users_list`,
-    },
     { label: "表示ラベル設定", onClick: () => setIsLabelSettingOpen(true) },
-    { label: "投票開始日設定", onClick: () => setIsLabelSettingOpen(true) },
   ];
 
   useEffect(() => {
+    if (uuid) {
+      const storedData: Record<number, string> = JSON.parse(
+        localStorage.getItem("viewUrls") || "{}"
+      );
+
+      // UUIDに一致するlistIdを取得
+      const matchedListId = Object.keys(storedData).find(
+        (key) => storedData[Number(key)] === uuid
+      );
+
+      if (matchedListId) {
+        // listIdに基づいてリスト名を取得
+        const listId = Number(matchedListId);
+        const matchedList = lists.find((list) => list.id === listId);
+
+        if (matchedList) {
+          setMatchedList(matchedList);
+          console.log("投票開始日:", matchedList.vote_start_date);
+
+          // 現在の日時を取得
+          const currentTime = new Date().getTime();
+          // 投票開始日をDate型に変換して比較
+          const votingStartTime = matchedList.vote_start_date
+            ? new Date(matchedList.vote_start_date).getTime()
+            : 0;
+
+          // 動的ボタンチェック
+          const hasVotingStarted = currentTime >= votingStartTime;
+          setIsVotingStart(hasVotingStarted);
+          setIsVotingCompleted(false);
+          setIsAggregationCompleted(false);
+          setIsEditing(true);
+        }
+      }
+    }
+
     if (sortLists.length > 0) {
       setDisplayListItems(listItems);
     } else {
       setDisplayListItems(listItems);
     }
-  }, [sortLists.length, listItems]);
+  }, [sortLists.length, listItems, uuid, list]); // 依存配列に `list` を追加
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -128,54 +155,39 @@ const ListView = () => {
     setIsMenu((prevState) => !prevState);
   };
 
-  const handleEditClick = (item: ListItem) => {
-    setSelectedListItem(item);
-    onEditModalOpen();
-  };
-
-  const handleDeleteClick = (item: ListItem) => {
-    setSelectedListItem(item);
-    onDeleteModalOpen();
-  };
-
-  const handleDelete = () => {
-    if (selectedListItem) {
-      setDisplayListItems((prevItem) =>
-        prevItem.filter((item) => item.item_id !== selectedListItem.item_id)
-      );
-
-      toast({
-        title: `"${selectedListItem.store_name}" を削除しました`,
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-        position: "top",
-      });
-      onDeleteModalOpen();
-    }
-  };
-
   const paginationZIndex = !isBottomNavOpen && !isFilter ? "z-40" : "z-20";
 
   return (
     <div className="p-3 overflow-auto relative">
       <div className="flex items-center justify-between mb-5 w-full">
         <h1 className="text-2xl font-bold flex-1">
-          {list ? list.list_name : "リストが見つかりません"}
+          {matchedList ? matchedList.list_name : "リストが見つかりません"}
         </h1>
+        <div className="flex items-center gap-2 sm:gap-7">
 
-        <div className="flex items-center gap-2">
+          <UrlCopyButton/>
+          {/* 投票開始日以前で集計・投票未完了なら EditButton を表示 */}
+          {!isVotingStart && !isVotingCompleted && !isAggregationCompleted && (
+            <EditButton 
+            isEditing={isEditing}/>
+          )}
 
+          {/* 投票完了で集計未完了なら TotallingButton を表示 */}
+          {isVotingCompleted && !isAggregationCompleted && <TotallingButton />}
+
+          {/* 集計完了 && 投票完了なら AggregatedResultsButton を表示 */}
+          {isAggregationCompleted && isVotingCompleted && (
+            <AggregatedResultsButton />
+          )}
           {/* フィルター & ソートボタンをアイコンと揃える */}
           <div className="flex gap-2 items-center">
             <FilterButton onClick={toggleFilterDropdown} disabled={isSort} />
             <SortButton onClick={toggleSortDropdown} disabled={isFilter} />
             <IconButton
-              icon={<HamburgerIcon boxSize={5} />} // テキストと同じ高さにするため boxSize を調整
+              icon={<HamburgerIcon boxSize={7} />}
               variant="unstyled"
               aria-label="メニュー"
-              className="flex items-center justify-center text-black block"
-              style={{ width: "50px", height: "50px" }} // `FilterButton` と同じインラインスタイルを追加
+              className="flex items-center justify-center text-black block w-[20px] h-[20px] sm:w-[30px] sm:h-[30px]"
               onClick={toggleMenuDropdown}
             />
           </div>
@@ -220,21 +232,6 @@ const ListView = () => {
         setSelectedFields={setSelectedFields}
       />
 
-      {/* カスタム設定モーダル */}
-      <CustomLabelEditModal
-        isOpen={isEditModalOpen}
-        onClose={onEditModalClose}
-        selectedName={selectedListItem?.store_name || ""}
-      />
-
-      {/*削除確認モーダル*/}
-      <DeleteConfirmModal
-        isOpen={isDeleteModalOpen}
-        onClose={onDeleteModalClose}
-        onConfirm={handleDelete}
-        selectedName={selectedListItem?.store_name || ""}
-      />
-
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -249,12 +246,13 @@ const ListView = () => {
         >
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {currentListItems.map((listItem) => (
-              <ListItemCard
+              <ViewItemCard
                 key={listItem.item_id}
                 listItem={listItem}
                 selectedFields={selectedFields}
-                onEdit={() => handleEditClick(listItem)}
-                onDelete={() => handleDeleteClick(listItem)}
+                isVotingStart={isVotingStart}
+                isVotingCompleted={isVotingCompleted}
+                isAggregationCompleted={isAggregationCompleted}
               />
             ))}
           </div>
