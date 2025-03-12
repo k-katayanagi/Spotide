@@ -38,11 +38,12 @@ const defaultFields = [
   { key: "created_at", label: "登録日" },
 ];
 
-const ListEdit = () => {
+const ListView = () => {
   const params = useParams();
   const { lists, sortLists } = useListContext();
   const { listItems } = useListItemContext();
   const { userid, listid } = params;
+  console.log(listid)
   const listType = useListType();
   const listId = params?.listid ? Number(params.listid) : null;
   const list = lists.find((i) => i.id === listId);
@@ -164,7 +165,6 @@ const ListEdit = () => {
         </h1>
 
         <div className="flex items-center gap-2">
-          <IssueViewButton listId={listId}/>
 
           {/* フィルター & ソートボタンをアイコンと揃える */}
           <div className="flex gap-2 items-center">
@@ -275,4 +275,4 @@ const ListEdit = () => {
   );
 };
 
-export default ListEdit;
+export default ListView;
