@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 const Top = () => {
   return (
@@ -6,6 +6,6 @@ const Top = () => {
       TOPページです
     </div>
   );
-}
+};
 
 export default Top;
