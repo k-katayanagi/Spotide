@@ -26,7 +26,9 @@ interface Props {
   selectedFields: string[];
   isVotingStart:boolean | undefined;
   isVotingCompleted:boolean | undefined;
+  isAllVotingCompleted:boolean | undefined;
   isAggregationCompleted:boolean | undefined;
+  onVote:() => void;
 }
 
 const ViewItemCard = ({
@@ -34,13 +36,15 @@ const ViewItemCard = ({
   selectedFields,
   isVotingStart,
   isVotingCompleted,
+  isAllVotingCompleted,
   isAggregationCompleted,
+  onVote,
 }: Props) => {
   return (
     <div className="bg-white border border-orange-300 shadow-md rounded-lg p-4 h-auto min-h-[320px] flex flex-col justify-between">
       <div className="flex justify-center items-center mb-4 space-x-2 sm:space-x-6 md:space-x-10 lg:space-x-16 xl:space-x-20">
-        {isVotingStart && !isVotingCompleted && !isAggregationCompleted && (
-          <VotingButton />
+        {isVotingStart && !isVotingCompleted && !isAggregationCompleted && !isAllVotingCompleted &&(
+          <VotingButton onClick={onVote}/>
         )}
       </div>
       <div className="flex-1">

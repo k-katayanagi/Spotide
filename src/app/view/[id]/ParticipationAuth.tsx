@@ -19,9 +19,9 @@ const ParticipationAuth = ({ setIsAuthenticated }: ParticipationAuthProps) => {
 
   // 仮の認証データ
   const mockGuestUser = {
-    username: "guestUser",
-    participationId: "guestId123",
-    password: "password123",
+    username: "user",
+    participationId: "123",
+    password: "123",
   };
 
   const handleGuestSubmit = () => {

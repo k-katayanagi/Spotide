@@ -16,7 +16,7 @@ import EditSortDropdown from "@/components/sortDropdown/EditSortDropdown";
 import ViewLabelSettingModal from "@/components/modal/ViewLabelSettingModal";
 import { motion } from "framer-motion";
 import { IconButton } from "@chakra-ui/react";
-// import { useDisclosure, useToast } from "@chakra-ui/react";
+import { useDisclosure, useToast } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import MenuBar from "@/components/Menu/MenuBar";
 // import useListType from "@/hooks/useListType";
@@ -24,6 +24,8 @@ import EditButton from "@/components/buttons/EditButton ";
 import TotallingButton from "@/components/buttons/TotallingButton";
 import AggregatedResultsButton from "@/components/buttons/AggregatedResultsButton";
 import UrlCopyButton from "@/components/buttons/UrlCopyButton";
+import VoteConfirmModal from "@/components/modal/VoteConfirmModal";
+import AggregatedResultsModal from "@/components/modal/AggregatedResultsModal";
 
 const defaultFields = [
   { key: "station", label: "駅" },
@@ -52,10 +54,10 @@ const ListView = () => {
   const [isMenu, setIsMenu] = useState(false);
   const [isLabelSettingOpen, setIsLabelSettingOpen] = useState(false);
   const [matchedList, setMatchedList] = useState<List | null>(null);
-  // const [selectedListItem, setSelectedListItem] = useState<ListItem | null>(
-  //   null
-  // );
-  // const toast = useToast();
+  const [selectedListItem, setSelectedListItem] = useState<ListItem | null>(
+    null
+  );
+  const toast = useToast();
   const { isBottomNavOpen } = useBottomNav();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -68,16 +70,28 @@ const ListView = () => {
   const [isVotingCompleted, setIsVotingCompleted] = useState<
     boolean | undefined
   >(undefined);
+  const [isAllVotingCompleted, setIsAllVotingCompleted] = useState<
+    boolean | undefined
+  >(undefined);
   const [isAggregationCompleted, setIsAggregationCompleted] = useState<
     boolean | undefined
   >(undefined);
   const [isVotingStart, setIsVotingStart] = useState<boolean | undefined>(
     undefined
   );
-  const [isEditing, setIsEditing] = useState<boolean | undefined>(
-    undefined
-  );
-  
+  const [isEditing, setIsEditing] = useState<boolean | undefined>(undefined);
+
+  const {
+    isOpen: isVoteModalOpen,
+    onOpen: onVoteModalOpen,
+    onClose: onVoteModalClose,
+  } = useDisclosure();
+
+  const {
+    isOpen: isResultsModalOpen,
+    onOpen: onResultsModalOpen,
+    onClose: onResultsModalClose,
+  } = useDisclosure();
 
   const menuItems = [
     { label: "表示ラベル設定", onClick: () => setIsLabelSettingOpen(true) },
@@ -114,6 +128,7 @@ const ListView = () => {
           const hasVotingStarted = currentTime >= votingStartTime;
           setIsVotingStart(hasVotingStarted);
           setIsVotingCompleted(false);
+          setIsAllVotingCompleted(true);
           setIsAggregationCompleted(false);
           setIsEditing(true);
         }
@@ -125,7 +140,7 @@ const ListView = () => {
     } else {
       setDisplayListItems(listItems);
     }
-  },  [lists, sortLists, listItems, uuid]); 
+  }, [lists, sortLists, listItems, uuid]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -140,6 +155,30 @@ const ListView = () => {
     if (listContainerRef.current) {
       listContainerRef.current.scrollTo({ top: 0, behavior: "smooth" });
     }
+  };
+
+  const handleVoteClick = (item: ListItem) => {
+    setSelectedListItem(item);
+    onVoteModalOpen();
+  };
+
+  const handleVote = () => {
+    if (selectedListItem) {
+      //TODO:ここに投票処理
+      toast({
+        title: `"${selectedListItem.store_name}" に投票しました`,
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+      onVoteModalClose();
+      setIsVotingCompleted(true);
+    }
+  };
+
+  const handleTotalling = () => {
+    setIsAggregationCompleted(true);
   };
 
   const toggleFilterDropdown = () => {
@@ -165,22 +204,22 @@ const ListView = () => {
           {matchedList ? matchedList.list_name : "リストが見つかりません"}
         </h1>
         <div className="flex items-center gap-2 sm:gap-7">
-
-          <UrlCopyButton/>
+          <UrlCopyButton />
           {/* 投票開始日以前で集計・投票未完了なら EditButton を表示 */}
           {!isVotingStart && !isVotingCompleted && !isAggregationCompleted && (
-            <EditButton 
-            isEditing={isEditing}/>
+            <EditButton isEditing={isEditing} />
           )}
 
-          {/* 投票完了で集計未完了なら TotallingButton を表示 */}
-          {isVotingCompleted && !isAggregationCompleted && <TotallingButton />}
+          {/* 全員投票完了で集計未完了なら TotallingButton を表示 */}
+          {isAllVotingCompleted && !isAggregationCompleted && (
+            <TotallingButton onClick={handleTotalling} />
+          )}
 
           {/* 集計完了 && 投票完了なら AggregatedResultsButton を表示 */}
-          {isAggregationCompleted && isVotingCompleted && (
-            <AggregatedResultsButton />
+          {isAggregationCompleted && (
+            <AggregatedResultsButton onClick={onResultsModalOpen} />
           )}
-          {/* フィルター & ソートボタンをアイコンと揃える */}
+
           <div className="flex gap-2 items-center">
             <FilterButton onClick={toggleFilterDropdown} disabled={isSort} />
             <SortButton onClick={toggleSortDropdown} disabled={isFilter} />
@@ -210,7 +249,6 @@ const ListView = () => {
         </div>
       )}
 
-      {/*absoluteにしてリストの上に被せる */}
       {isMenu && (
         <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 z-10 flex justify-center">
           <MenuBar onClick={toggleMenuDropdown} menuItems={menuItems} />
@@ -233,6 +271,20 @@ const ListView = () => {
         setSelectedFields={setSelectedFields}
       />
 
+      {/*投票確認モーダル*/}
+      <VoteConfirmModal
+        isOpen={isVoteModalOpen}
+        onClose={onVoteModalClose}
+        onConfirm={handleVote}
+        selectedName={selectedListItem?.store_name || ""}
+      />
+
+      {/*集計結果モーダル*/}
+      <AggregatedResultsModal
+        isOpen={isResultsModalOpen}
+        onClose={onResultsModalClose}
+      />
+
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -253,7 +305,9 @@ const ListView = () => {
                 selectedFields={selectedFields}
                 isVotingStart={isVotingStart}
                 isVotingCompleted={isVotingCompleted}
+                isAllVotingCompleted={isAllVotingCompleted}
                 isAggregationCompleted={isAggregationCompleted}
+                onVote={() => handleVoteClick(listItem)}
               />
             ))}
           </div>
