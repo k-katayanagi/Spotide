@@ -6,8 +6,11 @@ import { signIn } from 'next-auth/react';
 const RegistrationButton = () => {
   const handleRegistration = () => {
     console.log("Attempting Google SignIn");
-    signIn('google');  // Google認証を開始
+    signIn('google', {
+      callbackUrl: '/home', // ログイン成功後のリダイレクト先
+    });
   }
+
   return (
     <Button
       onClick={handleRegistration}
