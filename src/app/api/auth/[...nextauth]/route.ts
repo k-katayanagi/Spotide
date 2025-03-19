@@ -1,10 +1,7 @@
-// Spotide/src/app/api/auth/[...nextauth]/route.ts
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import { supabase } from "@/lib/supabase"; // Supabaseの設定があるファイル
-import { NextApiRequest, NextApiResponse } from "next";
+import { supabase } from "@/lib/supabase";
 
-// NextAuth のオプションを設定
 export const authOptions = {
   providers: [
     GoogleProvider({
@@ -13,30 +10,81 @@ export const authOptions = {
     }),
   ],
   callbacks: {
+    // Supabase にユーザー情報を保存
     async signIn({ user }) {
-      if (user?.id) {
-        // SupabaseにGoogleアカウント情報を保存
-        const { data, error } = await supabase.from("users").upsert({
-          google_id: user.id,
-          user_name: user.name || "未設定",
-        });
+      if (!user?.id) return false;
 
-        if (error) {
-          console.error("ユーザー情報の保存エラー:", error);
-          return false; // エラーが発生した場合、サインインを拒否
-        }
+  
+      const { data, error } = await supabase
+        .from("users")
+        .upsert(
+          {
+            google_id: user.id,
+            user_name: user.name || "未設定",
+          },
+          { onConflict: ["google_id"] }
+        )
+        .select();
+
+      if (error) {
+        console.error("Supabaseエラー:", error);
+        return false;
       }
+
+        console.log(data)
+      if (data && data.length > 0) {
+        user.user_id = data[0].user_id; 
+        console.log("User ID set in user object:", user.user_id); 
+      }
+
       return true;
+    },
+  
+    async jwt({ token, user, account }) {
+      if (user?.user_id) {
+        token.user_id = user.user_id; // user_id をトークンにセット
+        console.log("User ID set in token:", token.user_id);
+      }
+
+      // Google 認証の場合に access_token をトークンにセット
+      if (account?.access_token) {
+        token.access_token = account.access_token;
+        console.log("Access Token set in token:", token.access_token); 
+      }
+
+      return token;
+    },
+    // session コールバックで session に user_id と access_token を追加
+    async session({ session, token }) {
+      if (token?.user_id) {
+        session.user = {
+          ...session.user,
+          id: token.user_id, 
+        };
+      }
+
+      if (token?.access_token) {
+        session.accessToken = token.access_token; // トークンから access_token を取得して session にセット
+      }
+
+      return session;
+    },
+    // redirect コールバックで user_id に基づいてリダイレクト
+    async redirect({ url, baseUrl, token }) {
+      console.log("Base URL:", baseUrl);
+      console.log("Token User ID:", token?.user_id); 
+
+      if (token?.user_id) {
+        const redirectUrl = `${baseUrl}/user/${token.user_id}/mypage`; // user_id があれば、mypage にリダイレクト
+        console.log("Redirecting to:", redirectUrl); 
+        return redirectUrl;
+      }
+
+      return baseUrl; // user_id がない場合はホームにリダイレクト
     },
   },
 };
 
-// GET メソッドの処理
-export const GET = (req: NextApiRequest, res: NextApiResponse) => {
-  return NextAuth(req, res, authOptions);
-};
-
-// POST メソッドの処理
-export const POST = (req: NextApiRequest, res: NextApiResponse) => {
-  return NextAuth(req, res, authOptions);
-};
+// `NextAuth` をデフォルトエクスポートする代わりに、HTTP メソッドを個別にエクスポート
+export const GET = (req, res) => NextAuth(req, res, authOptions);
+export const POST = (req, res) => NextAuth(req, res, authOptions);
