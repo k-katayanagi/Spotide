@@ -63,7 +63,7 @@ const DateTimePicker = ({title}:Props) => {
             minTime={selectedDate && selectedDate.toDateString() === now.toDateString() ? now : new Date(0, 0, 0, 0, 0)} // 今日以外の場合は全時間帯から選べる
             maxTime={new Date(0, 0, 0, 23, 59)}
             timeFormat="HH:mm"
-            timeIntervals={15}
+            timeIntervals={1}
             dateFormat="yyyy/MM/dd HH:mm"
             locale="ja"
             className="react-datepicker__input text-gray-800 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
