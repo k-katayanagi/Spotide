@@ -8,6 +8,7 @@ import { Providers } from "./providers"; // Providersをインポート
 import { ListProvider } from "@/contexts/ListContext";
 import { ListItemProvider } from "@/contexts/ListItemContext";
 import { SearchSpotProvider } from "@/contexts/SearchSpotContext";
+import AuthGuard from "@/components/auth/AuthGuard";
 import "@/app/styles/globals.css";
 
 const geistSans = Geist({
@@ -45,7 +46,9 @@ export default async function RootLayout({
               {/* Providersを使用してNextAuthProviderをラップ */}
               <Providers session={session}>
                 <ResponsiveHeader />
-                <main>{children}</main>
+                <AuthGuard>
+                  <main>{children}</main>
+                </AuthGuard>
                 <ResponsiveFooter />
               </Providers>
             </SearchSpotProvider>
