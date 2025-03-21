@@ -1,13 +1,11 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "./api/auth/[...nextauth]/route"; // 認証オプションのインポート
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import ResponsiveHeader from "@/components/responsive/header/ResponsiveHeader";
 import ResponsiveFooter from "@/components/responsive/footer/ResponsiveFooter";
-import { Providers } from "./providers"; // Providersをインポート
 import { ListProvider } from "@/contexts/ListContext";
 import { ListItemProvider } from "@/contexts/ListItemContext";
 import { SearchSpotProvider } from "@/contexts/SearchSpotContext";
+import { Providers } from "./providers";
 import "@/app/styles/globals.css";
 
 const geistSans = Geist({
@@ -30,20 +28,14 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // サーバーサイドでセッションを取得
-  const session = await getServerSession(authOptions);
-
   return (
-    <html lang="en">
+    <html lang="ja">
       <head></head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ListProvider>
           <ListItemProvider>
             <SearchSpotProvider>
-              {/* Providersを使用してNextAuthProviderをラップ */}
-              <Providers session={session}>
+              <Providers>
                 <ResponsiveHeader />
                 <main>{children}</main>
                 <ResponsiveFooter />
@@ -54,4 +46,4 @@ export default async function RootLayout({
       </body>
     </html>
   );
-}
+};
