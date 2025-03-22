@@ -24,9 +24,10 @@ const ListCreate = () => {
   const [outingDate, setOutingDate] = useState<Date | null>(null);
   // セッションの`user.id`とURLの`userid`を照合
   useEffect(() => {
+    console.log(session)
     if (session && session.user.id !== userid) {
       // ユーザーIDが一致しない場合、リダイレクト
-      window.location.href = "/"; // トップページにリダイレクト
+      window.location.href = "/login"; // ログインにリダイレクト
     }
   }, [session, userid]);
 
@@ -58,7 +59,7 @@ const ListCreate = () => {
     }
 
     // API 呼び出し
-    const response = await fetch("/api/create", {
+    const response = await fetch("/api/lists", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -5,7 +5,7 @@ import ViewingButton from "../buttons/ViewingButton";
 import { listStatusOptions } from "@/consts/OptionList";
 import { List } from "@/types/ListTypes";
 import Image from "next/image";
-
+import useFormatDate from "@/hooks/useFormattedDate";
 interface Props {
   list: List;
   onDelete: () => void;
@@ -13,12 +13,20 @@ interface Props {
 }
 
 const ListCard = ({ list, onDelete, onEdit }: Props) => {
+
+  console.log("Received list:", list);
+
   const getStatusLabel = (status: number): string => {
     const statusObj = listStatusOptions.find(
       (option) => option.value === status
     );
     return statusObj ? statusObj.label : "不明";
   };
+
+  const formattedVoteStartDate = useFormatDate(list.voting_start_at, true);
+  const formattedOutingDate = useFormatDate(list.outing_at);
+  const formattedCreateDate = useFormatDate(list.created_at);
+  const formattedUpdateDate = useFormatDate(list.updated_at);
 
   return (
     <div className="bg-white border border-orange-300 shadow-md rounded-lg p-4 h-auto min-h-[320px] flex flex-col justify-between">
@@ -43,14 +51,7 @@ const ListCard = ({ list, onDelete, onEdit }: Props) => {
           <div className="flex flex-col sm:flex-row">
             <p className="text-gray-600 whitespace-nowrap">投票開始日時:</p>
             <p className="text-gray-600 sm:ml-1">
-              {new Date(list.vote_start_date).toLocaleString("ja-JP", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-                hour: "2-digit",
-                minute: "2-digit",
-                hour12: false,
-              })}
+              {formattedVoteStartDate}
             </p>
           </div>
 
@@ -70,11 +71,11 @@ const ListCard = ({ list, onDelete, onEdit }: Props) => {
           <div className="flex flex-col sm:flex-row">
             <p className="text-gray-600 whitespace-nowrap">おでかけ日:</p>
             <p className="text-gray-600 sm:ml-1">
-              {new Date(list.outing_date).toLocaleDateString("ja-JP")}
+              {formattedOutingDate}
             </p>
             <p className="text-gray-600 whitespace-nowrap sm:ml-4">作成日時:</p>
             <p className="text-gray-600 sm:ml-1">
-              {new Date(list.create_date).toLocaleDateString("ja-JP")}
+              {formattedCreateDate}
             </p>
           </div>
 
@@ -82,7 +83,7 @@ const ListCard = ({ list, onDelete, onEdit }: Props) => {
           <div className="flex flex-col">
             <p className="text-gray-600 whitespace-nowrap">更新日時:</p>
             <p className="text-gray-600">
-              {new Date(list.update_date).toLocaleDateString("ja-JP")}
+              {formattedUpdateDate}
             </p>
           </div>
         </div>

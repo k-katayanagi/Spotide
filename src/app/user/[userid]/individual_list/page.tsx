@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useListContext } from "@/contexts/ListContext";
 import { useBottomNav } from "@/contexts/BottomNavContext";
 import ListCard from "@/components/card/ListCard";
@@ -14,17 +15,13 @@ import { List } from "@/types/ListTypes";
 import DeleteConfirmModal from "@/components/modal/DeleteConfirmModal";
 import { useDisclosure, useToast } from "@chakra-ui/react";
 
-type User = {
-  id: number;
-  name: string;
-  list_name: string;
-  list_type: string;
-};
-
 const IndividualList = () => {
+  const { data: session } = useSession(); // セッション情報を取得
   const router = useRouter();
   const params = useParams();
-  const userId = Number(params?.userid);
+  const { userid } = params; // URLの`[userid]`を取得
+  const { lists, setLists, sortLists, setSortLists } = useListContext(); // Contextからリストを取得
+  const [userName, setUserName] = useState<string | null>(null); // ユーザー名の状態
   const [isFilter, setIsFilter] = useState(false);
   const [isSort, setIsSort] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -33,46 +30,47 @@ const IndividualList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const listContainerRef = useRef<HTMLDivElement>(null);
-  const { lists, sortLists, setSortLists } = useListContext(); //Listは仮データあとでDBから取得
-  const [displayLists, setDisplayLists] = useState<List[]>(lists);
   const toast = useToast();
 
   useEffect(() => {
-    if (sortLists.length > 0) {
-      setDisplayLists(sortLists);
-    } else {
-      setDisplayLists(lists);
+    // sessionのチェック（ログインしていない場合にリダイレクトしたい場合）
+    if (session && session.user.id !== userid) {
+      //TODO リダイレクト確認＆ページネーション確認
+      // リダイレクト処理
     }
-  }, [sortLists, lists]);
 
-  const users: Record<number, User> = {
-    1: {
-      id: 1,
-      name: "kanon",
-      list_name: "リスト①",
-      list_type: "individual_list",
-    },
-    2: {
-      id: 2,
-      name: "katayanagi",
-      list_name: "リスト②",
-      list_type: "individual_list",
-    },
-  };
+    // ユーザー名とリストを一緒に取得する処理
+    const fetchData = async () => {
+      if (userid) {
+        // ユーザー名の取得
+        const userResponse = await fetch(`/api/users/${userid}`);
+        const userData = await userResponse.json();
+        if (userResponse.ok) {
+          setUserName(userData.user_name); // ユーザー名をステートにセット
+        } else {
+          console.error("ユーザー名取得エラー:", userData.error);
+        }
 
-  if (isNaN(userId)) {
-    return <p className="text-red-500">ユーザーIDが無効です。</p>;
-  }
+        // リストの取得
+        const listsResponse = await fetch(
+          `/api/lists?userId=${userid}&listType=individual`
+        );
+        const listsData = await listsResponse.json();
+        if (listsResponse.ok) {
+          setLists(listsData); // リストデータをセット
+        } else {
+          console.error("リスト取得エラー:", listsData.error);
+        }
+      }
+    };
 
-  if (!(userId in users)) {
-    return <p className="text-red-500">ユーザーが見つかりません。</p>;
-  }
+    fetchData(); // ユーザーIDがあればデータを取得
+  }, [session, userid, setLists]); // sessionとuseridが変わる度に実行
 
-  const user = users[userId];
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentLists = displayLists.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(displayLists.length / itemsPerPage);
+  const currentLists = lists.slice(indexOfFirstItem, indexOfLastItem); // displayListsの代わりにlistsを使う
+  const totalPages = Math.ceil(lists.length / itemsPerPage); // displayListsの代わりにlistsを使う
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -90,15 +88,15 @@ const IndividualList = () => {
   };
 
   const handleSortChange = (sortKey: keyof List, order: number) => {
-    const sortedLists = [...displayLists].sort((a, b) => {
+    const sortedLists = [...lists].sort((a, b) => {
       let aValue = a[sortKey];
       let bValue = b[sortKey];
 
       const dateKeys: Array<keyof List> = [
-        "vote_start_date",
-        "create_date",
-        "update_date",
-        "outing_date",
+        "voting_start_at",
+        "created_at",
+        "updated_at",
+        "outing_at",
       ];
       if (dateKeys.includes(sortKey)) {
         aValue = new Date(aValue as string);
@@ -106,19 +104,16 @@ const IndividualList = () => {
       }
 
       if (typeof aValue === "number" || typeof aValue === "string") {
-        // aValue と bValue が両方とも undefined でないことを確認
         if (bValue !== undefined) {
           return order === 0
             ? aValue > bValue
               ? 1
               : -1
             : aValue < bValue
-              ? 1
-              : -1;
-        }
-        // bValueがundefinedの場合の処理を追加
-        else {
-          return 0; // または適切な処理
+            ? 1
+            : -1;
+        } else {
+          return 0;
         }
       }
 
@@ -138,18 +133,13 @@ const IndividualList = () => {
     onOpen();
   };
 
-  // 編集ページに遷移する関数（ここでルーティングを管理）
   const handleEditClick = (listId: number) => {
-    router.push(`/user/${userId}/individual_list/${listId}/list_edit`);
+    router.push(`/user/${userid}/individual_list/${listId}/list_edit`);
   };
 
   const handleDelete = () => {
     if (selectedList) {
-      // リストから削除
-      setDisplayLists((prevLists) =>
-        prevLists.filter((list) => list.id !== selectedList.id)
-      );
-
+      setLists(lists.filter((list) => list.list_id !== selectedList.list_id)); // リストから削除
       toast({
         title: `"${selectedList.list_name}" を削除しました`,
         status: "success",
@@ -166,7 +156,7 @@ const IndividualList = () => {
   return (
     <div className="p-3 overflow-auto relative">
       <div className="flex items-center justify-between mb-5 w-full">
-        <h1 className="text-2xl font-bold">{user.name}さんの個人リスト一覧</h1>
+        <h1 className="text-2xl font-bold">{userName}さんの個人リスト一覧</h1>
         <div className="flex gap-2 mb- justify-end relative z-10">
           <FilterButton onClick={toggleFilterDropdown} disabled={isSort} />
           <SortButton onClick={toggleSortDropdown} disabled={isFilter} />
@@ -197,14 +187,22 @@ const IndividualList = () => {
         ref={listContainerRef}
       >
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {currentLists.map((list) => (
-            <ListCard
-              key={list.id}
-              list={list}
-              onDelete={() => handleDeleteClick(list)}
-              onEdit={() => handleEditClick(list.id)}
-            />
-          ))}
+          {currentLists.map((list) => {
+             console.log(list);
+            if (!list.list_id) {
+              console.error("リストにidがありません:", list); // デバッグ用
+              return null; // idがない場合は表示しない
+            }
+
+            return (
+              <ListCard
+                key={list.list_id}
+                list={list}
+                onDelete={() => handleDeleteClick(list)}
+                onEdit={() => handleEditClick(list.list_id)}
+              />
+            );
+          })}
         </div>
       </div>
 

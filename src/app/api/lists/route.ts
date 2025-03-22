@@ -9,6 +9,7 @@ const convertToJST = (date: string | Date): string => {
   return dateObj.toISOString();
 };
 
+// POST: リストを作成
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -45,4 +46,27 @@ export async function POST(req: Request) {
       { status: 500 }
     );
   }
+}
+
+// GET: リストを取得
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const userId = searchParams.get("userId");
+  const listType = searchParams.get("listType") || "individual"; // デフォルトは "individual"
+
+  if (!userId) {
+    return NextResponse.json({ error: "ユーザーIDが必要です" }, { status: 400 });
+  }
+
+  const { data, error } = await supabase
+    .from("lists")
+    .select("*")
+    .eq("creator_id", userId)
+    .eq("list_type", listType); // listTypeを動的に指定
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json(data);
 }
