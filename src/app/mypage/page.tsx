@@ -1,43 +1,10 @@
-"use client";
-
-import { useParams } from "next/navigation";
 import Image from "next/image";
 
-type User = {
-  id: number;
-  name: string;
-  age: number;
-  email: string;
-};
-
-const Mypage = () => {
-  const params = useParams();
-  const { userid } = params;
-
-  // paramsから返されるのはstring型なので、number型に変換
-  const userId = Number(userid);
-
-  if (isNaN(userId)) {
-    return <p>ユーザーIDが無効です。</p>;
-  }
-
-  // 仮データ
-  const users: Record<number, User> = {
-    1: { id: 1, name: "kanon", age: 30, email: "kanon@example.com" },
-    2: { id: 2, name: "katayanagi", age: 25, email: "katayanagi@example.com" },
-  };
-
-  // ユーザーが見つからない場合
-  if (!(userId in users)) {
-    return <p>ユーザーが見つかりません</p>;
-  }
-
-  const user = users[userId];
-
+export default async function Mypage() {
   return (
     <div className="overflow-auto relative scrollbar-thin scrollbar-thumb-[#FF5722] scrollbar-track-[#FFE0B2]">
       <div className="flex items-center justify-between mb-[30px]">
-        <h1 className="text-2xl font-bold">{user.name}さんのマイページ</h1>
+        {/* <h1 className="text-2xl font-bold">{user.name}さんのマイページ</h1> */}
       </div>
 
       <div className="h-[70vh] mt-[30px]">
@@ -144,5 +111,3 @@ const Mypage = () => {
     </div>
   );
 };
-
-export default Mypage;
