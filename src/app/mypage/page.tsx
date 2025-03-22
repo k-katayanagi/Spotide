@@ -4,7 +4,7 @@ export default async function Mypage() {
   return (
     <div className="overflow-auto relative scrollbar-thin scrollbar-thumb-[#FF5722] scrollbar-track-[#FFE0B2]">
       <div className="flex items-center justify-between mb-[30px]">
-        {/* <h1 className="text-2xl font-bold">{user.name}さんのマイページ</h1> */}
+        <h1 className="text-2xl font-bold">⚪︎⚪︎⚪︎⚪︎さんのマイページ</h1>
       </div>
 
       <div className="h-[70vh] mt-[30px]">
