@@ -2,7 +2,7 @@ import { auth, signIn } from "@/auth";
 import LoginButton from "@/components/buttons/LoginButton";
 import TopButton from "@/components/buttons/TopButton";
 
-const Registry = async () => {
+export default async function Registry() {
   const session = await auth();
 
   return (
@@ -10,7 +10,7 @@ const Registry = async () => {
       <form
         action={async () => {
           "use server"
-          await signIn("google", { redirectTo: `/user/${session?.user.id}/mypage` })
+          await signIn("google");
         }}
       >
         <LoginButton />
@@ -22,5 +22,3 @@ const Registry = async () => {
     </div>
   );
 };
-
-export default Registry;
