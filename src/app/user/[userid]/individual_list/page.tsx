@@ -28,14 +28,14 @@ const IndividualList = () => {
   const [selectedList, setSelectedList] = useState<List | null>(null);
   const { isBottomNavOpen } = useBottomNav();
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 12;
   const listContainerRef = useRef<HTMLDivElement>(null);
   const toast = useToast();
 
   useEffect(() => {
     // sessionのチェック（ログインしていない場合にリダイレクトしたい場合）
     if (session && session.user.id !== userid) {
-      //TODO リダイレクト確認＆ページネーション確認
+      //TODO リダイレクト確認
       // リダイレクト処理
     }
 
@@ -69,8 +69,8 @@ const IndividualList = () => {
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentLists = lists.slice(indexOfFirstItem, indexOfLastItem); // displayListsの代わりにlistsを使う
-  const totalPages = Math.ceil(lists.length / itemsPerPage); // displayListsの代わりにlistsを使う
+  const currentLists = lists.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(lists.length / itemsPerPage); 
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);

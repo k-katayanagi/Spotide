@@ -19,6 +19,11 @@ const AuthGuard = ({ children }: { children: React.ReactNode }) => {
     if (!session && !publicRoutes.includes(pathname)) {
       router.push("/"); // `/login` や `/registry` 以外はトップにリダイレクト
     }
+
+    // セッションがある場合、`/login` や `/registry` ページにアクセスしようとするとマイページにリダイレクト
+    if (session && publicRoutes.includes(pathname)) {
+      router.push(`/user/${session.user.id}/mypage`); // セッションがあればマイページにリダイレクト
+    }
   }, [session, status, router, pathname]);
 
   if (status === "loading") return <p>Loading...</p>;

@@ -21,23 +21,9 @@ const HeaderNavigation = () => {
           />
           <label className="block">TOP</label>
         </li>
-        {/* セッションがなくても表示 */}
-        {!session ? (
-          <li
-            className="text-black hover:text-gray-300 text-lg text-center cursor-pointer"
-            onClick={() => handleNavigateTo("/login")}
-          >
-            <Image
-              src="/images/login.svg"
-              alt="ログインアイコン"
-              width={50}
-              height={50}
-              priority
-            />
-            <label className="block">ログイン</label>
-          </li>
-        ) : (
-          // セッションがある場合のみ表示されるメニュー
+        
+        {/* セッションがある場合のみ表示されるメニュー */}
+        {session && (
           <>
             <li
               className="text-black hover:text-gray-300 text-lg text-center cursor-pointer"
