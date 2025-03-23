@@ -2,10 +2,10 @@
 
 import Image from "next/image";
 import useNavigation from "@/hooks/useNavigation";
-import { useSession } from "next-auth/react"; // useSession をインポート
+import { useAuth } from "@/contexts/AuthContext"; // useAuthをインポート
 
 const HeaderNavigation = () => {
-  const { data: session } = useSession(); // セッションデータを取得
+  const { user } = useAuth(); // AuthContextからユーザー情報を取得
   const { handleNavigateTo } = useNavigation();
 
   return (
@@ -21,14 +21,14 @@ const HeaderNavigation = () => {
           />
           <label className="block">TOP</label>
         </li>
-        
-        {/* セッションがある場合のみ表示されるメニュー */}
-        {session && (
+
+        {/* ユーザー情報がある場合のみ表示されるメニュー */}
+        {user && (
           <>
             <li
               className="text-black hover:text-gray-300 text-lg text-center cursor-pointer"
               onClick={() =>
-                handleNavigateTo(`/user/${session.user.id}/list_create`)
+                handleNavigateTo(`/user/${user.id}/list_create`)
               } // 動的にユーザーIDを挿入
             >
               <Image
@@ -44,7 +44,7 @@ const HeaderNavigation = () => {
             <li
               className="text-black hover:text-gray-300 text-lg text-center cursor-pointer"
               onClick={() =>
-                handleNavigateTo(`/user/${session.user.id}/individual_list`)
+                handleNavigateTo(`/user/${user.id}/individual_list`)
               } // 動的にユーザーIDを挿入
             >
               <Image
@@ -60,7 +60,7 @@ const HeaderNavigation = () => {
             <li
               className="text-black hover:text-gray-300 text-lg text-center cursor-pointer"
               onClick={() =>
-                handleNavigateTo(`/user/${session.user.id}/share_list`)
+                handleNavigateTo(`/user/${user.id}/share_list`)
               } // 動的にユーザーIDを挿入
             >
               <Image
@@ -76,7 +76,7 @@ const HeaderNavigation = () => {
             <li
               className="text-black hover:text-gray-300 text-lg text-center cursor-pointer"
               onClick={() =>
-                handleNavigateTo(`/user/${session.user.id}/mypage`)
+                handleNavigateTo(`/user/${user.id}/mypage`)
               } // 動的にユーザーIDを挿入
             >
               <Image

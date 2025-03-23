@@ -1,13 +1,12 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "./api/auth/[...nextauth]/route"; // 認証オプションのインポート
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Providers } from "./Providers";
 import ResponsiveHeader from "@/components/responsive/header/ResponsiveHeader";
 import ResponsiveFooter from "@/components/responsive/footer/ResponsiveFooter";
-import { Providers } from "./providers"; // Providersをインポート
 import { ListProvider } from "@/contexts/ListContext";
 import { ListItemProvider } from "@/contexts/ListItemContext";
 import { SearchSpotProvider } from "@/contexts/SearchSpotContext";
+import { AuthProvider } from "@/contexts/AuthContext";
 import AuthGuard from "@/components/auth/AuthGuard";
 import "@/app/styles/globals.css";
 
@@ -31,9 +30,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // サーバーサイドでセッションを取得
-  const session = await getServerSession(authOptions);
-
   return (
     <html lang="en">
       <head></head>
@@ -43,13 +39,14 @@ export default async function RootLayout({
         <ListProvider>
           <ListItemProvider>
             <SearchSpotProvider>
-              {/* Providersを使用してNextAuthProviderをラップ */}
-              <Providers session={session}>
-                <ResponsiveHeader />
-                <AuthGuard>
-                  <main>{children}</main>
-                </AuthGuard>
-                <ResponsiveFooter />
+              <Providers>
+                <AuthProvider>
+                  <ResponsiveHeader />
+                  <AuthGuard>
+                    <main>{children}</main>
+                  </AuthGuard>
+                  <ResponsiveFooter />
+                </AuthProvider>
               </Providers>
             </SearchSpotProvider>
           </ListItemProvider>

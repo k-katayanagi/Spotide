@@ -1,16 +1,17 @@
 "use client";
 
 import Button from "@components/Button";
+import { signUpWithGoogle } from "@/lib/auth/auth";
 
 
-type Props = {
-  onClick?: () => void;
-};
+// type Props = {
+//   onClick?: () => void;
+// };
 
-const RegistrationButton = ({ onClick }: Props) => {
+const RegistrationButton = () => {
   return (
     <Button
-      onClick={onClick}
+      onClick={signUpWithGoogle}
       className="gsi-material-button"
       text={
         <div className="gsi-material-button-content-wrapper flex items-center">

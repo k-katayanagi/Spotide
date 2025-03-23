@@ -1,33 +1,31 @@
+// components/auth/AuthGuard.tsx
 "use client";
 
-import { useSession } from "next-auth/react";
+import { useAuth } from "@/contexts/AuthContext";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect } from "react";
 
 const AuthGuard = ({ children }: { children: React.ReactNode }) => {
-  const { data: session, status } = useSession();
+  const { user, loading } = useAuth();
   const router = useRouter();
-  const pathname = usePathname(); // 現在のURLを取得
+  const pathname = usePathname();
 
-  // ログイン不要なページ
   const publicRoutes = ["/login", "/registry"];
 
   useEffect(() => {
-    if (status === "loading") return; // ロード中は何もしない
+    if (loading) return;
 
-    // セッションがない場合、`/login`や`/registry`以外のページにアクセスするとトップページにリダイレクト
-    if (!session && !publicRoutes.includes(pathname)) {
-      router.push("/"); // `/login` や `/registry` 以外はトップにリダイレクト
+    if (!user && !publicRoutes.includes(pathname)) {
+      router.push("/"); // ログインしていない場合はトップにリダイレクト
     }
 
-    // セッションがある場合、`/login` や `/registry` ページにアクセスしようとするとマイページにリダイレクト
-    if (session && publicRoutes.includes(pathname)) {
-      router.push(`/user/${session.user.id}/mypage`); // セッションがあればマイページにリダイレクト
+    if (user && publicRoutes.includes(pathname)) {
+      router.push(`/user/${user.id}/mypage`); // ログインしている場合はマイページにリダイレクト
     }
-  }, [session, status, router, pathname]);
+  }, [user, loading, router, pathname]);
 
-  if (status === "loading") return <p>Loading...</p>;
-  if (!session && !publicRoutes.includes(pathname)) return null;
+  if (loading) return <p>Loading...</p>;
+  if (!user && !publicRoutes.includes(pathname)) return null;
 
   return <>{children}</>;
 };
