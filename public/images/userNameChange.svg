@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Adobe Illustrator 24.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 39 39" style="enable-background:new 0 0 39 39;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:url(#SVGID_1_);}
+	.st1{fill:url(#SVGID_2_);}
+	.st2{fill:url(#SVGID_3_);}
+</style>
+<g id="レイヤー_1のコピー">
+	<g>
+		<g>
+			<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="3.5" y1="19.5" x2="35.5" y2="19.5">
+				<stop  offset="0" style="stop-color:#FF5722"/>
+				<stop  offset="0.6623" style="stop-color:#643645"/>
+				<stop  offset="1" style="stop-color:#152557"/>
+			</linearGradient>
+			<path class="st0" d="M28.9,3.5H10.1c-3.64,0-6.6,2.41-6.6,5.37v21.26c0,2.96,2.96,5.37,6.6,5.37h15.8h1.01l0.72-0.58l7.16-5.83
+				l0.71-0.58v-0.82V8.87C35.5,5.91,32.54,3.5,28.9,3.5z M33.06,27.69h-3.7c-1.91,0-3.46,1.26-3.46,2.82v3.01H10.1
+				c-2.29,0-4.15-1.51-4.15-3.38V8.87C5.94,7,7.8,5.49,10.1,5.49H28.9c2.29,0,4.16,1.51,4.16,3.38V27.69z"/>
+			<linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="12.8018" y1="23.4717" x2="26.198" y2="23.4717">
+				<stop  offset="0" style="stop-color:#FF5722"/>
+				<stop  offset="1" style="stop-color:#994C34"/>
+			</linearGradient>
+			<path class="st1" d="M22.7,20.9c-0.91,0.52-2.01,0.82-3.2,0.82c-1.19,0-2.29-0.3-3.2-0.82c-1.59,0.55-2.56,1.53-3.15,2.39
+				c-0.79,1.14-0.17,2.76,1.19,2.76s5.16,0,5.16,0s3.79,0,5.16,0s1.98-1.61,1.19-2.76C25.26,22.43,24.28,21.45,22.7,20.9z"/>
+			<linearGradient id="SVGID_3_" gradientUnits="userSpaceOnUse" x1="15.2827" y1="16.7985" x2="23.7166" y2="16.7985">
+				<stop  offset="0" style="stop-color:#FF5722"/>
+				<stop  offset="1" style="stop-color:#994C34"/>
+			</linearGradient>
+			<path class="st2" d="M19.5,20.64c2.33,0,4.22-1.53,4.22-3.43v-0.82c0-1.9-1.89-3.43-4.22-3.43c-2.33,0-4.22,1.54-4.22,3.43v0.82
+				C15.28,19.11,17.17,20.64,19.5,20.64z"/>
+		</g>
+	</g>
+</g>
+<g id="レイヤー_2">
+</g>
+</svg>
