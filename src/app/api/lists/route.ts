@@ -70,3 +70,32 @@ export async function GET(request: Request) {
 
   return NextResponse.json(data);
 }
+
+
+// DELETE: リストを削除
+export async function DELETE(req: Request) {
+  try {
+    const body = await req.json();
+    const { listId } = body;
+
+    // リストの削除
+    const { data, error } = await supabase
+      .from("lists")
+      .delete()
+      .eq("list_id", listId);
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json({ message: "List deleted successfully", data });
+  } catch (error) {
+    if (error instanceof Error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    return NextResponse.json(
+      { error: "An unknown error occurred" },
+      { status: 500 }
+    );
+  }
+}

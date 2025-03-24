@@ -126,21 +126,46 @@ const IndividualList = () => {
     onOpen();
   };
 
+  // 編集ページに遷移する関数（ここでルーティングを管理）
   const handleEditClick = (listId: number) => {
     router.push(`/user/${userId}/individual_list/${listId}/list_edit`);
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (selectedList) {
-      setLists(lists.filter((list) => list.list_id !== selectedList.list_id)); // リストから削除
-      toast({
-        title: `"${selectedList.list_name}" を削除しました`,
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-        position: "top",
+      // APIを呼び出してリストを削除
+      const response = await fetch("/api/lists", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          listId: selectedList.list_id,
+        }),
       });
-      onClose();
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setLists(lists.filter((list) => list.list_id !== selectedList.list_id)); // リストから削除
+        toast({
+          title: `"${selectedList.list_name}" を削除しました`,
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: "top",
+        });
+        onClose();
+      } else {
+        toast({
+          title: "削除に失敗しました",
+          description: result.error,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+          position: "top",
+        });
+      }
     }
   };
 
