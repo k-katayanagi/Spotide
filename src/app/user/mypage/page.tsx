@@ -1,49 +1,54 @@
 "use client";
 
-import { useParams } from "next/navigation";
 import Image from "next/image";
-
-type User = {
-  id: number;
-  name: string;
-  age: number;
-  email: string;
-};
+import useNavigation from "@/hooks/useNavigation";
+import { useSession } from "next-auth/react";
+import { useState, useEffect } from "react";
 
 const Mypage = () => {
-  const params = useParams();
-  const { userid } = params;
+  const { data: session } = useSession();
+  const { handleNavigateTo } = useNavigation();
+  const [userName, setUserName] = useState<string | null>(null);
 
-  // paramsから返されるのはstring型なので、number型に変換
-  const userId = Number(userid);
+  // sessionとuserIdの取得確認
+  useEffect(() => {
+    if (!session?.user?.id) {
+      return; 
+    }
 
-  if (isNaN(userId)) {
-    return <p>ユーザーIDが無効です。</p>;
-  }
+    const fetchData = async () => {
+      try {
+        const userResponse = await fetch(`/api/users/${session.user.id}`);
+        const userData = await userResponse.json();
 
-  // 仮データ
-  const users: Record<number, User> = {
-    1: { id: 1, name: "kanon", age: 30, email: "kanon@example.com" },
-    2: { id: 2, name: "katayanagi", age: 25, email: "katayanagi@example.com" },
-  };
+        if (userResponse.ok) {
+          setUserName(userData.user_name); // ユーザー名をステートにセット
+        } else {
+          console.error("ユーザー名取得エラー:", userData.error);
+        }
+      } catch (error) {
+        console.error("データ取得中にエラーが発生しました:", error);
+      }
+    };
 
-  // ユーザーが見つからない場合
-  if (!(userId in users)) {
-    return <p>ユーザーが見つかりません</p>;
-  }
-
-  const user = users[userId];
+    fetchData(); // ユーザーIDがあればデータを取得
+  }, [session]); // sessionが変更されたときに実行
 
   return (
     <div className="overflow-auto relative scrollbar-thin scrollbar-thumb-[#FF5722] scrollbar-track-[#FFE0B2]">
       <div className="flex items-center justify-between mb-[30px]">
-        <h1 className="text-2xl font-bold">{user.name}さんのマイページ</h1>
+        <h1 className="text-2xl font-bold">
+          {userName ? `${userName}さんのマイページ` : "マイページ"}
+        </h1>
       </div>
 
       <div className="h-[70vh] mt-[30px]">
         <div className="grid grid-cols-2 md:grid-cols-3 grid-rows-1 gap-5 md:gap-x-2 md:gap-y-[100px] justify-items-center lg:scale-90">
           {/* TOPカード */}
-          <div className="flex flex-col items-center text-center bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-full max-w-[240px]  md:w-96 md:justify-self-end">
+          <div
+            className="flex flex-col items-center text-center bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-full max-w-[240px] md:w-96 md:justify-self-end cursor-pointer"
+            onClick={() => handleNavigateTo(`/`)}
+          >
             <div className="w-full flex flex-col items-center">
               <h2 className="text-lg font-bold">TOP</h2>
               <Image
@@ -57,7 +62,12 @@ const Mypage = () => {
           </div>
 
           {/* リスト作成カード */}
-          <div className="flex flex-col items-center text-center bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-full max-w-[240px]  md:w-96">
+          <div
+            className="flex flex-col items-center text-center bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-full max-w-[240px] md:w-96 cursor-pointer" 
+            onClick={() =>
+              handleNavigateTo(`/user/${session?.user?.id}/list_create`)
+            }
+          >
             <div className="w-full flex flex-col items-center">
               <h2 className="text-lg font-bold">リスト作成</h2>
               <Image
@@ -71,7 +81,7 @@ const Mypage = () => {
           </div>
 
           {/* ユーザー名変更カード */}
-          <div className="flex flex-col items-center text-center bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-full max-w-[240px]  md:w-96 md:justify-self-start">
+          <div className="flex flex-col items-center text-center bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-full max-w-[240px] md:w-96 md:justify-self-start">
             <div className="w-full flex flex-col items-center">
               <h2 className="text-lg font-bold">ユーザー名変更</h2>
               <Image
@@ -85,7 +95,12 @@ const Mypage = () => {
           </div>
 
           {/* 個人リスト */}
-          <div className="flex flex-col items-center text-center bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-full max-w-[240px]  md:w-96 md:justify-self-end">
+          <div
+            className="flex flex-col items-center text-center bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-full max-w-[240px] md:w-96 md:justify-self-end cursor-pointer"
+            onClick={() =>
+              handleNavigateTo(`/user/${session?.user?.id}/individual_list`)
+            }
+          >
             <div className="w-full flex flex-col items-center">
               <h2 className="text-lg font-bold">個人リスト</h2>
               <Image
@@ -99,7 +114,12 @@ const Mypage = () => {
           </div>
 
           {/* 共有リスト */}
-          <div className="flex flex-col items-center text-center bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-full max-w-[240px]  md:w-96">
+          <div
+            className="flex flex-col items-center text-center bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-full max-w-[240px] md:w-96 cursor-pointer"
+            onClick={() =>
+              handleNavigateTo(`/user/${session?.user?.id}/share_list`)
+            }
+          >
             <div className="w-full flex flex-col items-center">
               <h2 className="text-lg font-bold">共有リスト</h2>
               <Image
@@ -113,7 +133,7 @@ const Mypage = () => {
           </div>
 
           {/* ログアウト */}
-          <div className="flex flex-col items-center text-center bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-full max-w-[240px]  md:w-96 md:justify-self-start">
+          <div className="flex flex-col items-center text-center bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-full max-w-[240px] md:w-96 md:justify-self-start">
             <div className="w-full flex flex-col items-center">
               <h2 className="text-lg font-bold">ログアウト</h2>
               <Image
@@ -127,7 +147,7 @@ const Mypage = () => {
           </div>
 
           {/* 退会 */}
-          <div className="flex flex-col items-center text-center bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-full max-w-[240px]  md:w-96 md:justify-self-end">
+          <div className="flex flex-col items-center text-center bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-full max-w-[240px] md:w-96 md:justify-self-end">
             <div className="w-full flex flex-col items-center">
               <h2 className="text-lg font-bold">退会</h2>
               <Image

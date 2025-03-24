@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useListContext } from "@/contexts/ListContext";
 import { useBottomNav } from "@/contexts/BottomNavContext";
@@ -16,10 +16,8 @@ import DeleteConfirmModal from "@/components/modal/DeleteConfirmModal";
 import { useDisclosure, useToast } from "@chakra-ui/react";
 
 const IndividualList = () => {
-  const { data: session } = useSession(); // セッション情報を取得
+  const { data: session } = useSession(); // セッションからユーザー情報を取得
   const router = useRouter();
-  const params = useParams();
-  const { userid } = params; // URLの`[userid]`を取得
   const { lists, setLists, sortLists, setSortLists } = useListContext(); // Contextからリストを取得
   const [userName, setUserName] = useState<string | null>(null); // ユーザー名の状態
   const [isFilter, setIsFilter] = useState(false);
@@ -32,45 +30,40 @@ const IndividualList = () => {
   const listContainerRef = useRef<HTMLDivElement>(null);
   const toast = useToast();
 
-  useEffect(() => {
-    // sessionのチェック（ログインしていない場合にリダイレクトしたい場合）
-    if (session && session.user.id !== userid) {
-      //TODO リダイレクト確認
-      // リダイレクト処理
-    }
+  // セッションが存在するかチェックし、user.idを取得
+  const userId = session?.user.id;
 
+  useEffect(() => {
     // ユーザー名とリストを一緒に取得する処理
     const fetchData = async () => {
-      if (userid) {
-        // ユーザー名の取得
-        const userResponse = await fetch(`/api/users/${userid}`);
-        const userData = await userResponse.json();
-        if (userResponse.ok) {
-          setUserName(userData.user_name); // ユーザー名をステートにセット
-        } else {
-          console.error("ユーザー名取得エラー:", userData.error);
-        }
+      // ユーザー名の取得
+      const userResponse = await fetch(`/api/users/${userId}`);
+      const userData = await userResponse.json();
+      if (userResponse.ok) {
+        setUserName(userData.user_name); // ユーザー名をステートにセット
+      } else {
+        console.error("ユーザー名取得エラー:", userData.error);
+      }
 
-        // リストの取得
-        const listsResponse = await fetch(
-          `/api/lists?userId=${userid}&listType=individual`
-        );
-        const listsData = await listsResponse.json();
-        if (listsResponse.ok) {
-          setLists(listsData); // リストデータをセット
-        } else {
-          console.error("リスト取得エラー:", listsData.error);
-        }
+      // リストの取得
+      const listsResponse = await fetch(
+        `/api/lists?userId=${userId}&listType=individual`
+      );
+      const listsData = await listsResponse.json();
+      if (listsResponse.ok) {
+        setLists(listsData); // リストデータをセット
+      } else {
+        console.error("リスト取得エラー:", listsData.error);
       }
     };
 
     fetchData(); // ユーザーIDがあればデータを取得
-  }, [session, userid, setLists]); // sessionとuseridが変わる度に実行
+  }, [session, userId, setLists]); // sessionとuserIdが変わる度に実行
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentLists = lists.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(lists.length / itemsPerPage); 
+  const totalPages = Math.ceil(lists.length / itemsPerPage);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -134,7 +127,7 @@ const IndividualList = () => {
   };
 
   const handleEditClick = (listId: number) => {
-    router.push(`/user/${userid}/individual_list/${listId}/list_edit`);
+    router.push(`/user/${userId}/individual_list/${listId}/list_edit`);
   };
 
   const handleDelete = () => {
@@ -188,7 +181,6 @@ const IndividualList = () => {
       >
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {currentLists.map((list) => {
-             console.log(list);
             if (!list.list_id) {
               console.error("リストにidがありません:", list); // デバッグ用
               return null; // idがない場合は表示しない

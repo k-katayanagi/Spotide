@@ -1,3 +1,11 @@
+export type TUsers = {
+  user_id: string;
+  google_id: string;
+  user_name: string;
+  created_at: Date; // 登録日
+  updated_at: Date; // 更新日
+};
+
 export type TParticipantingUser = {
   participant_id: number; // 参加ID（ユニーク）
   list_id: number; // リストID（どのリストに属するか）

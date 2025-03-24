@@ -1,8 +1,7 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { useParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import ListNameInput from "@components/inputbox/ListNameInput";
 import ListSelect from "@/components/ListSelect";
 import { listTypeOptions } from "@/consts/OptionList";
@@ -12,24 +11,14 @@ import SubmitButton from "@/components/buttons/SubmitButton";
 import { useToast } from "@chakra-ui/react";
 
 const ListCreate = () => {
-  const { data: session } = useSession(); // セッション情報を取得
-  const params = useParams();
-  const { userid } = params; // URLの`[userid]`を取得
+  const { data: session } = useSession(); 
   const toast = useToast();
-
   const [error, setError] = useState("");
   const [listName, setListName] = useState("");
   const [selectedType, setSelectedType] = useState<string>("individual");
   const [voteDate, setVoteDate] = useState<Date | null>(null);
   const [outingDate, setOutingDate] = useState<Date | null>(null);
-  // セッションの`user.id`とURLの`userid`を照合
-  useEffect(() => {
-    console.log(session)
-    if (session && session.user.id !== userid) {
-      // ユーザーIDが一致しない場合、リダイレクト
-      window.location.href = "/login"; // ログインにリダイレクト
-    }
-  }, [session, userid]);
+
 
   // 入力値変更ハンドラ
   const onListNameChange = (value: string) => {
