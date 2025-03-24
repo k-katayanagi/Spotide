@@ -16,7 +16,7 @@ const Registry = () => {
   
     if (result?.error) {
       alert(`新規登録に失敗しました: ${result.error}`);
-      window.location.href = "/";
+      window.location.href = "/registry";
     }
   };
 
@@ -29,7 +29,7 @@ const Registry = () => {
   
     if (result?.error) {
       alert(`ログインに失敗しました: ${result.error}`);
-      window.location.href = "/";
+      window.location.href = "/login";
     }
   };
 
