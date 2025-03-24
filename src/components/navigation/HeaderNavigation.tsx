@@ -76,8 +76,8 @@ const HeaderNavigation = () => {
             <li
               className="text-black hover:text-gray-300 text-lg text-center cursor-pointer"
               onClick={() =>
-                handleNavigateTo(`/user/${session.user.id}/mypage`)
-              } // 動的にユーザーIDを挿入
+                handleNavigateTo(`/user/mypage`)
+              } 
             >
               <Image
                 src="/images/myPage.svg"

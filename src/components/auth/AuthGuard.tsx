@@ -22,7 +22,7 @@ const AuthGuard = ({ children }: { children: React.ReactNode }) => {
 
     // セッションがある場合、`/login` や `/registry` ページにアクセスしようとするとマイページにリダイレクト
     if (session && publicRoutes.includes(pathname)) {
-      router.push(`/user/${session.user.id}/mypage`); // セッションがあればマイページにリダイレクト
+      router.push(`/user/mypage`); // セッションがあればマイページにリダイレクト
     }
   }, [session, status, router, pathname]);
 
