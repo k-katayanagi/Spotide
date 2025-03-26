@@ -26,10 +26,20 @@ const generatePassword = (length: number = 12): string => {
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: (username: string, password: string) => void;
+  onConfirm: (
+    username: string,
+    password: string,
+    listId: number | null
+  ) => void;
+  listId: number | null;
 }
 
-const ParticipatingUsersAddModal = ({ isOpen, onClose, onConfirm }: Props) => {
+const ParticipatingUsersAddModal = ({
+  isOpen,
+  onClose,
+  onConfirm,
+  listId,
+}: Props) => {
   const cancelRef = useRef<HTMLButtonElement>(null);
 
   const [username, setUsername] = useState("");
@@ -41,7 +51,9 @@ const ParticipatingUsersAddModal = ({ isOpen, onClose, onConfirm }: Props) => {
   };
 
   const handleAddUser = () => {
-    onConfirm(username, password);
+    onConfirm(username, password, listId);
+    setUsername(""); 
+    setPassword(""); 
     onClose();
   };
 
@@ -54,7 +66,7 @@ const ParticipatingUsersAddModal = ({ isOpen, onClose, onConfirm }: Props) => {
       <AlertDialogOverlay>
         <AlertDialogContent
           maxWidth={{ base: "80%", md: "500px" }} // スマホ時は90%、PC時は最大500px
-          minH={{ base: "30vh", md: "50vh" }} 
+          minH={{ base: "30vh", md: "50vh" }}
           maxH="90vh"
           p={{ base: 4, md: 6 }} // スマホ時は余白を小さく
           borderRadius="xl"

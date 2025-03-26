@@ -47,6 +47,8 @@ const ListCreate = () => {
       return;
     }
 
+
+
     // API 呼び出し
     const response = await fetch("/api/lists", {
       method: "POST",
@@ -59,16 +61,17 @@ const ListCreate = () => {
         voteDate,
         outingDate,
         userId: session?.user.id,
+        username:session?.user.name
       }),
     });
 
     const data = await response.json();
+    console.log(data);
 
     if (response.ok) {
       // 成功時のトースト表示
       toast({
         title: "リスト作成しました",
-        description: data.message,
         status: "success",
         duration: 5000, // 表示時間（ミリ秒）
         isClosable: true, // 閉じるボタン
