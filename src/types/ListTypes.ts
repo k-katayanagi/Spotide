@@ -42,13 +42,10 @@ export type ListItem = {
 };
 
 export type Spot = {
-  item_id: number;
-  list_id: number;
+  id: number;
   store_name: string;
   station: string;
   google_rating: number;
-  custom_rating: number;
-  memo: string;
   address: string;
   prefecture: string;
   city: string;
@@ -58,9 +55,6 @@ export type Spot = {
   time_from_nearest_station: number;
   category: string;
   sub_category: string;
-  photo_id: number;
-  add_by_id: number;
-  created_at: Date;
-  updated_at: Date;
+  photo_ids: string[];
 };
 

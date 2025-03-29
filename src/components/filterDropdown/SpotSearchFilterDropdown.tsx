@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useToast } from "@chakra-ui/react";
 import ListSelect from "../ListSelect";
 import {
   prefectures,
@@ -15,10 +16,12 @@ import StarRating from "../UI/StarRating";
 // import { ListItem } from "@/types/ListTypes";
 
 type Props = {
-  toggleFilterDropdown: () => void;
+  handleSearch: (e: React.FormEvent) => void; 
 };
 
-const SpotSearchFilterDropdown = ({ toggleFilterDropdown }: Props) => {
+const SpotSearchFilterDropdown = ({
+  handleSearch,
+}: Props) => {
   // const { listItems, setSortLists } = useListContext();
   // const [listItemsName, setListItemsName] = useState("");
   const [googleRating, setGoogleRating] = useState<number>(0);
@@ -39,6 +42,7 @@ const SpotSearchFilterDropdown = ({ toggleFilterDropdown }: Props) => {
     { value: "saturday", label: "土" },
     { value: "sunday", label: "日" },
   ];
+
   const handleHolidayChange = (holiday: string) => {
     setSelectedHolidays((prev) =>
       prev.includes(holiday)
@@ -47,21 +51,15 @@ const SpotSearchFilterDropdown = ({ toggleFilterDropdown }: Props) => {
     );
   };
 
-  const handleFilterApply = (e: React.FormEvent) => {
-    e.preventDefault();
-    toggleFilterDropdown();
-  };
-
   return (
     <div
       className="bg-gradient-to-b from-[rgba(255,224,178,0.98)] to-[rgba(255,183,77,0.98)] border-4 border-[#FF9800] rounded-lg p-6 shadow-md 
             min-h-[50vh] max-h-[80vh] lg:min-h-[30vh] lg:max-h-[70vh] 
             flex flex-col items-center mx-auto relative"
     >
-      <form onSubmit={handleFilterApply} className="flex flex-col flex-grow">
+      <form onSubmit={handleSearch} className="flex flex-col flex-grow">
         <div className="m-auto">
           <div className="flex flex-col gap-4">
-
             {/* 都道府県・市区町村・駅 */}
             <div className="flex justify-center gap-2 w-fit">
               <ListSelect
@@ -184,9 +182,7 @@ const SpotSearchFilterDropdown = ({ toggleFilterDropdown }: Props) => {
                   onChange={setGoogleRating}
                 />
               </div>
-          
-              {/* OKボタン */}
-              <div　className="flex items-end ml-auto w-full justify-end">
+              <div className="flex items-end ml-auto w-full justify-end">
                 <SearchButton />
               </div>
             </div>
