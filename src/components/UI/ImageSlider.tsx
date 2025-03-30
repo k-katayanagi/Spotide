@@ -26,8 +26,8 @@ const ImageSlider = ({ photoIds }: { photoIds: string[] }) => {
                 src={photoId}
                 alt={`画像 ${index + 1}`}
                 width={300} // 幅を変更
-                height={160} // 高さを変更
-                className="w-full h-[160px] object-cover rounded-lg"
+                height={200} // 高さを変更
+                className="w-full h-[200px] object-cover rounded-lg"
                 unoptimized
               />
             </SplideSlide>

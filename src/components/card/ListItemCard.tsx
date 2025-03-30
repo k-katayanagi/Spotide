@@ -47,7 +47,7 @@ const ListItemCard = ({
           src="/images/image.gif"
           alt="画像"
           width={0} // 自動調整のため0に設定
-          height={160}
+          height={180}
           className="w-full h-[160px] object-cover rounded-lg mb-4"
           unoptimized
         />

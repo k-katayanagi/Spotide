@@ -70,7 +70,7 @@ const transformToSpot = (place: any, index: number) => {
   const photoUrls =
     place.photos?.map(
       (photo: any) =>
-        `https://places.googleapis.com/v1/${photo.name}/media?key=${GOOGLE_MAPS_API_KEY}&maxWidthPx=300&maxHeightPx=160`
+        `https://places.googleapis.com/v1/${photo.name}/media?key=${GOOGLE_MAPS_API_KEY}&maxWidthPx=300&maxHeightPx=200`
     ) || [];
 
   return {
@@ -125,7 +125,7 @@ export async function GET(req: NextRequest) {
         params: {
           regionCode: "JP", // 日本国内に限定
           languageCode: "ja", // 日本語で結果を返す
-          pageSize: 10,
+          pageSize: 13,
         },
       }
     );

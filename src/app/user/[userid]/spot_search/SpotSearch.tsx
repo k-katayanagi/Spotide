@@ -35,7 +35,7 @@ const SpotSearch = () => {
   //   );
   //   const toast = useToast();
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 12;
   const listContainerRef = useRef<HTMLDivElement>(null);
 
   const menuItems = [

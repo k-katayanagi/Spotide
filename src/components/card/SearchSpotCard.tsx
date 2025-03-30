@@ -35,16 +35,18 @@ const SearchSpotCard = ({ SearchSpot, onAdd }: Props) => {
           <p>画像がありません</p>
         )}
 
-        <h2 className="text-lg font-bold">{SearchSpot.store_name}</h2>
+        <h1 className="text-2xl  font-bold mt-5 mb-5">
+          {SearchSpot.store_name}
+        </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
           {defaultFields.map((field) => (
             <div key={field.key} className="flex text-base">
-              <span className="font-bold text-lg text-gray-900">
+              <span className="font-bold text-lg text-gray-900 whitespace-nowrap">
                 {field.label}:
               </span>
               &nbsp;
-              <span className="text-gray-700">
+              <span className="text-gray-700 break-words">
                 {String(SearchSpot[field.key as keyof Spot] || "―")}
               </span>
             </div>
