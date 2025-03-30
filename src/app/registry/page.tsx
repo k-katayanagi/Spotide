@@ -1,5 +1,7 @@
 "use client";
 
+// aa
+
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import RegistrationButton from "@/components/buttons/RegistrationButton";
