@@ -86,6 +86,7 @@ const SpotSearch = () => {
 
   const handleAddListItem = async (spot: Spot) => {
     try {
+
       const response = await fetch("/api/listItems", {
         method: "POST",
         headers: {

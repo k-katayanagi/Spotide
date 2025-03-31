@@ -43,6 +43,7 @@ export type ListItem = {
 
 export type Spot = {
   id: number;
+  place_id: string;
   store_name: string;
   station: string;
   google_rating: number;

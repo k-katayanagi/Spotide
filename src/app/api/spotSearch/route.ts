@@ -1,5 +1,6 @@
 import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
+import { typeToJapanese } from "@/types/SpotTypes";
 
 const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
 const GOOGLE_PLACES_API_URL =
@@ -50,23 +51,6 @@ const transformToSpot = (place: any, index: number) => {
       ?.map((day: string) => day.split(":")[0])
       .join(", ") || "不明";
 
-  // Google Places API から取得した types を日本語に変換する関数
-  const typeToJapanese = (type: string) => {
-    const typeMap: { [key: string]: string } = {
-      restaurant: "レストラン",
-      cafe: "カフェ",
-      store: "店舗",
-      bar: "バー",
-      hotel: "ホテル",
-      gym: "ジム",
-      school: "学校",
-      hospital: "病院",
-      supermarket: "スーパー",
-      chinese_restaurant: "中華",
-    };
-    return typeMap[type] || "未分類"; // マッチするタイプがなければ "未分類"
-  };
-
   const photoUrls =
     place.photos?.map(
       (photo: any) =>
@@ -75,6 +59,7 @@ const transformToSpot = (place: any, index: number) => {
 
   return {
     id: index, // 配列のインデックスを item_id に設定
+    place_id: place.id,
     store_name: place.displayName?.text || "名称不明",
     station: "不明",
     google_rating: place.rating || 0,
@@ -120,7 +105,7 @@ export async function GET(req: NextRequest) {
           "Content-Type": "application/json",
           "X-Goog-Api-Key": GOOGLE_MAPS_API_KEY, // APIキー
           "X-Goog-FieldMask":
-            "places.displayName,places.formattedAddress,places.rating,places.addressComponents,places.types,places.regularOpeningHours,places.photos,places.id", // 必要なフィールドを指定
+            "places.id,places.displayName,places.formattedAddress,places.rating,places.addressComponents,places.types,places.regularOpeningHours,places.photos,places.id", // 必要なフィールドを指定
         },
         params: {
           regionCode: "JP", // 日本国内に限定
@@ -133,6 +118,7 @@ export async function GET(req: NextRequest) {
     const placesData = placesResponse.data.places || [];
 
     // 取得した photos の中身をログに出力
+    // Google Places APIのレスポンスをログに出力
     placesData.forEach((place: any, index: number) => {
       console.log(`Place ${index + 1}:`);
       if (place.photos) {
@@ -140,6 +126,7 @@ export async function GET(req: NextRequest) {
           console.log(`  Photo ${photoIndex + 1}:`, photo);
         });
       }
+      console.log("Place ID:", place.id); // ここで place.id を確認
     });
 
     if (placesData.length === 0) {
