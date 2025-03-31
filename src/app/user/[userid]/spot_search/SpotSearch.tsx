@@ -49,18 +49,11 @@ const SpotSearch = () => {
     },
   ];
 
-  // useEffect(() => {
-  //   const fetchSpots = async () => {
-  //     try {
-  //       const response = await axios.get("/api/spotSearch?query=カフェ"); // ★ 検索ワードを適宜変更
-  //       setSearchSpots(response.data);
-  //     } catch (error) {
-  //       console.error("Failed to fetch spots:", error);
-  //     }
-  //   };
-
-  //   fetchSpots();
-  // }, [setSearchSpots]);
+  // 新しいリストIDまたはユーザーIDが変更されたときに検索結果をリセット
+  useEffect(() => {
+    setSearchSpots([]);  // ここで検索結果をリセット
+    setSearchKeyword("");  // 検索キーワードもリセット
+  }, [userid, listid, setSearchSpots]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -91,16 +84,51 @@ const SpotSearch = () => {
     setIsMenu((prevState) => !prevState);
   };
 
-  const handleAddListItem = (spot: Spot) => {
-    toast({
-      title: `"${spot.store_name}" を追加しました`,
-      status: "success",
-      duration: 3000,
-      isClosable: true,
-      position: "top",
-    });
-  };
+  const handleAddListItem = async (spot: Spot) => {
+    try {
+      const response = await fetch("/api/listItems", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          spot,
+          userId: userid,
+          listid: listid,
+        }),
+      });
 
+      const data = await response.json();
+
+      if (response.ok) {
+        toast({
+          title: `"${spot.store_name}" を追加しました`,
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: "top",
+        });
+      } else {
+        toast({
+          title: data.error || data.message || "エラーが発生しました",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+          position: "top",
+        });
+      }
+    } catch (error) {
+      console.error("Error adding spot:", error);
+      toast({
+        title: "data",
+        description: error.message || "ネットワークエラー",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+    }
+  };
 
   // 検索処理
   const handleSearch = async (e: React.FormEvent) => {
@@ -124,7 +152,7 @@ const SpotSearch = () => {
         `/api/spotSearch?query=${encodeURIComponent(searchKeyword)}`
       );
 
-      console.log(response.data.results)
+      console.log(response.data.results);
       if (response.data.results && response.data.results.length > 0) {
         setSearchSpots(response.data.results); // 検索結果を context にセット
         toast({

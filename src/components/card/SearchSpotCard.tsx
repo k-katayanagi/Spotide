@@ -5,10 +5,8 @@ import AddButton from "../buttons/AddButton";
 import ImageSlider from "../UI/ImageSlider";
 
 const defaultFields = [
-  { key: "station", label: "駅" },
   { key: "google_rating", label: "Google評価" },
   { key: "address", label: "住所" },
-  { key: "time_to_station", label: "駅からの所要時間" },
   { key: "business_hours", label: "営業時間" },
   { key: "regular_holiday", label: "定休日" },
   { key: "time_from_nearest_station", label: "最寄り駅からの時間" },
