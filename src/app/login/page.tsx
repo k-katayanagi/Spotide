@@ -2,12 +2,14 @@
 
 import { signIn } from "next-auth/react";
 import { useState } from "react";
+import { useToast } from "@chakra-ui/react";
 import LoginButton from "@/components/buttons/LoginButton";
 import TopButton from "@/components/buttons/TopButton";
 
-const  Login = () => {
+const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
-  
+  const toast = useToast(); // useToast を使用
+
   // ログイン処理
   const handleLogin = async () => {
     console.log("Googleアカウントでログイン開始");
@@ -18,9 +20,25 @@ const  Login = () => {
 
     if (result?.error) {
       setErrorMessage(`ログインに失敗しました: ${result.error}`);
+      toast({
+        title: "ログイン失敗",
+        description: "もう一度お試しください",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
       return;
     }
 
+    toast({
+      title: "ログイン成功",
+      description: "マイページへ移動します",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+      position: "top",
+    });
   };
 
   return (

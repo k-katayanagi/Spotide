@@ -1,9 +1,32 @@
 "use client";
 import HeaderNavigation from "@/components/navigation/HeaderNavigation";
 import LoginButton from "@/components/buttons/LoginButton";
+import LogoutButton from "@/components/buttons/LogoutButton";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
+import { signIn,signOut } from "next-auth/react";
 
 const ResponsiveHeader = () => {
+  const { data: session } = useSession(); // セッション情報を取得
+
+  // ログイン処理
+  const handleLogin = async () => {
+    console.log("Googleアカウントでログイン開始");
+
+    const result = await signIn("google", {
+      callbackUrl: "/user/mypage",
+    });
+
+    if (result?.error) {
+      return;
+    }
+  };
+
+  // ログアウト処理
+  const handleLogout = async () => {
+    signOut({ callbackUrl: "/login" })
+  };
+
   return (
     <header className="flex items-center justify-between lg:justify-start p-2 text-white w-full">
       {/* 共通のSpotide部分 */}
@@ -26,7 +49,11 @@ const ResponsiveHeader = () => {
       {/* PC用ナビゲーション */}
       <div className="nav-pc hidden lg:flex items-center justify-center space-x-9">
         <HeaderNavigation />
-        <LoginButton />
+        {session ? (
+          <LogoutButton onClick={handleLogout} />
+        ) : (
+          <LoginButton onClick={handleLogin} />
+        )}
       </div>
     </header>
   );
