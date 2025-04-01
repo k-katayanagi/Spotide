@@ -1,43 +1,24 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import { useState } from "react";
-import { useParams } from "next/navigation";
 import ListNameInput from "@components/inputbox/ListNameInput";
 import ListSelect from "@/components/ListSelect";
 import { listTypeOptions } from "@/consts/OptionList";
 import DateTimePicker from "@/components/dateTimePicker/DateTimePicker";
+import OutingCalendarPicker from "@/components/dateTimePicker/OutingCalendarPicker";
 import SubmitButton from "@/components/buttons/SubmitButton";
-
-type User = {
-  id: number;
-  name: string;
-  age: number;
-  email: string;
-};
+import { useToast } from "@chakra-ui/react";
 
 const ListCreate = () => {
-  const params = useParams();
-  const { userid } = params;
-
-  // 最初にuseStateを呼び出す
-  const [listName, setListName] = useState("");
+  const { data: session } = useSession(); 
+  const toast = useToast();
   const [error, setError] = useState("");
-  const [selectedType, setSelectedType] = useState<string>("simple");
+  const [listName, setListName] = useState("");
+  const [selectedType, setSelectedType] = useState<string>("individual");
+  const [voteDate, setVoteDate] = useState<Date | null>(null);
+  const [outingDate, setOutingDate] = useState<Date | null>(null);
 
-  // 条件をチェックして早期リターンを行う
-  const userId = Number(userid);
-  if (isNaN(userId)) {
-    return <p>ユーザーIDが無効です。</p>;
-  }
-
-  const users: Record<number, User> = {
-    1: { id: 1, name: "kanon", age: 30, email: "kanon@example.com" },
-    2: { id: 2, name: "katayanagi", age: 25, email: "katayanagi@example.com" },
-  };
-
-  if (!(userId in users)) {
-    return <p>ユーザーが見つかりません</p>;
-  }
 
   // 入力値変更ハンドラ
   const onListNameChange = (value: string) => {
@@ -49,15 +30,71 @@ const ListCreate = () => {
     console.log(value);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleVoteDateChange = (date: Date | null) => {
+    setVoteDate(date);
+  };
+
+  const handleOutingDateChange = (date: Date | null) => {
+    setOutingDate(date);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // 入力検証
     if (!listName || error) {
       setError("リスト名を入力してください");
       return;
     }
 
-    // フォーム送信のロジック（仮）
-    console.log("送信するデータ:", { userId, listName, selectedType });
+
+
+    // API 呼び出し
+    const response = await fetch("/api/lists", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        listName,
+        selectedType,
+        voteDate,
+        outingDate,
+        userId: session?.user.id,
+        username:session?.user.name
+      }),
+    });
+
+    const data = await response.json();
+    console.log(data);
+
+    if (response.ok) {
+      // 成功時のトースト表示
+      toast({
+        title: "リスト作成しました",
+        status: "success",
+        duration: 5000, // 表示時間（ミリ秒）
+        isClosable: true, // 閉じるボタン
+        position: "top"
+      });
+
+      // 成功時にフォームのリセット
+      setListName("");
+      setSelectedType("individual");
+      setVoteDate(null);
+      setOutingDate(null);
+      setError("");
+    } else {
+      // エラー時のトースト表示
+      toast({
+        title: "リスト作成エラー",
+        description: data.error || "データ送信に失敗しました",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "top",
+      });
+    }
   };
 
   return (
@@ -87,7 +124,19 @@ const ListCreate = () => {
           </div>
 
           <div className="w-full flex flex-col self-start">
-            <DateTimePicker title="投票開始日時設定" />
+            <DateTimePicker
+              title="投票開始日時設定"
+              onDateChange={handleVoteDateChange}
+              value={voteDate}
+            />
+          </div>
+
+          <div className="w-full flex flex-col self-start">
+            <OutingCalendarPicker
+              title="お出かけ日"
+              onChange={handleOutingDateChange}
+              value={outingDate}
+            />
           </div>
 
           {/* 🔹 SubmitButton だけ右端に配置 */}
@@ -99,4 +148,5 @@ const ListCreate = () => {
     </div>
   );
 };
+
 export default ListCreate;

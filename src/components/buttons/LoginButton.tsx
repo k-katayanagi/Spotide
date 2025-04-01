@@ -1,34 +1,18 @@
 'use client';
 
 import Button from '@components/Button';
-import { useToast } from '@chakra-ui/react';
 import "@/components/buttons/GoogleButton.css";
 
+type Props = {
+  onClick:() => void;
+};
 
+const LoginButton = ({onClick}:Props) => {
 
-// type Props = {
-//   imageWidth?: number;
-//   imageHeight?: number;
-// };
-
-const LoginButton = () => {
-  const toast = useToast();
-
-  const handleLogin = async () => {
-    console.log("Attempting Google SignIn");
-    // Googleサインインを開始
-    toast({
-      title: "ログイン完了",
-      status: "success",
-      duration: 3000,
-      isClosable: true,
-      position: "top",
-    });
-  };
 
   return (
     <Button
-      onClick={handleLogin}
+      onClick={onClick}
       className='gsi-material-button'
       text={(
         <div className="gsi-material-button-content-wrapper flex items-center">

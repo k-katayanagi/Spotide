@@ -15,8 +15,13 @@ import {
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: (username: string, password: string) => void;
+  onConfirm: (
+    username: string,
+    password: string,
+    listId: number | null
+  ) => void;
   selectedUser: TParticipantingUser | null;
+  listId: number | null;
 }
 
 // パスワード自動生成
@@ -36,25 +41,29 @@ const ParticipatingUsersEditModal = ({
   onClose,
   onConfirm,
   selectedUser,
+  listId,
 }: Props) => {
   const cancelRef = useRef<HTMLButtonElement>(null);
 
-  // ✅ モーダルが開くたびに `username` をセット
+  // モーダルが開くたびに `username` と `password` をセット
   const [username, setUsername] = useState(
     selectedUser?.participant_name || ""
   );
   const [password, setPassword] = useState(selectedUser?.password || "");
 
   useEffect(() => {
-    if (selectedUser) {
+    if (isOpen && selectedUser) {
+      console.log("Opening modal with selectedUser:", selectedUser);  // selectedUserが正しいか確認
       setUsername(selectedUser.participant_name);
       setPassword(selectedUser.password);
     }
-  }, [selectedUser, isOpen]);
+  }, [isOpen, selectedUser]);
+  
+  
+  
 
   const handleSave = () => {
-    onConfirm(username, password);
-    onClose();
+    onConfirm(username, password, listId);
   };
 
   const handleGeneratePassword = () => {
@@ -69,13 +78,7 @@ const ParticipatingUsersEditModal = ({
       onClose={onClose}
     >
       <AlertDialogOverlay>
-        <AlertDialogContent
-          maxWidth={{ base: "80%", md: "500px" }} // スマホ時は90%、PC時は最大500px
-          minH={{ base: "30vh", md: "50vh" }} 
-          maxH="90vh"
-          p={{ base: 4, md: 6 }} // スマホ時は余白を小さく
-          borderRadius="xl"
-        >
+        <AlertDialogContent maxWidth={{ base: "80%", md: "500px" }}>
           <AlertDialogHeader
             fontSize={{ base: "lg", md: "2xl" }}
             fontWeight="bold"
@@ -99,6 +102,7 @@ const ParticipatingUsersEditModal = ({
                 h="55px"
                 fontSize="xl"
                 w="full"
+                disabled={selectedUser?.is_guest === false} // isGuestがfalseなら無効
               />
             </div>
 

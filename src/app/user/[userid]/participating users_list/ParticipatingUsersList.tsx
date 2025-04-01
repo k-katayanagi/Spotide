@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { testParticipants } from "../individual_list/testlistdata";
 import { TParticipantingUser } from "@/types/UserTypes ";
 import EditButton from "@/components/buttons/EditButton ";
 import DeleteButton from "@/components/buttons/DeleteButton";
@@ -16,14 +15,17 @@ import DeleteConfirmModal from "@/components/modal/DeleteConfirmModal";
 import { IconButton } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import MenuBar from "@/components/Menu/MenuBar";
-import { useDisclosure, useToast } from "@chakra-ui/react";
+import { useDisclosure, useToast, Spinner } from "@chakra-ui/react";
 import useListType from "@/hooks/useListType";
 
 const ParticipatingUsersList = () => {
-  const [displayUserNames, setDisplayUserNames] =
-    useState<TParticipantingUser[]>(testParticipants);
+  const [displayUserNames, setDisplayUserNames] = useState<
+    TParticipantingUser[]
+  >([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const params = useParams();
   const { userid, listid } = params;
+  const listId = params?.listid ? Number(params.listid) : null;
   const listType = useListType();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
@@ -68,6 +70,45 @@ const ParticipatingUsersList = () => {
     },
   ];
 
+  const fetchParticipants = async () => {
+    if (!listId) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/participants?list_id=${listId}`);
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Fetched Participants:", data); // データを確認するためにログを出力
+        setDisplayUserNames(data);
+      } else {
+        toast({
+          title: "データ取得に失敗しました",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+          position: "top",
+        });
+      }
+    } catch (error) {
+      console.error("Fetch error:", error); // エラー時にもログを出力
+      toast({
+        title: "エラーが発生しました",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+    } finally {
+      setLoading(false); // データ取得後にローディング状態をfalseにする
+    }
+  };
+
+  useEffect(() => {
+    fetchParticipants();
+  }, [listId]);
+
   const toggleMenuDropdown = () => {
     setIsMenu((prevState) => !prevState);
   };
@@ -76,61 +117,153 @@ const ParticipatingUsersList = () => {
     onAddModalOpen();
   };
 
-  const handleUserAdd = (username: string, password: string) => {
-    console.log("ユーザー追加:", { username, password });
-    // ユーザー追加処理をここに実装
-
-    toast({
-      title: `"${username}" を追加しました！`,
-      status: "success",
-      duration: 3000,
-      isClosable: true,
-      position: "top",
-    });
-  };
-
-  const handleUserEditClick = (user: TParticipantingUser) => {
-    setSelectedUser(user);
-    onEditModalOpen();
-  };
-
-  const handleUserEdit = async (
-    editedUsername: string
-    // editedPassword: string
+  const handleUserAdd = async (
+    username: string,
+    password: string,
+    listId: number | null
   ) => {
-    if (!selectedUser) return;
-
-    try {
-      // DB の値を更新
-      // await fetch("/api/participants/update", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({
-      //     participant_id: selectedUser.participant_id,
-      //     participant_name: editedUsername,
-      //     password: editedPassword || null,
-      //   }),
-      // });
-
-      //フロント側のデータ（displayUserNames）を更新
-      setDisplayUserNames((prevUsers) =>
-        prevUsers.map((user) =>
-          user.participant_id === selectedUser.participant_id
-            ? { ...user, participant_name: editedUsername }
-            : user
-        )
-      );
-
+    if (!username || !password || !listId) {
       toast({
-        title: "情報を更新しました",
-        status: "success",
+        title: "情報が不足しています",
+        status: "error",
         duration: 3000,
         isClosable: true,
         position: "top",
       });
+      return;
+    }
 
-      setSelectedUser(null);
-      onEditModalClose();
+    try {
+      // APIエンドポイントへのPOSTリクエストを送信
+      const response = await fetch("/api/participants", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          participant_name: username,
+          password,
+          list_id: listId,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorResult = await response.json();
+        console.error("Error response:", errorResult);
+        throw new Error(errorResult.message || "Unknown error occurred");
+      }
+
+      const result = await response.json();
+      console.log(result)
+
+      if (result) {
+        setDisplayUserNames((prevUsers) => [
+          ...prevUsers,
+          {
+            participant_id: result.data.participant_id,
+            list_id: result.data.list_id,
+            user_id: result.data.user_id,
+            participant_name: username,
+            password:result.data.password,
+            is_guest: result.data.is_guest,
+            created_at:result.data.created_at || new Date(),
+            updated_at:result.data.updated_at || new Date(),
+          },
+        ]);
+
+        toast({
+          title: `"${username}" を追加しました！`,
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: "top",
+        });
+
+        // モーダルを閉じる
+        onAddModalClose();
+      } else {
+        toast({
+          title: "ユーザーの追加に失敗しました",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+          position: "top",
+        });
+      }
+    } catch (error) {
+      console.error("ユーザー追加エラー:", error);
+      toast({
+        title: "ユーザー追加処理中にエラーが発生しました",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+    }
+  };
+
+  const handleUserEditClick = (user: TParticipantingUser) => {
+    if (user) {
+      setSelectedUser(user);
+      onEditModalOpen();
+    }
+  };
+
+  const handleUserEdit = async (
+    editedUsername: string,
+    editedPassword: string,
+    listId: number | null
+  ) => {
+    if (!selectedUser) return;
+
+    try {
+      const response = await fetch("/api/participants", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          participant_id: selectedUser.participant_id,
+          participant_name: editedUsername,
+          password: editedPassword || null,
+          list_id: listId,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorResult = await response.json();
+        console.error("Error response:", errorResult);
+        throw new Error(errorResult.message || "Unknown error occurred");
+      }
+
+      const result = await response.json();
+
+      if (result) {
+        setDisplayUserNames((prevUsers: TParticipantingUser[]) => {
+          const updatedUsers = prevUsers.map((user) =>
+            user.participant_id === result.data.participant_id
+              ? {
+                  ...user,
+                  participant_name: result.data.participant_name,
+                  password: result.data.password,
+                  list_id: listId !== null ? listId : user.list_id,
+                  updated_at: result.updated_at || new Date(),
+                }
+              : user
+          );
+          console.log(updatedUsers);
+          return updatedUsers;
+        });
+
+        toast({
+          title: "情報を更新しました",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: "top",
+        });
+
+        setSelectedUser(null);
+        onEditModalClose();
+      }
     } catch (error) {
       console.error("更新エラー:", error);
       toast({
@@ -148,13 +281,31 @@ const ParticipatingUsersList = () => {
     onDeleteModalOpen();
   };
 
-  const handleDelete = () => {
-    if (selectedUser) {
+  const handleDelete = async () => {
+    if (!selectedUser) return;
+
+    try {
+      const response = await fetch("/api/participants", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ participant_id: selectedUser.participant_id }),
+      });
+
+      if (!response.ok) {
+        const errorResult = await response.json();
+        console.error("Error response:", errorResult);
+        throw new Error(errorResult.message || "削除処理に失敗しました");
+      }
+
+      // フロント側のデータ更新
       setDisplayUserNames((prevUsers) =>
         prevUsers.filter(
           (user) => user.participant_id !== selectedUser.participant_id
         )
       );
+
       toast({
         title: `"${selectedUser.participant_name}" を削除しました`,
         status: "success",
@@ -162,8 +313,18 @@ const ParticipatingUsersList = () => {
         isClosable: true,
         position: "top",
       });
+
       setSelectedUser(null);
       onDeleteModalClose();
+    } catch (error) {
+      console.error("削除エラー:", error);
+      toast({
+        title: "削除に失敗しました",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
     }
   };
 
@@ -224,34 +385,46 @@ const ParticipatingUsersList = () => {
         )}
       </div>
 
-      <div className="w-[90%] sm:w-[60%] h-[400px] p-4 border border-orange-500 rounded-lg bg-gradient-to-br from-orange-200 to-orange-300 flex flex-col gap-y-2  mx-auto">
-        {currentUserNames.length > 0 ? (
-          currentUserNames.map((user) => (
-            <div
-              key={user.participant_id}
-              className="flex items-center gap-x-4 p-2 border border-orange-500 rounded-lg bg-white h-[60px]"
-            >
-              <div className="flex-1 min-w-0">
-                <p className="truncate">{user.participant_name}</p>
-              </div>
-              <div className="flex justify-center items-center space-x-2">
-                <EditButton
-                  className="flex items-center justify-center h-[40px] w-[70px] sm:h-[45px] sm:w-[80px]"
-                  onClick={() => handleUserEditClick(user)}
-                />
-                <DetailButton
-                  className="flex items-center justify-center h-[40px] w-[70px] sm:h-[45px] sm:w-[80px]"
-                  onClick={() => handleUserDetailClick(user)}
-                />
-                <DeleteButton
-                  className="flex items-center justify-center h-[40px] w-[70px] sm:h-[45px] sm:w-[80px]"
-                  onClick={() => handleDeleteClick(user)}
-                />
-              </div>
-            </div>
-          ))
+      <div className="w-[90%] sm:w-[60%] h-[400px] p-4 border border-orange-500 rounded-lg bg-gradient-to-br from-orange-200 to-orange-300 flex flex-col gap-y-2 mx-auto">
+        {loading ? (
+          <div className="flex justify-center items-center h-full">
+            <Spinner size="xl" />
+          </div>
+        ) : displayUserNames.length === 0 ? (
+          <p className="text-center text-gray-600">参加者がいません</p>
         ) : (
-          <p className="text-center text-gray-600">データなし</p>
+          currentUserNames.map((user) => {
+            const isCurrentUser = user.user_id === userid;
+
+            return (
+              <div
+                key={user.participant_id}
+                className="flex items-center gap-x-4 p-2 border border-orange-500 rounded-lg bg-white h-[60px]"
+              >
+                <div className="flex-1 min-w-0">
+                  <p className="truncate">{user.participant_name}</p>
+                </div>
+                <div className="flex items-center gap-x-2 w-[200px]">
+                  {" "}
+                  {/* 固定幅を設定してボタンの配置を調整 */}
+                  <EditButton
+                    className="flex items-center justify-center h-[40px] w-[70px] sm:h-[45px] sm:w-[80px]"
+                    onClick={() => handleUserEditClick(user)}
+                  />
+                  <DetailButton
+                    className="flex items-center justify-center h-[40px] w-[70px] sm:h-[45px] sm:w-[80px]"
+                    onClick={() => handleUserDetailClick(user)}
+                  />
+                  {!isCurrentUser && (
+                    <DeleteButton
+                      className="flex items-center justify-center h-[40px] w-[70px] sm:h-[45px] sm:w-[80px]"
+                      onClick={() => handleDeleteClick(user)}
+                    />
+                  )}
+                </div>
+              </div>
+            );
+          })
         )}
       </div>
 
@@ -268,6 +441,7 @@ const ParticipatingUsersList = () => {
         isOpen={isAddModalOpen}
         onClose={onAddModalClose}
         onConfirm={handleUserAdd}
+        listId={listId}
       />
 
       {/* ユーザー編集モーダル */}
@@ -276,6 +450,7 @@ const ParticipatingUsersList = () => {
         onClose={onEditModalClose}
         onConfirm={handleUserEdit}
         selectedUser={selectedUser || null}
+        listId={listId}
       />
 
       {/* ユーザー詳細モーダル */}

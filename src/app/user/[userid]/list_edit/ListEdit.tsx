@@ -45,7 +45,7 @@ const ListEdit = () => {
   const { userid, listid } = params;
   const listType = useListType();
   const listId = params?.listid ? Number(params.listid) : null;
-  const list = lists.find((i) => i.id === listId);
+  const list = lists.find((i) => i.list_id=== listId);
   const [isFilter, setIsFilter] = useState(false);
   const [isSort, setIsSort] = useState(false);
   const [isMenu, setIsMenu] = useState(false);
@@ -89,6 +89,7 @@ const ListEdit = () => {
     { label: "表示ラベル設定", onClick: () => setIsLabelSettingOpen(true) },
     { label: "投票開始日設定", onClick: () => setIsLabelSettingOpen(true) },
   ];
+
 
   useEffect(() => {
     if (sortLists.length > 0) {

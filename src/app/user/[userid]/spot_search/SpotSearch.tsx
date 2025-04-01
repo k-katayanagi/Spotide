@@ -16,26 +16,27 @@ import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import InputBox from "@/components/InputBox";
 import MenuBar from "@/components/Menu/MenuBar";
 import useListType from "@/hooks/useListType";
+import axios from "axios";
 
 const SpotSearch = () => {
   const params = useParams();
   const { userid, listid } = params;
   const listType = useListType();
-  const { searchSpots, filteredSpots } = useSearchSpotContext();
+  const { searchSpots, setSearchSpots, filteredSpots } = useSearchSpotContext();
   const [isFilter, setIsFilter] = useState(false);
   const [isSort, setIsSort] = useState(false);
   const [isMenu, setIsMenu] = useState(false);
+  const [searchKeyword, setSearchKeyword] = useState(""); // 検索キーワードを管理する状態
   const { isBottomNavOpen } = useBottomNav();
+  const [loading, setLoading] = useState(false);
   const toast = useToast();
   //   const [selectedSearchSpot, setSelectedSearchSpot] = useState<Spot | null>(
   //     null
   //   );
   //   const toast = useToast();
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 12;
   const listContainerRef = useRef<HTMLDivElement>(null);
-  const [displaySearchSpot, setDisplaySearchSpot] =
-    useState<Spot[]>(searchSpots);
 
   const menuItems = [
     {
@@ -48,21 +49,19 @@ const SpotSearch = () => {
     },
   ];
 
+  // 新しいリストIDまたはユーザーIDが変更されたときに検索結果をリセット
   useEffect(() => {
-    if (filteredSpots && filteredSpots.length > 0) {
-      setDisplaySearchSpot(filteredSpots);
-    } else {
-      setDisplaySearchSpot(searchSpots);
-    }
-  }, [filteredSpots?.length ?? 0, searchSpots]);
+    setSearchSpots([]);  // ここで検索結果をリセット
+    setSearchKeyword("");  // 検索キーワードもリセット
+  }, [userid, listid, setSearchSpots]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentSearchSpot = displaySearchSpot.slice(
+  const currentSearchSpot = searchSpots.slice(
     indexOfFirstItem,
     indexOfLastItem
   );
-  const totalPages = Math.ceil(displaySearchSpot.length / itemsPerPage);
+  const totalPages = Math.ceil(searchSpots.length / itemsPerPage);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -85,14 +84,110 @@ const SpotSearch = () => {
     setIsMenu((prevState) => !prevState);
   };
 
-  const handleAddListItem = (spot: Spot) => {
-    toast({
-      title: `"${spot.store_name}" を追加しました`,
-      status: "success",
-      duration: 3000,
-      isClosable: true,
-      position: "top",
-    });
+  const handleAddListItem = async (spot: Spot) => {
+    try {
+      const response = await fetch("/api/listItems", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          spot,
+          userId: userid,
+          listid: listid,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast({
+          title: `"${spot.store_name}" を追加しました`,
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: "top",
+        });
+      } else {
+        toast({
+          title: data.error || data.message || "エラーが発生しました",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+          position: "top",
+        });
+      }
+    } catch (error) {
+      console.error("Error adding spot:", error);
+      toast({
+        title: "data",
+        description: error.message || "ネットワークエラー",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+    }
+  };
+
+  // 検索処理
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!searchKeyword.trim()) {
+      toast({
+        title: "検索キーワードが入力されていません。",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await axios.get(
+        `/api/spotSearch?query=${encodeURIComponent(searchKeyword)}`
+      );
+
+      console.log(response.data.results);
+      if (response.data.results && response.data.results.length > 0) {
+        setSearchSpots(response.data.results); // 検索結果を context にセット
+        toast({
+          title: "検索が完了しました。",
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+          position: "top",
+        });
+      } else {
+        toast({
+          title: "該当するスポットが見つかりませんでした。",
+          status: "info",
+          duration: 3000,
+          isClosable: true,
+          position: "top",
+        });
+      }
+    } catch (error) {
+      console.error(
+        "検索に失敗しました:",
+        error.response ? error.response.data : error.message
+      );
+      toast({
+        title: "検索に失敗しました。",
+        description: error.response?.data?.error || "ネットワークエラー",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+    } finally {
+      setLoading(false);
+      toggleFilterDropdown(); // フィルターメニューを閉じる
+    }
   };
 
   const paginationZIndex = !isBottomNavOpen && !isFilter ? "z-40" : "z-20";
@@ -102,9 +197,10 @@ const SpotSearch = () => {
         <div className="flex-1 flex items-end justify-center gap-2">
           <InputBox
             placeholder="検索するキーワードを入力"
-            className="border border-gray-400 rounded-md p-2 w-[300px] h-10 sm:w-[400px] sm:h-12 relative" 
+            className="border border-gray-400 rounded-md p-2 w-[300px] h-10 sm:w-[400px] sm:h-12 relative"
             onClick={toggleFilterDropdown}
             showImage={true}
+            onChange={(e) => setSearchKeyword(e.target.value)}
           />
         </div>
 
@@ -122,9 +218,7 @@ const SpotSearch = () => {
 
       {isFilter && (
         <div className="absolute top-[60px] left-1/2 transform -translate-x-1/2 z-30 w-full max-w-[1024px]">
-          <SpotSearchFilterDropdown
-            toggleFilterDropdown={toggleFilterDropdown}
-          />
+          <SpotSearchFilterDropdown handleSearch={handleSearch} />
         </div>
       )}
 
@@ -153,14 +247,14 @@ const SpotSearch = () => {
 
       {/* リスト部分 */}
       <div
-        className="overflow-auto max-h-[60vh] p-2 border border-[#FF5722] rounded-lg  bg-gradient-to-br from-[#FFE0B2] to-[#FFCC80]
+        className="overflow-auto h-[65vh] p-2 border border-[#FF5722] rounded-lg  bg-gradient-to-br from-[#FFE0B2] to-[#FFCC80]
                   scrollbar-thin scrollbar-thumb-[#FF5722] scrollbar-track-[#FFE0B2]"
         ref={listContainerRef}
       >
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {currentSearchSpot.map((Item) => (
             <SearchSpotCard
-              key={Item.item_id}
+              key={Item.id}
               SearchSpot={Item}
               onAdd={() => handleAddListItem(Item)}
             />
