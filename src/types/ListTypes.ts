@@ -17,26 +17,24 @@ export type List = {
 };
 
 
-
 export type ListItem = {
   item_id: number;
   list_id: number;
   store_name: string;
   station: string;
   google_rating: number;
-  custom_rating: number;
-  memo: string;
+  custom_rating?: number;
+  memo?: string;
   address: string;
   prefecture: string;
   city: string;
-  time_to_station: number;
   business_hours: string; 
   regular_holiday: string;
   time_from_nearest_station: number;
   category: string;
   sub_category: string;
-  photo_id: number;
-  add_by_id: number;
+  photo_id: string;
+  add_by_id: string;
   created_at: Date;
   updated_at: Date;
 };

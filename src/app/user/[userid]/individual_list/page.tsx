@@ -76,6 +76,7 @@ const IndividualList = () => {
     setIsFilter((prevState) => !prevState);
   };
 
+  
   const toggleSortDropdown = () => {
     setIsSort((prevState) => !prevState);
   };

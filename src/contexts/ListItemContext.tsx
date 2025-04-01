@@ -1,12 +1,11 @@
 "use client";
 import { createContext, useContext, useState, ReactNode } from "react";
-import { testListItem } from "@/app/user/[userid]/individual_list/testlistdata";
 import { ListItem } from "@/types/ListTypes";
 type ListItemContextType = {
   listItems: ListItem[];
-  setListItems: (items: ListItem[]) => void;
+  setListItems: React.Dispatch<React.SetStateAction<ListItem[]>>;
   sortListItems: ListItem[];
-  setSortListItems: (sortLists: ListItem[]) => void;
+  setSortListItems: React.Dispatch<React.SetStateAction<ListItem[]>>;
 };
 
 const ListItemContext = createContext<ListItemContextType | undefined>(
@@ -14,7 +13,7 @@ const ListItemContext = createContext<ListItemContextType | undefined>(
 );
 
 export const ListItemProvider = ({ children }: { children: ReactNode }) => {
-  const [listItems, setListItems] = useState<ListItem[]>(testListItem);
+  const [listItems, setListItems] = useState<ListItem[]>([]);
   const [sortListItems, setSortListItems] = useState<ListItem[]>([]);
 
   return (

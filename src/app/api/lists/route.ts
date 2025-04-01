@@ -72,6 +72,7 @@ export async function POST(req: Request) {
           participant_name: username,
           password: password,
           is_guest: false,
+          is_admin: true,
           created_at: convertToJST(new Date()),
           updated_at: convertToJST(new Date()),
         },
@@ -104,7 +105,8 @@ export async function POST(req: Request) {
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const userId = searchParams.get("userId");
-  const listType = searchParams.get("listType") || "individual"; // デフォルトは "individual"
+  const listType = (searchParams.get("listType") || "individual").replace('_list', '');
+  const listId = searchParams.get("listId");
 
   if (!userId) {
     return NextResponse.json(
@@ -113,17 +115,42 @@ export async function GET(request: Request) {
     );
   }
 
-  const { data, error } = await supabase
-    .from("lists")
-    .select("*")
-    .eq("creator_id", userId)
-    .eq("list_type", listType); // listTypeを動的に指定
+  try {
+    let query = supabase
+      .from("lists")
+      .select("*")
+      .eq("creator_id", userId)
+      .eq("list_type", listType);
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    // listId がある場合にのみフィルタリング
+    if (listId) {
+      const numericListId = Number(listId);
+
+      if (!isNaN(numericListId)) {
+        query = query.eq("list_id", numericListId.toString()); 
+      } else {
+        console.error("エラー: list_id が数値ではありません:", listId);
+        return NextResponse.json({ error: "無効な list_id" }, { status: 400 });
+      }
+    }
+
+    // クエリの実行
+    const { data, error } = await query;
+
+    if (error) {
+      console.error("Supabaseエラー:", error);
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    console.log("取得データ:", data);
+    return NextResponse.json(data); // 取得したリストデータを返す
+  } catch (error) {
+    console.error("リスト取得中のエラー:", error);
+    return NextResponse.json(
+      { error: "リスト取得中にエラーが発生しました", details: error.message },
+      { status: 500 }
+    );
   }
-
-  return NextResponse.json(data);
 }
 
 // DELETE: リストを削除

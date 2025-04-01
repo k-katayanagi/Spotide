@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useListContext } from "@/contexts/ListContext";
 import { useListItemContext } from "@/contexts/ListItemContext";
 import { useBottomNav } from "@/contexts/BottomNavContext";
@@ -9,6 +10,7 @@ import Pagination from "@/components/pagination/Pagination";
 import FilterButton from "@/components/buttons/FilterButton";
 import SortButton from "@/components/buttons/SortButton";
 import { ListItem } from "@/types/ListTypes";
+import { List } from "@/types/ListTypes";
 import ListItemCard from "@/components/card/ListItemCard";
 import EditFilterDropdown from "@/components/filterDropdown/EditFilterDropdown ";
 import EditSortDropdown from "@/components/sortDropdown/EditSortDropdown";
@@ -18,7 +20,7 @@ import DeleteConfirmModal from "@/components/modal/DeleteConfirmModal";
 import IssueViewButton from "@/components/buttons/IssueViewButton";
 import { motion } from "framer-motion";
 import { IconButton } from "@chakra-ui/react";
-import { useDisclosure, useToast } from "@chakra-ui/react";
+import { useDisclosure, useToast, Spinner } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import MenuBar from "@/components/Menu/MenuBar";
 import useListType from "@/hooks/useListType";
@@ -39,13 +41,15 @@ const defaultFields = [
 ];
 
 const ListEdit = () => {
+  const { data: session } = useSession();
   const params = useParams();
-  const { lists, sortLists } = useListContext();
-  const { listItems } = useListItemContext();
-  const { userid, listid } = params;
+  const { lists, setLists } = useListContext();
+  const { listItems, setListItems } = useListItemContext();
   const listType = useListType();
-  const listId = params?.listid ? Number(params.listid) : null;
-  const list = lists.find((i) => i.list_id=== listId);
+  const { userid, listid } = params;
+  const listId = listid ? Number(listid) : null; // listidを数値に変換
+  const list = lists.find((i) => i.list_id === listId);
+  const userId = session?.user.id;
   const [isFilter, setIsFilter] = useState(false);
   const [isSort, setIsSort] = useState(false);
   const [isMenu, setIsMenu] = useState(false);
@@ -71,11 +75,10 @@ const ListEdit = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const listContainerRef = useRef<HTMLDivElement>(null);
-  const [displayListItems, setDisplayListItems] =
-    useState<ListItem[]>(listItems);
   const [selectedFields, setSelectedFields] = useState<string[]>(
     defaultFields.map((f) => f.key)
   );
+  const [loading, setLoading] = useState(true);
 
   const menuItems = [
     {
@@ -90,22 +93,56 @@ const ListEdit = () => {
     { label: "投票開始日設定", onClick: () => setIsLabelSettingOpen(true) },
   ];
 
-
   useEffect(() => {
-    if (sortLists.length > 0) {
-      setDisplayListItems(listItems);
-    } else {
-      setDisplayListItems(listItems);
+    if (!listId) return;
+    const fetchListItems = async () => {
+      setLoading(true); // 取得開始時にローディングを有効化
+      try {
+        const response = await fetch(`/api/listItems?list_id=${listId}`);
+        if (!response.ok) throw new Error("リストアイテム取得に失敗しました");
+        const data = await response.json();
+        setListItems(data.listItems);
+      } catch (error) {
+        console.error("エラー:", error);
+        setListItems([]);
+      } finally {
+        setLoading(false); // 取得完了時にローディングを無効化
+      }
+    };
+
+    // リストの情報を取得する処理
+    const fetchLists = async () => {
+      try {
+        console.log("id:", listId, userId, listType);
+        const response = await fetch(
+          `/api/lists?userId=${userId}&listId=${listId}&listType=${listType}`
+        );
+        if (!response.ok) throw new Error("リスト取得に失敗しました");
+        const data = await response.json();
+        console.log("responseLists:", data);
+        setLists(data); // 取得したリストをセット
+        setLoading(false);
+      } catch (error) {
+        console.error("エラー:", error);
+      }
+    };
+
+    // listsが空の場合にのみリストを取得
+    if (!Array.isArray(lists) || lists.length === 0) {
+      fetchLists();
     }
-  }, [sortLists.length, listItems]);
+
+    // listItemsは常に取得
+    fetchListItems();
+  }, []);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentListItems = displayListItems.slice(
-    indexOfFirstItem,
-    indexOfLastItem
-  );
-  const totalPages = Math.ceil(displayListItems.length / itemsPerPage);
+  const currentListItems = Array.isArray(listItems)
+    ? listItems.slice(indexOfFirstItem, indexOfLastItem)
+    : [];
+
+  const totalPages = Math.ceil(listItems.length / itemsPerPage);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -140,7 +177,7 @@ const ListEdit = () => {
 
   const handleDelete = () => {
     if (selectedListItem) {
-      setDisplayListItems((prevItem) =>
+      setListItems((prevItem) =>
         prevItem.filter((item) => item.item_id !== selectedListItem.item_id)
       );
 
@@ -161,24 +198,21 @@ const ListEdit = () => {
     <div className="p-3 overflow-auto relative">
       <div className="flex items-center justify-between mb-5 w-full">
         <h1 className="text-2xl font-bold flex-1">
-          {list ? list.list_name : "リストが見つかりません"}
+          {loading
+            ? "取得中..."
+            : list?.list_name ||
+              lists[0]?.list_name ||
+              "リストが見つかりません"}
         </h1>
-
         <div className="flex items-center gap-2">
-          <IssueViewButton listId={listId}/>
+          <IssueViewButton listId={listId} />
 
           {/* フィルター & ソートボタンをアイコンと揃える */}
           <div className="flex gap-5 items-center">
-            <FilterButton
-              onClick={toggleFilterDropdown}
-              disabled={isSort}
-            />
-            <SortButton
-              onClick={toggleSortDropdown}
-              disabled={isFilter}
-            />
+            <FilterButton onClick={toggleFilterDropdown} disabled={isSort} />
+            <SortButton onClick={toggleSortDropdown} disabled={isFilter} />
             <IconButton
-              icon={<HamburgerIcon boxSize={7} />} // テキストと同じ高さにするため boxSize を調整
+              icon={<HamburgerIcon boxSize={7} />}
               variant="unstyled"
               aria-label="メニュー"
               className="flex items-center justify-center text-black block w-[20px] h-[20px] sm:w-[30px] sm:h-[30px]"
@@ -249,21 +283,31 @@ const ListEdit = () => {
       >
         {/* リスト部分 */}
         <div
-          className="overflow-auto max-h-[60vh] p-2 border border-[#FF5722] rounded-lg  bg-gradient-to-br from-[#FFE0B2] to-[#FFCC80]
-                scrollbar-thin scrollbar-thumb-[#FF5722] scrollbar-track-[#FFE0B2]"
+          className="overflow-auto h-[65vh] p-2 border border-[#FF5722] rounded-lg  bg-gradient-to-br from-[#FFE0B2] to-[#FFCC80]
+                  scrollbar-thin scrollbar-thumb-[#FF5722] scrollbar-track-[#FFE0B2]"
           ref={listContainerRef}
         >
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {currentListItems.map((listItem) => (
-              <ListItemCard
-                key={listItem.item_id}
-                listItem={listItem}
-                selectedFields={selectedFields}
-                onEdit={() => handleEditClick(listItem)}
-                onDelete={() => handleDeleteClick(listItem)}
-              />
-            ))}
-          </div>
+          {loading ? (
+            <div className="flex justify-center items-center w-full h-full">
+              <Spinner size="xl" color="orange.500" />
+            </div>
+          ) : currentListItems.length > 0 ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {currentListItems.map((listItem) => (
+                <ListItemCard
+                  key={listItem.item_id}
+                  listItem={listItem}
+                  selectedFields={selectedFields}
+                  onEdit={() => handleEditClick(listItem)}
+                  onDelete={() => handleDeleteClick(listItem)}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="flex justify-center items-center text-gray-500 mt-4 w-full h-full">
+              アイテムが追加されていません
+            </div>
+          )}
         </div>
       </motion.div>
 

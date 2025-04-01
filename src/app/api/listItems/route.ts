@@ -12,7 +12,6 @@ const convertToJST = (date: string | Date): string => {
 };
 
 // list_itemsテーブルで重複をチェックする関数
-// list_itemsテーブルで重複をチェックする関数
 const checkExistingSpot = async (
   listid: number,
   storeName: string,
@@ -197,5 +196,39 @@ const updatePhotoItemIds = async (photoIds: number[], itemId: number) => {
   } catch (error) {
     console.error("Error updating photos:", error.message);
     throw error;
+  }
+};
+
+//listItem取得
+export const GET = async (req: Request) => {
+  try {
+    const { searchParams } = new URL(req.url);
+    const listId = searchParams.get("list_id");
+
+    if (!listId) {
+      return NextResponse.json(
+        { message: "list_id is required" },
+        { status: 400 }
+      );
+    }
+
+    // リストアイテム取得
+    const { data: listItems, error: listError } = await supabase
+      .from("list_items")
+      .select("*")
+      .eq("list_id", listId);
+
+    if (listError) {
+      throw new Error("Error fetching list items: " + listError.message);
+    }
+
+    console.log("取得アイテム",listItems)
+    return NextResponse.json({ listItems }, { status: 200 });
+  } catch (error) {
+    console.error("Error in GET list_items and lists API:", error);
+    return NextResponse.json(
+      { message: "Failed to fetch data", error: error.message },
+      { status: 500 }
+    );
   }
 };
