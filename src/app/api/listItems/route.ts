@@ -134,11 +134,31 @@ const addSpotToList = async (
   listid: number
 ) => {
   try {
+    // list_participants から participant_id を取得
+    const { data: participantData, error: participantError } = await supabase
+      .from("list_participants")
+      .select("participant_id")
+      .eq("list_id", listid)
+      .eq("user_id", userId)
+      .single(); // 単一の値を取得
+
+    if (participantError || !participantData) {
+      console.error(
+        "Error fetching participant_id:",
+        participantError?.message
+      );
+      throw new Error("参加者情報を取得できませんでした");
+    }
+
+    const participantId = participantData.participant_id;
+
+    // list_items にスポットを追加
     const { data, error } = await supabase
       .from("list_items")
       .insert([
         {
           list_id: listid,
+          participant_id: participantId, // 取得した participant_id をセット
           store_name: spot.store_name,
           station: spot.station,
           google_rating: spot.google_rating,
@@ -159,7 +179,7 @@ const addSpotToList = async (
       .select();
 
     if (error) {
-      console.error("Error inserting spot:", error.message); // 詳細なエラーをログに出力
+      console.error("Error inserting spot:", error.message);
       throw new Error("Error inserting spot: " + error.message);
     }
 
@@ -212,17 +232,22 @@ export const GET = async (req: Request) => {
       );
     }
 
-    // リストアイテム取得
-    const { data: listItems, error: listError } = await supabase
+    const { data: listItems, error } = await supabase
       .from("list_items")
-      .select("*")
+      .select(
+        `
+      *,
+      list_participants (participant_name)
+    `
+      )
       .eq("list_id", listId);
 
-    if (listError) {
-      throw new Error("Error fetching list items: " + listError.message);
+    if (error) {
+      console.error("Error fetching list items:", error.message);
+    } else {
+      console.log("取得アイテム:", listItems);
     }
 
-    console.log("取得アイテム",listItems)
     return NextResponse.json({ listItems }, { status: 200 });
   } catch (error) {
     console.error("Error in GET list_items and lists API:", error);

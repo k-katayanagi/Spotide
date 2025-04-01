@@ -1,5 +1,6 @@
 import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
+import { typeToJapanese } from "@/types/SpotTypes";
 
 const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
 const GOOGLE_PLACES_API_URL =
@@ -49,23 +50,6 @@ const transformToSpot = (place: any, index: number) => {
       ?.filter((day: string) => day.includes("定休日"))
       ?.map((day: string) => day.split(":")[0])
       .join(", ") || "不明";
-
-  // Google Places API から取得した types を日本語に変換する関数
-  const typeToJapanese = (type: string) => {
-    const typeMap: { [key: string]: string } = {
-      restaurant: "レストラン",
-      cafe: "カフェ",
-      store: "店舗",
-      bar: "バー",
-      hotel: "ホテル",
-      gym: "ジム",
-      school: "学校",
-      hospital: "病院",
-      supermarket: "スーパー",
-      chinese_restaurant: "中華",
-    };
-    return typeMap[type] || "未分類"; // マッチするタイプがなければ "未分類"
-  };
 
   const photoUrls =
     place.photos?.map(
