@@ -36,7 +36,7 @@ const defaultFields = [
   { key: "time_from_nearest_station", label: "最寄り駅からの時間" },
   { key: "category", label: "カテゴリ" },
   { key: "sub_category", label: "サブカテゴリ" },
-  { key: "add_by_id", label: "登録者" },
+  { key: "list_participants", label: "登録者" },
   { key: "created_at", label: "登録日" },
 ];
 
@@ -101,6 +101,8 @@ const ListEdit = () => {
         const response = await fetch(`/api/listItems?list_id=${listId}`);
         if (!response.ok) throw new Error("リストアイテム取得に失敗しました");
         const data = await response.json();
+        console.log("フロント側データ", data);
+        console.log("フロント側データlistItems", data.listItems);
         setListItems(data.listItems);
       } catch (error) {
         console.error("エラー:", error);

@@ -16,7 +16,7 @@ const defaultFields = [
   { key: "time_from_nearest_station", label: "最寄り駅からの時間" },
   { key: "category", label: "カテゴリ" },
   { key: "sub_category", label: "サブカテゴリ" },
-  { key: "add_by_id", label: "登録者" },
+  { key: "list_participants", label: "登録者" },
   { key: "created_at", label: "登録日" },
 ];
 
@@ -51,7 +51,8 @@ const ListItemCard = ({
           className="w-full h-[160px] object-cover rounded-lg mb-4"
           unoptimized
         />
-        <h2 className="text-lg font-bold">{listItem.store_name}</h2>
+
+        <h1 className="text-2xl  font-bold mt-5 mb-5">{listItem.store_name}</h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
           {selectedFields.map((key) => {
@@ -60,13 +61,15 @@ const ListItemCard = ({
 
             return (
               <div key={field.key} className="flex text-base">
-                <span className="font-bold text-lg text-gray-900">
+                <span className="font-bold text-lg text-gray-900 whitespace-nowrap">
                   {field.label}:
                 </span>
                 &nbsp;
-                <span className="text-gray-700">
+                <span className="text-gray-700 break-words">
                   {key === "created_at"
                     ? new Date(listItem.created_at).toLocaleDateString()
+                    : key === "list_participants"
+                    ? listItem.list_participants?.participant_name || "未登録"
                     : String(listItem[key as keyof ListItem])}
                 </span>
               </div>

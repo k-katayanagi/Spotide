@@ -17,6 +17,7 @@ export type List = {
 };
 
 
+
 export type ListItem = {
   item_id: number;
   list_id: number;
@@ -35,6 +36,9 @@ export type ListItem = {
   sub_category: string;
   photo_id: string;
   add_by_id: string;
+  list_participants?: {
+    participant_name: string;
+  };
   created_at: Date;
   updated_at: Date;
 };

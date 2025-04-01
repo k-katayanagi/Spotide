@@ -237,7 +237,8 @@ export const GET = async (req: Request) => {
       .select(
         `
       *,
-      list_participants (participant_name)
+      list_participants (participant_name),
+      photos (photo_url)
     `
       )
       .eq("list_id", listId);
@@ -245,7 +246,13 @@ export const GET = async (req: Request) => {
     if (error) {
       console.error("Error fetching list items:", error.message);
     } else {
-      console.log("取得アイテム:", listItems);
+      // photo_url を配列として整理
+      const formattedData = listItems.map((item) => ({
+        ...item,
+        photo_url: item.photos.map((photo) => photo.photo_url), // photo_urlを配列化
+      }));
+
+      console.log("取得アイテム:", formattedData);
     }
 
     return NextResponse.json({ listItems }, { status: 200 });
