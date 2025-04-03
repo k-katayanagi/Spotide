@@ -101,8 +101,6 @@ const ListEdit = () => {
         const response = await fetch(`/api/listItems?list_id=${listId}`);
         if (!response.ok) throw new Error("リストアイテム取得に失敗しました");
         const data = await response.json();
-        console.log("フロント側データ", data);
-        console.log("フロント側データlistItems", data.listItems);
         setListItems(data.listItems);
       } catch (error) {
         console.error("エラー:", error);
@@ -177,20 +175,45 @@ const ListEdit = () => {
     onDeleteModalOpen();
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (selectedListItem) {
-      setListItems((prevItem) =>
-        prevItem.filter((item) => item.item_id !== selectedListItem.item_id)
-      );
+      // バックエンドで削除処理を実行
+      try {
+        const response = await fetch("/api/listItems", {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ item_id: selectedListItem.item_id }),
+        });
 
-      toast({
-        title: `"${selectedListItem.store_name}" を削除しました`,
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-        position: "top",
-      });
-      onDeleteModalOpen();
+        if (!response.ok) {
+          throw new Error("削除に失敗しました");
+        }
+
+        // フロントエンドでアイテムを削除（バックエンドが成功した場合）
+        setListItems((prevItem) =>
+          prevItem.filter((item) => item.item_id !== selectedListItem.item_id)
+        );
+
+        toast({
+          title: `"${selectedListItem.store_name}" を削除しました`,
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: "top",
+        });
+        onDeleteModalClose();
+      } catch (error) {
+        toast({
+          title: "エラーが発生しました",
+          description: error.message,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+          position: "top",
+        });
+      }
     }
   };
 

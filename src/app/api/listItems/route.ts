@@ -193,13 +193,11 @@ const addSpotToList = async (
 // photosテーブルのitem_idを更新する関数
 const updatePhotoItemIds = async (photoIds: number[], itemId: number) => {
   try {
-    // 空の配列が渡されている場合、何もしない
     if (photoIds.length === 0) {
       console.log("No photos to update.");
       return;
     }
 
-    // photoIdsが正しい型（number[]）であることを確認
     const validPhotoIds = photoIds.map((id) => parseInt(id.toString(), 10));
 
     const { data, error } = await supabase
@@ -210,16 +208,13 @@ const updatePhotoItemIds = async (photoIds: number[], itemId: number) => {
     if (error) {
       throw new Error("Error updating photo item_id: " + error.message);
     }
-
-    console.log("Photos updated successfully with item_id:", itemId);
-    console.log("Updated photos:", data); // 更新されたデータの確認用ログ
   } catch (error) {
     console.error("Error updating photos:", error.message);
     throw error;
   }
 };
 
-//listItem取得
+//listItem取得処理
 export const GET = async (req: Request) => {
   try {
     const { searchParams } = new URL(req.url);
@@ -245,21 +240,60 @@ export const GET = async (req: Request) => {
 
     if (error) {
       console.error("Error fetching list items:", error.message);
-    } else {
-      // photo_url を配列として整理
-      const formattedData = listItems.map((item) => ({
-        ...item,
-        photo_url: item.photos.map((photo) => photo.photo_url), // photo_urlを配列化
-      }));
-
-      console.log("取得アイテム:", formattedData);
     }
-
     return NextResponse.json({ listItems }, { status: 200 });
   } catch (error) {
     console.error("Error in GET list_items and lists API:", error);
     return NextResponse.json(
       { message: "Failed to fetch data", error: error.message },
+      { status: 500 }
+    );
+  }
+};
+
+export const DELETE = async (req: Request) => {
+  try {
+    const body = await req.json();
+    const { item_id } = body;
+
+    if (!item_id) {
+      return NextResponse.json(
+        { message: "item_id is required" },
+        { status: 400 }
+      );
+    }
+
+    // list_itemsテーブルからアイテムを削除
+    const { error: listItemsError } = await supabase
+      .from("list_items")
+      .delete()
+      .eq("item_id", item_id);
+
+    if (listItemsError) {
+      console.error("Error deleting list item:", listItemsError.message);
+      throw new Error("Error deleting list item");
+    }
+
+    // photosテーブルから関連する写真を削除
+    const { error: photosError } = await supabase
+      .from("photos")
+      .delete()
+      .eq("item_id", item_id);
+
+    if (photosError) {
+      console.error("Error deleting photos:", photosError.message);
+      throw new Error("Error deleting photos");
+    }
+
+    // 削除が成功した場合
+    return NextResponse.json(
+      { message: "スポットと関連する写真を削除しました" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error in DELETE list item and photos:", error.message);
+    return NextResponse.json(
+      { message: "削除に失敗しました", error: error.message },
       { status: 500 }
     );
   }

@@ -2,8 +2,8 @@
 
 import DeleteButton from "@/components/buttons/DeleteButton";
 import CustomEditButton from "../buttons/CustomEditButton";
+import ImageSlider from "../UI/ImageSlider";
 import { ListItem } from "@/types/ListTypes";
-import Image from "next/image";
 
 const defaultFields = [
   { key: "station", label: "駅" },
@@ -43,15 +43,13 @@ const ListItemCard = ({
         <DeleteButton className="mx-2" onClick={onDelete} />
       </div>
       <div className="flex-1">
-        <Image
-          src="/images/image.gif"
-          alt="画像"
-          width={0} // 自動調整のため0に設定
-          height={180}
-          className="w-full h-[160px] object-cover rounded-lg mb-4"
-          unoptimized
-        />
-
+        {listItem.photos && listItem.photos.length > 0 ? (
+          <ImageSlider
+            photoIds={listItem.photos.map((photo) => photo.photo_url)}
+          />
+        ) : (
+          <p>画像がありません</p>
+        )}
         <h1 className="text-2xl  font-bold mt-5 mb-5">{listItem.store_name}</h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -70,6 +68,10 @@ const ListItemCard = ({
                     ? new Date(listItem.created_at).toLocaleDateString()
                     : key === "list_participants"
                     ? listItem.list_participants?.participant_name || "未登録"
+                    : key === "custom_rating"
+                    ? listItem.custom_rating === null
+                      ? "未設定" // custom_ratingがnullの場合
+                      : String(listItem.custom_rating)
                     : String(listItem[key as keyof ListItem])}
                 </span>
               </div>

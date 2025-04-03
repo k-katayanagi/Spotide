@@ -25,7 +25,7 @@ const defaultFields = [
   { key: "time_from_nearest_station", label: "最寄り駅からの時間" },
   { key: "category", label: "カテゴリ" },
   { key: "sub_category", label: "サブカテゴリ" },
-  { key: "add_by_id", label: "登録者" },
+  { key: "list_participants", label: "登録者" },
   { key: "created_at", label: "登録日" },
 ];
 
