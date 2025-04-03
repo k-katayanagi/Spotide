@@ -2,9 +2,34 @@
 
 import Image from 'next/image';
 import useNavigation from '@/hooks/useNavigation';
+import { useSession } from 'next-auth/react';
 
 const BottomNavigation = () => {
+  const { data: session } = useSession(); // セッションデータを取得
   const { handleNavigateTo } = useNavigation();
+
+  if (!session) {
+    return (
+      <nav className="desktop-nav flex justify-center items-center w-full">
+        <ul className="flex space-x-8">
+          <li
+            className="text-black hover:text-gray-300 text-lg text-center"
+            onClick={() => handleNavigateTo('/')}
+          >
+            <Image
+              src="/images/top.svg"
+              alt="TOPアイコン"
+              width={50}
+              height={50}
+              priority
+            />
+            <label className="block">TOP</label>
+          </li>
+        </ul>
+      </nav>
+    );
+  }
+
   return (
     <nav className="desktop-nav flex justify-center items-center w-full">
       <ul className="flex space-x-8">
@@ -23,7 +48,9 @@ const BottomNavigation = () => {
         </li>
         <li
           className="text-black hover:text-gray-300 text-lg text-center"
-          onClick={() => handleNavigateTo('/user/1/list_create')}
+          onClick={() =>
+            handleNavigateTo(`/user/${session.user.id}/list_create`)
+          }
         >
           <Image
             src="/images/createList.svg"
@@ -37,7 +64,9 @@ const BottomNavigation = () => {
 
         <li
           className="text-black hover:text-gray-300 text-lg text-center"
-          onClick={() => handleNavigateTo('/user/1/individual_list')}
+          onClick={() =>
+            handleNavigateTo(`/user/${session.user.id}/individual_list`)
+          }
         >
           <Image
             src="/images/individualList.svg"
@@ -51,7 +80,9 @@ const BottomNavigation = () => {
 
         <li
           className="text-black hover:text-gray-300 text-lg text-center"
-          onClick={() => handleNavigateTo('/user/1/share_list')}
+          onClick={() =>
+            handleNavigateTo(`/user/${session.user.id}/share_list`)
+          }
         >
           <Image
             src="/images/shareList.svg"
@@ -65,7 +96,7 @@ const BottomNavigation = () => {
 
         <li
           className="text-black hover:text-gray-300 text-lg text-center"
-          onClick={() => handleNavigateTo('/user/1/mypage')}
+          onClick={() => handleNavigateTo(`/user/mypage`)}
         >
           <Image
             src="/images/myPage.svg"

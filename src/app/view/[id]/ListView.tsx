@@ -111,17 +111,17 @@ const ListView = () => {
       if (matchedListId) {
         // listIdに基づいてリスト名を取得
         const listId = Number(matchedListId);
-        const matchedList = lists.find((list) => list.id === listId);
+        const matchedList = lists.find((list) => list.list_id === listId);
 
         if (matchedList) {
           setMatchedList(matchedList);
-          console.log('投票開始日:', matchedList.vote_start_date);
+          console.log('投票開始日:', matchedList.voting_start_at);
 
           // 現在の日時を取得
           const currentTime = new Date().getTime();
           // 投票開始日をDate型に変換して比較
-          const votingStartTime = matchedList.vote_start_date
-            ? new Date(matchedList.vote_start_date).getTime()
+          const votingStartTime = matchedList.voting_start_at
+            ? new Date(matchedList.voting_start_at).getTime()
             : 0;
 
           // 動的ボタンチェック
