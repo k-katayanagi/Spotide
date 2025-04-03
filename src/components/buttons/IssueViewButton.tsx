@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { v4 as uuidv4 } from "uuid"; // UUID 生成ライブラリ
-import Button from "@components/Button";
-import useNavigation from "@/hooks/useNavigation";
+import { useState, useEffect } from 'react';
+import { v4 as uuidv4 } from 'uuid'; // UUID 生成ライブラリ
+import Button from '@components/Button';
+import useNavigation from '@/hooks/useNavigation';
 
 interface Props {
   className?: string;
@@ -26,14 +26,14 @@ const IssueViewButton = ({ className, listId }: Props) => {
       try {
         // 本番では `/api/view-url?listId=${listId}` に `GET` する
         const storedData: Record<number, string> = JSON.parse(
-          localStorage.getItem("viewUrls") || "{}"
+          localStorage.getItem('viewUrls') || '{}',
         );
 
         if (storedData[listId]) {
           setViewUrl(`/view/${storedData[listId]}`);
         }
       } catch (error) {
-        console.error("閲覧URLの取得に失敗しました", error);
+        console.error('閲覧URLの取得に失敗しました', error);
       } finally {
         setIsLoading(false);
       }
@@ -44,7 +44,7 @@ const IssueViewButton = ({ className, listId }: Props) => {
 
   const handleClick = async () => {
     if (listId === null) {
-      console.error("リストIDが無効です");
+      console.error('リストIDが無効です');
       return;
     }
 
@@ -56,14 +56,14 @@ const IssueViewButton = ({ className, listId }: Props) => {
 
         // 仮のDB (localStorage) に保存（本番では API に保存）
         const storedData: Record<number, string> = JSON.parse(
-          localStorage.getItem("viewUrls") || "{}"
+          localStorage.getItem('viewUrls') || '{}',
         );
         storedData[listId] = newUuid;
-        localStorage.setItem("viewUrls", JSON.stringify(storedData));
+        localStorage.setItem('viewUrls', JSON.stringify(storedData));
 
         setViewUrl(generatedUrl);
       } catch (error) {
-        console.error("閲覧URLの発行に失敗しました", error);
+        console.error('閲覧URLの発行に失敗しました', error);
         return;
       }
     } else {
@@ -82,12 +82,12 @@ const IssueViewButton = ({ className, listId }: Props) => {
       disabled={isLoading || listId === null}
       text={
         isLoading
-          ? "読み込み中..."
+          ? '読み込み中...'
           : listId === null
-          ? "リストIDが無効"
-          : viewUrl
-          ? "閲覧する"
-          : "閲覧URL発行"
+            ? 'リストIDが無効'
+            : viewUrl
+              ? '閲覧する'
+              : '閲覧URL発行'
       }
     />
   );

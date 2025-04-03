@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import Button from "@components/Button";
+import Button from '@components/Button';
 
 interface Props {
-  className?: string; 
+  className?: string;
   onClick?: () => void; // ← クリック時の関数を受け取る
 }
 
-const UrlCopyButton = ({ onClick,className }: Props) => {
+const UrlCopyButton = ({ onClick, className }: Props) => {
   return (
     <Button
       className={`group relative inline-flex h-[50px] items-center justify-center overflow-hidden rounded-full 

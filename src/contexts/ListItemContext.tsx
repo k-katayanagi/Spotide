@@ -1,6 +1,6 @@
-"use client";
-import { createContext, useContext, useState, ReactNode } from "react";
-import { ListItem } from "@/types/ListTypes";
+'use client';
+import { createContext, useContext, useState, ReactNode } from 'react';
+import { ListItem } from '@/types/ListTypes';
 type ListItemContextType = {
   listItems: ListItem[];
   setListItems: React.Dispatch<React.SetStateAction<ListItem[]>>;
@@ -9,7 +9,7 @@ type ListItemContextType = {
 };
 
 const ListItemContext = createContext<ListItemContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export const ListItemProvider = ({ children }: { children: ReactNode }) => {
@@ -29,7 +29,7 @@ export const useListItemContext = () => {
   const context = useContext(ListItemContext);
   if (!context) {
     throw new Error(
-      "useListItemContext must be used within a ListItemProvider"
+      'useListItemContext must be used within a ListItemProvider',
     );
   }
   return context;

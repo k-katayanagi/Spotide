@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import {
   AlertDialog,
   AlertDialogBody,
@@ -7,9 +7,8 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
   Button,
-} from "@chakra-ui/react";
-import { useRef } from "react";
-
+} from '@chakra-ui/react';
+import { useRef } from 'react';
 
 interface Props {
   isOpen: boolean;

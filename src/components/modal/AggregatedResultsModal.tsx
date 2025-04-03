@@ -9,10 +9,10 @@ import {
   Flex,
   Text,
   Icon,
-} from "@chakra-ui/react";
-import { FaCrown } from "react-icons/fa";
-import { useBreakpointValue } from "@chakra-ui/react";
-import { useRef } from "react";
+} from '@chakra-ui/react';
+import { FaCrown } from 'react-icons/fa';
+import { useBreakpointValue } from '@chakra-ui/react';
+import { useRef } from 'react';
 
 interface Props {
   isOpen: boolean;
@@ -22,14 +22,14 @@ interface Props {
 const AggregatedResultsModal = ({ isOpen, onClose }: Props) => {
   // 仮の投票データ
   const results = [
-    { label: "○○", votes: 1, isSelected: false },
-    { label: "○○", votes: 2, isSelected: false },
-    { label: "○○", votes: 5, isSelected: true },
+    { label: '○○', votes: 1, isSelected: false },
+    { label: '○○', votes: 2, isSelected: false },
+    { label: '○○', votes: 5, isSelected: true },
   ];
 
   const paddingTop = useBreakpointValue({
-    base: "2rem",
-    sm: "6rem",
+    base: '2rem',
+    sm: '6rem',
   });
   const cancelRef = useRef<HTMLButtonElement>(null);
   return (
@@ -40,8 +40,8 @@ const AggregatedResultsModal = ({ isOpen, onClose }: Props) => {
     >
       <AlertDialogOverlay>
         <AlertDialogContent
-          maxWidth={{ base: "80%", md: "500px" }}
-          minH={{ base: "30vh", md: "50vh" }}
+          maxWidth={{ base: '80%', md: '500px' }}
+          minH={{ base: '30vh', md: '50vh' }}
           maxH="90vh"
           p={{ base: 4, md: 6 }}
           borderRadius="xl"
@@ -50,7 +50,7 @@ const AggregatedResultsModal = ({ isOpen, onClose }: Props) => {
           justifyContent="center"
         >
           <AlertDialogHeader
-            fontSize={{ base: "lg", md: "2xl" }}
+            fontSize={{ base: 'lg', md: '2xl' }}
             fontWeight="bold"
           >
             投票結果

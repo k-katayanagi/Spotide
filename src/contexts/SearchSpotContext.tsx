@@ -1,22 +1,30 @@
 'use client';
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState} from 'react';
 import { Spot } from '@/types/ListTypes';
 
 type SearchSpotContextType = {
-  searchSpots: any[];
-  filteredSpots: any[];
-  setSearchSpots: (spots: any[]) => void;  // 型を any[] に変更
-  setFilteredSpots: (spots: any[]) => void;
-}
+  searchSpots: Spot[];
+  filteredSpots: Spot[];
+  setSearchSpots: (spots: Spot[]) => void;
+  setFilteredSpots: (spots: Spot[]) => void;
+};
 
-const SearchSpotContext = createContext<SearchSpotContextType | undefined>(undefined);
+const SearchSpotContext = createContext<SearchSpotContextType | undefined>(
+  undefined,
+);
 
-export const SearchSpotProvider = ({ children }: { children: React.ReactNode }) => {
-  const [searchSpots, setSearchSpots] = useState<any[]>([]);
-  const [filteredSpots, setFilteredSpots] = useState<any[]>([]);
+export const SearchSpotProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const [searchSpots, setSearchSpots] = useState<Spot[]>([]);
+  const [filteredSpots, setFilteredSpots] = useState<Spot[]>([]);
 
   return (
-    <SearchSpotContext.Provider value={{ searchSpots, filteredSpots, setSearchSpots, setFilteredSpots }}>
+    <SearchSpotContext.Provider
+      value={{ searchSpots, filteredSpots, setSearchSpots, setFilteredSpots }}
+    >
       {children}
     </SearchSpotContext.Provider>
   );
@@ -25,7 +33,9 @@ export const SearchSpotProvider = ({ children }: { children: React.ReactNode }) 
 export const useSearchSpotContext = () => {
   const context = useContext(SearchSpotContext);
   if (!context) {
-    throw new Error("useSearchSpotContext must be used within a SearchSpotProvider");
+    throw new Error(
+      'useSearchSpotContext must be used within a SearchSpotProvider',
+    );
   }
   return context;
 };

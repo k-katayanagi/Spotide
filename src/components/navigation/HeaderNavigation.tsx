@@ -1,14 +1,12 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import useNavigation from "@/hooks/useNavigation";
-import { useSession } from "next-auth/react";
+import Image from 'next/image';
+import useNavigation from '@/hooks/useNavigation';
+import { useSession } from 'next-auth/react';
 
 const HeaderNavigation = () => {
   const { data: session } = useSession(); // セッションデータを取得
   const { handleNavigateTo } = useNavigation();
-
-
 
   // セッションがない場合はリダイレクトや他のUIの処理を行うことができます
   if (!session) {
@@ -94,9 +92,7 @@ const HeaderNavigation = () => {
 
         <li
           className="text-black hover:text-gray-300 text-lg text-center cursor-pointer"
-          onClick={() =>
-            handleNavigateTo(`/user/mypage`)
-          }
+          onClick={() => handleNavigateTo(`/user/mypage`)}
         >
           <Image
             src="/images/myPage.svg"

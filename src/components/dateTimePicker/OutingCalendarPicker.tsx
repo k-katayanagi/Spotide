@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import { FormControl } from "@chakra-ui/react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import "@/components/dateTimePicker/dateTimePicker.css";
-import { registerLocale } from "react-datepicker";
-import { ja } from "date-fns/locale";
+import React, { useEffect, useState } from 'react';
+import { FormControl } from '@chakra-ui/react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import '@/components/dateTimePicker/dateTimePicker.css';
+import { registerLocale } from 'react-datepicker';
+import { ja } from 'date-fns/locale';
 
 // ロケール設定
-registerLocale("ja", ja);
+registerLocale('ja', ja);
 
 type Props = {
   title?: string;
   className?: string;
-  value: Date | null; 
+  value: Date | null;
   onChange: (date: Date | null) => void;
 };
 
@@ -22,14 +22,13 @@ const OutingCalendarPicker = ({ title, value, onChange }: Props) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(value);
   const now = new Date();
 
-
   useEffect(() => {
     setSelectedDate(value);
   }, [value]);
 
   const handleChange = (date: Date | null) => {
     setSelectedDate(date);
-    onChange(date); 
+    onChange(date);
   };
 
   return (

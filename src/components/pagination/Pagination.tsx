@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 type Props = {
   currentPage: number;
@@ -9,12 +9,19 @@ type Props = {
 };
 
 const getRandomColor = () => {
-  const colors = ["bg-red-100", "bg-blue-100", "bg-green-100", "bg-yellow-100", "bg-purple-100", "bg-pink-100"];
+  const colors = [
+    'bg-red-100',
+    'bg-blue-100',
+    'bg-green-100',
+    'bg-yellow-100',
+    'bg-purple-100',
+    'bg-pink-100',
+  ];
   return colors[Math.floor(Math.random() * colors.length)];
 };
 
 const Pagination = ({ currentPage, totalPages, onPageChange }: Props) => {
-  const [buttonColor, setButtonColor] = useState("");
+  const [buttonColor, setButtonColor] = useState('');
 
   useEffect(() => {
     setButtonColor(getRandomColor());
@@ -30,7 +37,9 @@ const Pagination = ({ currentPage, totalPages, onPageChange }: Props) => {
         前へ
       </button>
 
-      <span className="text-lg font-bold">{currentPage} / {totalPages}</span>
+      <span className="text-lg font-bold">
+        {currentPage} / {totalPages}
+      </span>
 
       <button
         onClick={() => onPageChange(currentPage + 1)}

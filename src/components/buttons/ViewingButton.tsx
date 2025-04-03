@@ -1,10 +1,10 @@
 'use client';
 
 import Button from '@components/Button';
-import useNavigation from "@/hooks/useNavigation";
+import useNavigation from '@/hooks/useNavigation';
 
 interface Props {
-    className?: string; 
+  className?: string;
 }
 
 const ViewingButton = ({ className }: Props) => {
@@ -22,7 +22,9 @@ const ViewingButton = ({ className }: Props) => {
       text={
         <>
           <span className="absolute h-0 w-0 rounded-full bg-blue-300 transition-all duration-300 group-hover:h-56 group-hover:w-32"></span>
-          <span className="relative flex items-center justify-center">閲覧</span>
+          <span className="relative flex items-center justify-center">
+            閲覧
+          </span>
         </>
       }
     />

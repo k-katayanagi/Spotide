@@ -1,32 +1,31 @@
-"use client";
+'use client';
 
-import { useState, useRef, useEffect } from "react";
-import { useParams } from "next/navigation";
-import { useSearchSpotContext } from "@/contexts/SearchSpotContext";
-import { useBottomNav } from "@/contexts/BottomNavContext";
-import Pagination from "@/components/pagination/Pagination";
-import SortButton from "@/components/buttons/SortButton";
-import { Spot } from "@/types/ListTypes";
-import SearchSpotCard from "@/components/card/SearchSpotCard";
-import SpotSearchFilterDropdown from "@/components/filterDropdown/SpotSearchFilterDropdown";
-import SpotSearchSortDropdown from "@/components/sortDropdown/SpotSearchSortDropdown";
-import { IconButton } from "@chakra-ui/react";
-import { useToast } from "@chakra-ui/react";
-import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
-import InputBox from "@/components/InputBox";
-import MenuBar from "@/components/Menu/MenuBar";
-import useListType from "@/hooks/useListType";
-import axios from "axios";
+import { useState, useRef, useEffect } from 'react';
+import { useParams } from 'next/navigation';
+import { useSearchSpotContext } from '@/contexts/SearchSpotContext';
+import { useBottomNav } from '@/contexts/BottomNavContext';
+import Pagination from '@/components/pagination/Pagination';
+import SortButton from '@/components/buttons/SortButton';
+import { Spot } from '@/types/ListTypes';
+import SearchSpotCard from '@/components/card/SearchSpotCard';
+import SpotSearchFilterDropdown from '@/components/filterDropdown/SpotSearchFilterDropdown';
+import SpotSearchSortDropdown from '@/components/sortDropdown/SpotSearchSortDropdown';
+import { IconButton,Spinner,useToast } from '@chakra-ui/react';
+import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
+import InputBox from '@/components/InputBox';
+import MenuBar from '@/components/Menu/MenuBar';
+import useListType from '@/hooks/useListType';
+import axios from 'axios';
 
 const SpotSearch = () => {
   const params = useParams();
   const { userid, listid } = params;
   const listType = useListType();
-  const { searchSpots, setSearchSpots, filteredSpots } = useSearchSpotContext();
+  const { searchSpots, setSearchSpots } = useSearchSpotContext();
   const [isFilter, setIsFilter] = useState(false);
   const [isSort, setIsSort] = useState(false);
   const [isMenu, setIsMenu] = useState(false);
-  const [searchKeyword, setSearchKeyword] = useState(""); // 検索キーワードを管理する状態
+  const [searchKeyword, setSearchKeyword] = useState(''); // 検索キーワードを管理する状態
   const { isBottomNavOpen } = useBottomNav();
   const [loading, setLoading] = useState(false);
   const toast = useToast();
@@ -40,33 +39,33 @@ const SpotSearch = () => {
 
   const menuItems = [
     {
-      label: "共有ユーザー設定",
+      label: '共有ユーザー設定',
       url: `/user/${userid}/${listType}/${listid}/list_edit/participating_users_list`,
     },
     {
-      label: "編集リストに戻る",
+      label: '編集リストに戻る',
       url: `/user/${userid}/${listType}/${listid}/list_edit`,
     },
   ];
 
   // 新しいリストIDまたはユーザーIDが変更されたときに検索結果をリセット
   useEffect(() => {
-    setSearchSpots([]);  // ここで検索結果をリセット
-    setSearchKeyword("");  // 検索キーワードもリセット
+    setSearchSpots([]); // ここで検索結果をリセット
+    setSearchKeyword(''); // 検索キーワードもリセット
   }, [userid, listid, setSearchSpots]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentSearchSpot = searchSpots.slice(
     indexOfFirstItem,
-    indexOfLastItem
+    indexOfLastItem,
   );
   const totalPages = Math.ceil(searchSpots.length / itemsPerPage);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     if (listContainerRef.current) {
-      listContainerRef.current.scrollTo({ top: 0, behavior: "smooth" });
+      listContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -86,10 +85,10 @@ const SpotSearch = () => {
 
   const handleAddListItem = async (spot: Spot) => {
     try {
-      const response = await fetch("/api/listItems", {
-        method: "POST",
+      const response = await fetch('/api/listItems', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           spot,
@@ -103,30 +102,42 @@ const SpotSearch = () => {
       if (response.ok) {
         toast({
           title: `"${spot.store_name}" を追加しました`,
-          status: "success",
+          status: 'success',
           duration: 3000,
           isClosable: true,
-          position: "top",
+          position: 'top',
         });
       } else {
         toast({
-          title: data.error || data.message || "エラーが発生しました",
-          status: "error",
+          title: data.error || data.message || 'エラーが発生しました',
+          status: 'error',
           duration: 3000,
           isClosable: true,
-          position: "top",
+          position: 'top',
         });
       }
-    } catch (error) {
-      console.error("Error adding spot:", error);
-      toast({
-        title: "data",
-        description: error.message || "ネットワークエラー",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-        position: "top",
-      });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error('Error adding spot:', error.message);
+        toast({
+          title: 'データの追加に失敗しました',
+          description: error.message || 'ネットワークエラー',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+          position: 'top',
+        });
+      } else {
+        console.error('予期しないエラー:', error);
+        toast({
+          title: 'データの追加に失敗しました',
+          description: '予期しないエラーが発生しました。',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+          position: 'top',
+        });
+      }
     }
   };
 
@@ -136,11 +147,11 @@ const SpotSearch = () => {
 
     if (!searchKeyword.trim()) {
       toast({
-        title: "検索キーワードが入力されていません。",
-        status: "warning",
+        title: '検索キーワードが入力されていません。',
+        status: 'warning',
         duration: 3000,
         isClosable: true,
-        position: "top",
+        position: 'top',
       });
       return;
     }
@@ -149,48 +160,57 @@ const SpotSearch = () => {
 
     try {
       const response = await axios.get(
-        `/api/spotSearch?query=${encodeURIComponent(searchKeyword)}`
+        `/api/spotSearch?query=${encodeURIComponent(searchKeyword)}`,
       );
 
       console.log(response.data.results);
       if (response.data.results && response.data.results.length > 0) {
         setSearchSpots(response.data.results); // 検索結果を context にセット
         toast({
-          title: "検索が完了しました。",
-          status: "success",
+          title: '検索が完了しました。',
+          status: 'success',
           duration: 2000,
           isClosable: true,
-          position: "top",
+          position: 'top',
         });
       } else {
         toast({
-          title: "該当するスポットが見つかりませんでした。",
-          status: "info",
+          title: '該当するスポットが見つかりませんでした。',
+          status: 'info',
           duration: 3000,
           isClosable: true,
-          position: "top",
+          position: 'top',
         });
       }
-    } catch (error) {
-      console.error(
-        "検索に失敗しました:",
-        error.response ? error.response.data : error.message
-      );
-      toast({
-        title: "検索に失敗しました。",
-        description: error.response?.data?.error || "ネットワークエラー",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-        position: "top",
-      });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error('検索に失敗しました:', error.message);
+        toast({
+          title: '検索に失敗しました。',
+          description: error.message || 'ネットワークエラー',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+          position: 'top',
+        });
+      } else {
+        console.error('予期しないエラー:', error);
+        toast({
+          title: '検索に失敗しました。',
+          description: '予期しないエラーが発生しました。',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+          position: 'top',
+        });
+      }
     } finally {
       setLoading(false);
       toggleFilterDropdown(); // フィルターメニューを閉じる
     }
   };
 
-  const paginationZIndex = !isBottomNavOpen && !isFilter ? "z-40" : "z-20";
+  const paginationZIndex = !isBottomNavOpen && !isFilter ? 'z-40' : 'z-20';
   return (
     <div className="p-3 overflow-auto relative">
       <div className="flex items-center justify-between mb-5 w-full">
@@ -251,15 +271,26 @@ const SpotSearch = () => {
                   scrollbar-thin scrollbar-thumb-[#FF5722] scrollbar-track-[#FFE0B2]"
         ref={listContainerRef}
       >
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {currentSearchSpot.map((Item) => (
-            <SearchSpotCard
-              key={Item.id}
-              SearchSpot={Item}
-              onAdd={() => handleAddListItem(Item)}
-            />
-          ))}
-        </div>
+        {/* ローディング中のスピナー */}
+        {loading ? (
+          <div className="flex justify-center items-center h-full">
+            <Spinner size="lg" color="orange.400" />
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {currentSearchSpot.length > 0 ? (
+              currentSearchSpot.map((Item) => (
+                <SearchSpotCard
+                  key={Item.id}
+                  SearchSpot={Item}
+                  onAdd={() => handleAddListItem(Item)}
+                />
+              ))
+            ) : (
+              <p className="text-center w-full"></p>
+            )}
+          </div>
+        )}
       </div>
 
       {/* ページネーション */}

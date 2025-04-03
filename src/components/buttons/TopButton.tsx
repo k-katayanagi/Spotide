@@ -1,7 +1,7 @@
 'use client';
 
 import Button from '@components/Button';
-import useNavigation from "@/hooks/useNavigation";
+import useNavigation from '@/hooks/useNavigation';
 
 const TopButton = () => {
   const { handleNavigateTo } = useNavigation();

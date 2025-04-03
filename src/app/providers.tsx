@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { ChakraProvider } from "@chakra-ui/react";
-import { BottomNavProvider } from "@/contexts/BottomNavContext";
-import { NextAuthProvider } from "@/lib/NextAuthProvider";
-import { Session } from "next-auth";
+import { ChakraProvider } from '@chakra-ui/react';
+import { BottomNavProvider } from '@/contexts/BottomNavContext';
+import { NextAuthProvider } from '@/lib/NextAuthProvider';
+import { Session } from 'next-auth';
 
 export function Providers({
   children,
@@ -15,7 +15,8 @@ export function Providers({
   return (
     <ChakraProvider>
       <BottomNavProvider>
-        <NextAuthProvider session={session}>{children}</NextAuthProvider> {/* sessionを渡す */}
+        <NextAuthProvider session={session}>{children}</NextAuthProvider>{' '}
+        {/* sessionを渡す */}
       </BottomNavProvider>
     </ChakraProvider>
   );

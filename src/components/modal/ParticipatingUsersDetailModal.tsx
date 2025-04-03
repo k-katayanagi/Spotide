@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useRef } from "react";
-import { TParticipantingUser } from "@/types/UserTypes ";
+import { useRef } from 'react';
+import { TParticipantingUser } from '@/types/UserTypes ';
 import {
   AlertDialog,
   AlertDialogBody,
@@ -13,8 +13,8 @@ import {
   Flex,
   Text,
   useToast,
-} from "@chakra-ui/react";
-import { CopyIcon } from "@chakra-ui/icons";
+} from '@chakra-ui/react';
+import { CopyIcon } from '@chakra-ui/icons';
 
 interface Props {
   isOpen: boolean;
@@ -38,11 +38,11 @@ const ParticipatingUsersDetailModal = ({
     navigator.clipboard.writeText(textToCopy);
 
     toast({
-      title: "コピーしました",
-      status: "success",
+      title: 'コピーしました',
+      status: 'success',
       duration: 2000,
       isClosable: true,
-      position: "top",
+      position: 'top',
     });
   };
 
@@ -54,14 +54,14 @@ const ParticipatingUsersDetailModal = ({
     >
       <AlertDialogOverlay>
         <AlertDialogContent
-          maxWidth={{ base: "90%", md: "500px" }} // スマホ時は90%、PC時は最大500px
-          minH={{ base: "30vh", md: "50vh" }} 
+          maxWidth={{ base: '90%', md: '500px' }} // スマホ時は90%、PC時は最大500px
+          minH={{ base: '30vh', md: '50vh' }}
           maxH="90vh"
           p={{ base: 4, md: 6 }} // スマホ時は余白を小さく
           borderRadius="xl"
         >
           <AlertDialogHeader
-            fontSize={{ base: "lg", md: "2xl" }}
+            fontSize={{ base: 'lg', md: '2xl' }}
             fontWeight="bold"
           >
             ユーザー詳細
@@ -74,8 +74,8 @@ const ParticipatingUsersDetailModal = ({
             justifyContent="center"
             flexGrow={1}
             sx={{
-              paddingInlineStart: { base: "5rem", md: "9rem" },
-              paddingInlineEnd: { base: "8rem", md: "9rem" },
+              paddingInlineStart: { base: '5rem', md: '9rem' },
+              paddingInlineEnd: { base: '8rem', md: '9rem' },
             }}
           >
             {selectedUser ? (
@@ -90,7 +90,7 @@ const ParticipatingUsersDetailModal = ({
                   align="center"
                   gap={{ base: 2, md: 4 }} // スマホ時は間隔を小さく
                   w="100%"
-                  maxW={{ base: "300px", md: "400px" }} // スマホ時は小さく
+                  maxW={{ base: '300px', md: '400px' }} // スマホ時は小さく
                 >
                   <Flex w="100%" justify="flex-start">
                     <Text
@@ -101,7 +101,7 @@ const ParticipatingUsersDetailModal = ({
                     >
                       ユーザー名:
                     </Text>
-                    <Text fontSize={{ base: "md", md: "2xl" }} textAlign="left">
+                    <Text fontSize={{ base: 'md', md: '2xl' }} textAlign="left">
                       {selectedUser.participant_name}
                     </Text>
                   </Flex>
@@ -115,7 +115,7 @@ const ParticipatingUsersDetailModal = ({
                     >
                       参加ID:
                     </Text>
-                    <Text fontSize={{ base: "md", md: "2xl" }} textAlign="left">
+                    <Text fontSize={{ base: 'md', md: '2xl' }} textAlign="left">
                       {selectedUser.participant_id}
                     </Text>
                   </Flex>
@@ -147,7 +147,7 @@ const ParticipatingUsersDetailModal = ({
               <Button
                 ref={cancelRef}
                 onClick={onClose}
-                size={{ base: "md", md: "lg" }}
+                size={{ base: 'md', md: 'lg' }}
                 borderRadius="full"
               >
                 閉じる
@@ -156,7 +156,7 @@ const ParticipatingUsersDetailModal = ({
                 colorScheme="blue"
                 leftIcon={<CopyIcon />}
                 onClick={handleCopyAll}
-                size={{ base: "md", md: "lg" }}
+                size={{ base: 'md', md: 'lg' }}
                 borderRadius="full"
               >
                 コピーする

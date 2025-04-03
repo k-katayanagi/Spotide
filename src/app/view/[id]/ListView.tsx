@@ -1,45 +1,45 @@
-"use client";
+'use client';
 
-import { useState, useRef, useEffect } from "react";
-import { useParams } from "next/navigation";
-import { useListContext } from "@/contexts/ListContext";
-import { useListItemContext } from "@/contexts/ListItemContext";
-import { useBottomNav } from "@/contexts/BottomNavContext";
-import Pagination from "@/components/pagination/Pagination";
-import FilterButton from "@/components/buttons/FilterButton";
-import SortButton from "@/components/buttons/SortButton";
-import { ListItem } from "@/types/ListTypes";
-import { List } from "@/types/ListTypes";
-import ViewItemCard from "@/components/card/ViewItemCard";
-import EditFilterDropdown from "@/components/filterDropdown/EditFilterDropdown ";
-import EditSortDropdown from "@/components/sortDropdown/EditSortDropdown";
-import ViewLabelSettingModal from "@/components/modal/ViewLabelSettingModal";
-import { motion } from "framer-motion";
-import { IconButton } from "@chakra-ui/react";
-import { useDisclosure, useToast } from "@chakra-ui/react";
-import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
-import MenuBar from "@/components/Menu/MenuBar";
+import { useState, useRef, useEffect } from 'react';
+import { useParams } from 'next/navigation';
+import { useListContext } from '@/contexts/ListContext';
+import { useListItemContext } from '@/contexts/ListItemContext';
+import { useBottomNav } from '@/contexts/BottomNavContext';
+import Pagination from '@/components/pagination/Pagination';
+import FilterButton from '@/components/buttons/FilterButton';
+import SortButton from '@/components/buttons/SortButton';
+import { ListItem } from '@/types/ListTypes';
+import { List } from '@/types/ListTypes';
+import ViewItemCard from '@/components/card/ViewItemCard';
+import EditFilterDropdown from '@/components/filterDropdown/EditFilterDropdown ';
+import EditSortDropdown from '@/components/sortDropdown/EditSortDropdown';
+import ViewLabelSettingModal from '@/components/modal/ViewLabelSettingModal';
+import { motion } from 'framer-motion';
+import { IconButton } from '@chakra-ui/react';
+import { useDisclosure, useToast } from '@chakra-ui/react';
+import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
+import MenuBar from '@/components/Menu/MenuBar';
 // import useListType from "@/hooks/useListType";
-import EditButton from "@/components/buttons/EditButton ";
-import TotallingButton from "@/components/buttons/TotallingButton";
-import AggregatedResultsButton from "@/components/buttons/AggregatedResultsButton";
-import UrlCopyButton from "@/components/buttons/UrlCopyButton";
-import VoteConfirmModal from "@/components/modal/VoteConfirmModal";
-import AggregatedResultsModal from "@/components/modal/AggregatedResultsModal";
+import EditButton from '@/components/buttons/EditButton ';
+import TotallingButton from '@/components/buttons/TotallingButton';
+import AggregatedResultsButton from '@/components/buttons/AggregatedResultsButton';
+import UrlCopyButton from '@/components/buttons/UrlCopyButton';
+import VoteConfirmModal from '@/components/modal/VoteConfirmModal';
+import AggregatedResultsModal from '@/components/modal/AggregatedResultsModal';
 
 const defaultFields = [
-  { key: "station", label: "駅" },
-  { key: "google_rating", label: "Google評価" },
-  { key: "custom_rating", label: "カスタム評価" },
-  { key: "address", label: "住所" },
-  { key: "time_to_station", label: "駅からの所要時間" },
-  { key: "business_hours", label: "営業時間" },
-  { key: "regular_holiday", label: "定休日" },
-  { key: "time_from_nearest_station", label: "最寄り駅からの時間" },
-  { key: "category", label: "カテゴリ" },
-  { key: "sub_category", label: "サブカテゴリ" },
-  { key: "add_by_id", label: "登録者" },
-  { key: "created_at", label: "登録日" },
+  { key: 'station', label: '駅' },
+  { key: 'google_rating', label: 'Google評価' },
+  { key: 'custom_rating', label: 'カスタム評価' },
+  { key: 'address', label: '住所' },
+  { key: 'time_to_station', label: '駅からの所要時間' },
+  { key: 'business_hours', label: '営業時間' },
+  { key: 'regular_holiday', label: '定休日' },
+  { key: 'time_from_nearest_station', label: '最寄り駅からの時間' },
+  { key: 'category', label: 'カテゴリ' },
+  { key: 'sub_category', label: 'サブカテゴリ' },
+  { key: 'add_by_id', label: '登録者' },
+  { key: 'created_at', label: '登録日' },
 ];
 
 const ListView = () => {
@@ -55,7 +55,7 @@ const ListView = () => {
   const [isLabelSettingOpen, setIsLabelSettingOpen] = useState(false);
   const [matchedList, setMatchedList] = useState<List | null>(null);
   const [selectedListItem, setSelectedListItem] = useState<ListItem | null>(
-    null
+    null,
   );
   const toast = useToast();
   const { isBottomNavOpen } = useBottomNav();
@@ -65,7 +65,7 @@ const ListView = () => {
   const [displayListItems, setDisplayListItems] =
     useState<ListItem[]>(listItems);
   const [selectedFields, setSelectedFields] = useState<string[]>(
-    defaultFields.map((f) => f.key)
+    defaultFields.map((f) => f.key),
   );
   const [isVotingCompleted, setIsVotingCompleted] = useState<
     boolean | undefined
@@ -77,7 +77,7 @@ const ListView = () => {
     boolean | undefined
   >(undefined);
   const [isVotingStart, setIsVotingStart] = useState<boolean | undefined>(
-    undefined
+    undefined,
   );
   const [isEditing, setIsEditing] = useState<boolean | undefined>(undefined);
 
@@ -94,18 +94,18 @@ const ListView = () => {
   } = useDisclosure();
 
   const menuItems = [
-    { label: "表示ラベル設定", onClick: () => setIsLabelSettingOpen(true) },
+    { label: '表示ラベル設定', onClick: () => setIsLabelSettingOpen(true) },
   ];
 
   useEffect(() => {
     if (uuid) {
       const storedData: Record<number, string> = JSON.parse(
-        localStorage.getItem("viewUrls") || "{}"
+        localStorage.getItem('viewUrls') || '{}',
       );
 
       // UUIDに一致するlistIdを取得
       const matchedListId = Object.keys(storedData).find(
-        (key) => storedData[Number(key)] === uuid
+        (key) => storedData[Number(key)] === uuid,
       );
 
       if (matchedListId) {
@@ -115,7 +115,7 @@ const ListView = () => {
 
         if (matchedList) {
           setMatchedList(matchedList);
-          console.log("投票開始日:", matchedList.vote_start_date);
+          console.log('投票開始日:', matchedList.vote_start_date);
 
           // 現在の日時を取得
           const currentTime = new Date().getTime();
@@ -146,14 +146,14 @@ const ListView = () => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentListItems = displayListItems.slice(
     indexOfFirstItem,
-    indexOfLastItem
+    indexOfLastItem,
   );
   const totalPages = Math.ceil(displayListItems.length / itemsPerPage);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     if (listContainerRef.current) {
-      listContainerRef.current.scrollTo({ top: 0, behavior: "smooth" });
+      listContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -167,10 +167,10 @@ const ListView = () => {
       //TODO:ここに投票処理
       toast({
         title: `"${selectedListItem.store_name}" に投票しました`,
-        status: "success",
+        status: 'success',
         duration: 3000,
         isClosable: true,
-        position: "top",
+        position: 'top',
       });
       onVoteModalClose();
       setIsVotingCompleted(true);
@@ -195,13 +195,13 @@ const ListView = () => {
     setIsMenu((prevState) => !prevState);
   };
 
-  const paginationZIndex = !isBottomNavOpen && !isFilter ? "z-40" : "z-20";
+  const paginationZIndex = !isBottomNavOpen && !isFilter ? 'z-40' : 'z-20';
 
   return (
     <div className="p-3 overflow-auto relative">
       <div className="flex items-center justify-between mb-5 w-full">
         <h1 className="text-2xl font-bold flex-1">
-          {matchedList ? matchedList.list_name : "リストが見つかりません"}
+          {matchedList ? matchedList.list_name : 'リストが見つかりません'}
         </h1>
         <div className="flex items-center gap-2 sm:gap-7">
           <UrlCopyButton />
@@ -276,7 +276,7 @@ const ListView = () => {
         isOpen={isVoteModalOpen}
         onClose={onVoteModalClose}
         onConfirm={handleVote}
-        selectedName={selectedListItem?.store_name || ""}
+        selectedName={selectedListItem?.store_name || ''}
       />
 
       {/*集計結果モーダル*/}
@@ -288,7 +288,7 @@ const ListView = () => {
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, ease: "easeOut" }}
+        transition={{ duration: 0.3, ease: 'easeOut' }}
         className="bg-white border border-orange-200 shadow-lg rounded-lg p-4 h-auto min-h-[320px] flex flex-col justify-between hover:shadow-xl transition-shadow"
       >
         {/* リスト部分 */}

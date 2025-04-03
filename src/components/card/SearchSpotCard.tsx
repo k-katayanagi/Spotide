@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { Spot } from "@/types/ListTypes";
-import AddButton from "../buttons/AddButton";
-import ImageSlider from "../UI/ImageSlider";
+import { Spot } from '@/types/ListTypes';
+import AddButton from '../buttons/AddButton';
+import ImageSlider from '../UI/ImageSlider';
 
 const defaultFields = [
-  { key: "google_rating", label: "Google評価" },
-  { key: "address", label: "住所" },
-  { key: "business_hours", label: "営業時間" },
-  { key: "regular_holiday", label: "定休日" },
-  { key: "time_from_nearest_station", label: "最寄り駅からの時間" },
-  { key: "category", label: "カテゴリ" },
-  { key: "sub_category", label: "サブカテゴリ" },
+  { key: 'google_rating', label: 'Google評価' },
+  { key: 'address', label: '住所' },
+  { key: 'business_hours', label: '営業時間' },
+  { key: 'regular_holiday', label: '定休日' },
+  { key: 'time_from_nearest_station', label: '最寄り駅からの時間' },
+  { key: 'category', label: 'カテゴリ' },
+  { key: 'sub_category', label: 'サブカテゴリ' },
 ];
 
 interface Props {
@@ -45,7 +45,7 @@ const SearchSpotCard = ({ SearchSpot, onAdd }: Props) => {
               </span>
               &nbsp;
               <span className="text-gray-700 break-words">
-                {String(SearchSpot[field.key as keyof Spot] || "―")}
+                {String(SearchSpot[field.key as keyof Spot] || '―')}
               </span>
             </div>
           ))}

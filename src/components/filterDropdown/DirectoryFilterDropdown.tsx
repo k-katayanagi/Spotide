@@ -1,21 +1,21 @@
-"use client";
-import { useState } from "react";
-import ListNameInput from "../inputbox/ListNameInput";
-import CalendarPicker from "../dateTimePicker/CalendarPicker ";
-import ListSelect from "../ListSelect";
-import { listStatusOptions } from "@/consts/OptionList";
-import OkButton from "../buttons/OkButton";
-import { useListContext } from "@/contexts/ListContext";
-import { List } from "@/types/ListTypes";
+'use client';
+import { useState } from 'react';
+import ListNameInput from '../inputbox/ListNameInput';
+import CalendarPicker from '../dateTimePicker/CalendarPicker ';
+import ListSelect from '../ListSelect';
+import { listStatusOptions } from '@/consts/OptionList';
+import OkButton from '../buttons/OkButton';
+import { useListContext } from '@/contexts/ListContext';
+import { List } from '@/types/ListTypes';
 
 type Props = {
   toggleFilterDropdown: () => void;
 };
 
 const DirectoryFilterDropdown = ({ toggleFilterDropdown }: Props) => {
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const { lists, setSortLists } = useListContext();
-  const [listName, setListName] = useState("");
+  const [listName, setListName] = useState('');
   const [outingStartDate, setOutingStartDate] = useState<Date | null>(null);
   const [outingEndDate, setOutingEndDate] = useState<Date | null>(null);
   const [createStartDate, setCreateStartDate] = useState<Date | null>(null);
@@ -23,10 +23,10 @@ const DirectoryFilterDropdown = ({ toggleFilterDropdown }: Props) => {
   const [updateStartDate, setUpdateStartDate] = useState<Date | null>(null);
   const [updateEndDate, setUpdateEndDate] = useState<Date | null>(null);
   const filterStatusOptions = [
-    { value: "", label: "すべて" },
+    { value: '', label: 'すべて' },
     ...listStatusOptions,
   ];
-  const [selectedStatus, setSelectedStatus] = useState<string>("");
+  const [selectedStatus, setSelectedStatus] = useState<string>('');
 
   const handleFilterApply = (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,26 +35,26 @@ const DirectoryFilterDropdown = ({ toggleFilterDropdown }: Props) => {
     if (listName) {
       const normalizeToHiragana = (str: string) =>
         str
-          .normalize("NFKC")
+          .normalize('NFKC')
           .toLowerCase()
           .replace(/[\u30a1-\u30f6]/g, (match) =>
-            String.fromCharCode(match.charCodeAt(0) - 0x60)
+            String.fromCharCode(match.charCodeAt(0) - 0x60),
           );
 
       const normalizedInput = normalizeToHiragana(listName);
 
       filteredLists = filteredLists.filter((list) =>
-        normalizeToHiragana(list.list_name).includes(normalizedInput)
+        normalizeToHiragana(list.list_name).includes(normalizedInput),
       );
     }
 
     const filterByDate = (
       dateField: keyof Pick<
         List,
-        "outing_date" | "create_date" | "update_date"
+        'outing_date' | 'create_date' | 'update_date'
       >,
       startDate: Date | null,
-      endDate: Date | null
+      endDate: Date | null,
     ) => {
       return (list: List) => {
         const targetDate = new Date(list[dateField]);
@@ -71,19 +71,19 @@ const DirectoryFilterDropdown = ({ toggleFilterDropdown }: Props) => {
 
     if (outingStartDate || outingEndDate) {
       filteredLists = filteredLists.filter(
-        filterByDate("outing_date", outingStartDate, outingEndDate)
+        filterByDate('outing_date', outingStartDate, outingEndDate),
       );
     }
 
     if (createStartDate || createEndDate) {
       filteredLists = filteredLists.filter(
-        filterByDate("create_date", createStartDate, createEndDate)
+        filterByDate('create_date', createStartDate, createEndDate),
       );
     }
 
     if (updateStartDate || updateEndDate) {
       filteredLists = filteredLists.filter(
-        filterByDate("update_date", updateStartDate, updateEndDate)
+        filterByDate('update_date', updateStartDate, updateEndDate),
       );
     }
 

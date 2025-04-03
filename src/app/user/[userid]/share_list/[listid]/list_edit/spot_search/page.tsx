@@ -1,5 +1,5 @@
-"use client";
-import SpotSearch from "@/app/user/[userid]/spot_search/SpotSearch";
+'use client';
+import SpotSearch from '@/app/user/[userid]/spot_search/SpotSearch';
 
 const ShareSpotSearch = () => {
   return <SpotSearch />;

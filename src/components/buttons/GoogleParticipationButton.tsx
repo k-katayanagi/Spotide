@@ -1,14 +1,13 @@
-"use client";
+'use client';
 
-import Button from "@components/Button";
-import "@/components/buttons/GoogleButton.css";
+import Button from '@components/Button';
+import '@/components/buttons/GoogleButton.css';
 
 type Props = {
   onClick: () => void;
 };
 
 const GoogleParticipationButton = ({ onClick }: Props) => {
-
   return (
     <Button
       onClick={onClick}

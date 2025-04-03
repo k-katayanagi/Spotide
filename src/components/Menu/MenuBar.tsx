@@ -1,7 +1,7 @@
-"use client";
-import { motion } from "framer-motion";
-import { TMenu } from "@/types/MenuType";
-import { useRouter } from "next/navigation";
+'use client';
+import { motion } from 'framer-motion';
+import { TMenu } from '@/types/MenuType';
+import { useRouter } from 'next/navigation';
 
 interface Props {
   onClick: () => void;
@@ -17,8 +17,8 @@ const MenuBar = ({ onClick, menuItems }: Props) => {
         initial={{ opacity: 0, y: -30 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -30 }}
-        transition={{ duration: 0.3, ease: "easeOut" }}
-        className="w-[300px] min-h-[200px]" 
+        transition={{ duration: 0.3, ease: 'easeOut' }}
+        className="w-[300px] min-h-[200px]"
       >
         {/* メニュー項目 */}
         <div className="mt-6 w-full">

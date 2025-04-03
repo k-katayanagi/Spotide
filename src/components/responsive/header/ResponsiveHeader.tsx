@@ -1,20 +1,20 @@
-"use client";
-import HeaderNavigation from "@/components/navigation/HeaderNavigation";
-import LoginButton from "@/components/buttons/LoginButton";
-import LogoutButton from "@/components/buttons/LogoutButton";
-import Image from "next/image";
-import { useSession } from "next-auth/react";
-import { signIn,signOut } from "next-auth/react";
+'use client';
+import HeaderNavigation from '@/components/navigation/HeaderNavigation';
+import LoginButton from '@/components/buttons/LoginButton';
+import LogoutButton from '@/components/buttons/LogoutButton';
+import Image from 'next/image';
+import { useSession } from 'next-auth/react';
+import { signIn, signOut } from 'next-auth/react';
 
 const ResponsiveHeader = () => {
   const { data: session } = useSession(); // セッション情報を取得
 
   // ログイン処理
   const handleLogin = async () => {
-    console.log("Googleアカウントでログイン開始");
+    console.log('Googleアカウントでログイン開始');
 
-    const result = await signIn("google", {
-      callbackUrl: "/user/mypage",
+    const result = await signIn('google', {
+      callbackUrl: '/user/mypage',
     });
 
     if (result?.error) {
@@ -24,7 +24,7 @@ const ResponsiveHeader = () => {
 
   // ログアウト処理
   const handleLogout = async () => {
-    signOut({ callbackUrl: "/login" })
+    signOut({ callbackUrl: '/login' });
   };
 
   return (

@@ -3,11 +3,11 @@
 import Button from '@components/Button';
 
 interface Props {
-    className?: string; 
-    onClick?: () => void;
+  className?: string;
+  onClick?: () => void;
 }
 
-const TotallingButton = ({ className,onClick }: Props) => {
+const TotallingButton = ({ className, onClick }: Props) => {
   return (
     <Button
       className={`group relative inline-flex items-center justify-center overflow-hidden rounded-full 
@@ -21,7 +21,9 @@ const TotallingButton = ({ className,onClick }: Props) => {
       text={
         <>
           <span className="absolute h-0 w-0 rounded-full bg-blue-300 transition-all duration-300 group-hover:h-[50px] group-hover:w-[100px]"></span>
-          <span className="relative flex items-center justify-center">集計する</span>
+          <span className="relative flex items-center justify-center">
+            集計する
+          </span>
         </>
       }
     />

@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef } from 'react';
 import {
   AlertDialog,
   AlertDialogBody,
@@ -9,13 +9,13 @@ import {
   Button,
   Input,
   Flex,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 
 // パスワード自動生成
 const generatePassword = (length: number = 12): string => {
   const charset =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
-  let password = "";
+    'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()';
+  let password = '';
   for (let i = 0; i < length; i++) {
     const randomIndex = Math.floor(Math.random() * charset.length);
     password += charset[randomIndex];
@@ -29,7 +29,7 @@ interface Props {
   onConfirm: (
     username: string,
     password: string,
-    listId: number | null
+    listId: number | null,
   ) => void;
   listId: number | null;
 }
@@ -42,8 +42,8 @@ const ParticipatingUsersAddModal = ({
 }: Props) => {
   const cancelRef = useRef<HTMLButtonElement>(null);
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleGeneratePassword = () => {
     const newPassword = generatePassword();
@@ -52,8 +52,8 @@ const ParticipatingUsersAddModal = ({
 
   const handleAddUser = () => {
     onConfirm(username, password, listId);
-    setUsername(""); 
-    setPassword(""); 
+    setUsername('');
+    setPassword('');
     onClose();
   };
 
@@ -65,14 +65,14 @@ const ParticipatingUsersAddModal = ({
     >
       <AlertDialogOverlay>
         <AlertDialogContent
-          maxWidth={{ base: "80%", md: "500px" }} // スマホ時は90%、PC時は最大500px
-          minH={{ base: "30vh", md: "50vh" }}
+          maxWidth={{ base: '80%', md: '500px' }} // スマホ時は90%、PC時は最大500px
+          minH={{ base: '30vh', md: '50vh' }}
           maxH="90vh"
           p={{ base: 4, md: 6 }} // スマホ時は余白を小さく
           borderRadius="xl"
         >
           <AlertDialogHeader
-            fontSize={{ base: "lg", md: "2xl" }}
+            fontSize={{ base: 'lg', md: '2xl' }}
             fontWeight="bold"
           >
             ユーザー追加

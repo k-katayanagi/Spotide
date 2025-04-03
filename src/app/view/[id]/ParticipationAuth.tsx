@@ -1,27 +1,27 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import ParticipationButton from "@/components/buttons/ParticipationButton";
-import TopButton from "@/components/buttons/TopButton";
-import GoogleParticipationButton from "@/components/buttons/GoogleParticipationButton";
+import { useState } from 'react';
+import ParticipationButton from '@/components/buttons/ParticipationButton';
+import TopButton from '@/components/buttons/TopButton';
+import GoogleParticipationButton from '@/components/buttons/GoogleParticipationButton';
 
 interface ParticipationAuthProps {
   setIsAuthenticated: (value: boolean) => void;
 }
 
 const ParticipationAuth = ({ setIsAuthenticated }: ParticipationAuthProps) => {
-  const [activeTab, setActiveTab] = useState("guest");
-  const [username, setUsername] = useState("");
-  const [participationId, setParticipationId] = useState("");
-  const [password, setPassword] = useState("");
-  const [userId, setUserId] = useState("");
-  const [existingPassword, setExistingPassword] = useState("");
+  const [activeTab, setActiveTab] = useState('guest');
+  const [username, setUsername] = useState('');
+  const [participationId, setParticipationId] = useState('');
+  const [password, setPassword] = useState('');
+  const [userId, setUserId] = useState('');
+  const [existingPassword, setExistingPassword] = useState('');
 
   // 仮の認証データ
   const mockGuestUser = {
-    username: "user",
-    participationId: "123",
-    password: "123",
+    username: 'user',
+    participationId: '123',
+    password: '123',
   };
 
   const handleGuestSubmit = () => {
@@ -32,15 +32,15 @@ const ParticipationAuth = ({ setIsAuthenticated }: ParticipationAuthProps) => {
     ) {
       setIsAuthenticated(true);
     } else {
-      alert("認証失敗: ユーザー名、参加ID、またはパスワードが間違っています");
+      alert('認証失敗: ユーザー名、参加ID、またはパスワードが間違っています');
     }
   };
 
   const handleExistingSubmit = () => {
-    if (userId === "existingUser" && existingPassword === "password123") {
+    if (userId === 'existingUser' && existingPassword === 'password123') {
       setIsAuthenticated(true);
     } else {
-      alert("認証失敗: ユーザーIDまたはパスワードが間違っています");
+      alert('認証失敗: ユーザーIDまたはパスワードが間違っています');
     }
   };
 
@@ -49,21 +49,21 @@ const ParticipationAuth = ({ setIsAuthenticated }: ParticipationAuthProps) => {
       {/* タブボタン */}
       <div className="flex border border-gray-400 rounded-lg overflow-hidden">
         <button
-          onClick={() => setActiveTab("guest")}
+          onClick={() => setActiveTab('guest')}
           className={`w-1/2 h-16 border-r border-gray-400 ${
-            activeTab === "guest"
-              ? "bg-[#FF5722] text-white border-[#FF5722]"
-              : "bg-gray-300 text-gray-600"
+            activeTab === 'guest'
+              ? 'bg-[#FF5722] text-white border-[#FF5722]'
+              : 'bg-gray-300 text-gray-600'
           } text-center text-xl sm:text-lg font-bold hover:opacity-75 cursor-pointer transition-all ease duration-200`}
         >
           ゲストユーザー
         </button>
         <button
-          onClick={() => setActiveTab("existing")}
+          onClick={() => setActiveTab('existing')}
           className={`w-1/2 h-16 ${
-            activeTab === "existing"
-              ? "bg-[#FF5722] text-white border-[#FF5722]"
-              : "bg-gray-300 text-gray-600"
+            activeTab === 'existing'
+              ? 'bg-[#FF5722] text-white border-[#FF5722]'
+              : 'bg-gray-300 text-gray-600'
           } text-center text-xl sm:text-lg font-bold hover:opacity-75 cursor-pointer transition-all ease duration-200`}
         >
           既存ユーザー
@@ -71,7 +71,7 @@ const ParticipationAuth = ({ setIsAuthenticated }: ParticipationAuthProps) => {
       </div>
 
       {/* ゲストユーザー認証 */}
-      {activeTab === "guest" && (
+      {activeTab === 'guest' && (
         <div className="p-12 sm:p-8">
           <h2 className="text-3xl sm:text-2xl font-semibold mb-8">
             ゲストユーザー認証
@@ -112,7 +112,7 @@ const ParticipationAuth = ({ setIsAuthenticated }: ParticipationAuthProps) => {
       )}
 
       {/* 既存ユーザー認証 */}
-      {activeTab === "existing" && (
+      {activeTab === 'existing' && (
         <div className="p-12 sm:p-8">
           <h2 className="text-3xl sm:text-2xl font-semibold mb-8">
             既存ユーザー認証

@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { FormControl } from "@chakra-ui/react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import "@/components/dateTimePicker/dateTimePicker.css";
-import { registerLocale } from "react-datepicker";
-import { ja } from "date-fns/locale";
+import React, { useState } from 'react';
+import { FormControl } from '@chakra-ui/react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import '@/components/dateTimePicker/dateTimePicker.css';
+import { registerLocale } from 'react-datepicker';
+import { ja } from 'date-fns/locale';
 
 // ロケール設定
-registerLocale("ja", ja);
+registerLocale('ja', ja);
 
 type Props = {
   title?: string;

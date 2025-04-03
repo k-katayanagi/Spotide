@@ -1,25 +1,31 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import { FormControl } from '@chakra-ui/react';
 import DatePicker from 'react-datepicker';
-import "react-datepicker/dist/react-datepicker.css";
+import 'react-datepicker/dist/react-datepicker.css';
 import '@/components/dateTimePicker/dateTimePicker.css';
-import { registerLocale } from "react-datepicker";
-import { ja } from "date-fns/locale";
+import { registerLocale } from 'react-datepicker';
+import { ja } from 'date-fns/locale';
 
 // ロケール設定
 registerLocale('ja', ja);
 
-const DateTimePicker   = () => {
+const DateTimePicker = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const datePickerRef = useRef<DatePicker | null>(null);
   const now = new Date();
 
   const adjustScroll = () => {
-    const calendarElement = document.querySelector('.react-datepicker__calendar');
-    const timeList = calendarElement?.querySelector(".react-datepicker__time-list");
-    const activeTime = calendarElement?.querySelector(".react-datepicker__time-list-item--selected");
+    const calendarElement = document.querySelector(
+      '.react-datepicker__calendar',
+    );
+    const timeList = calendarElement?.querySelector(
+      '.react-datepicker__time-list',
+    );
+    const activeTime = calendarElement?.querySelector(
+      '.react-datepicker__time-list-item--selected',
+    );
 
     if (timeList) {
       if (selectedDate && selectedDate.toDateString() === now.toDateString()) {
@@ -27,7 +33,7 @@ const DateTimePicker   = () => {
         const nowTime = new Date();
         const selectedTime = selectedDate;
         if (selectedTime && selectedTime > nowTime) {
-          activeTime?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          activeTime?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
       } else {
         // 今日以外の場合 → スクロールを一番上に
@@ -54,7 +60,11 @@ const DateTimePicker   = () => {
         timeCaption="時間"
         showPreviousMonths={false}
         minDate={now}
-        minTime={selectedDate && selectedDate.toDateString() === now.toDateString() ? now : new Date(0, 0, 0, 0, 0)} // 今日以外の場合は全時間帯から選べる
+        minTime={
+          selectedDate && selectedDate.toDateString() === now.toDateString()
+            ? now
+            : new Date(0, 0, 0, 0, 0)
+        } // 今日以外の場合は全時間帯から選べる
         maxTime={new Date(0, 0, 0, 23, 59)}
         timeFormat="HH:mm"
         timeIntervals={15}
@@ -64,8 +74,7 @@ const DateTimePicker   = () => {
         onCalendarOpen={adjustScroll} // カレンダーが開いた時にスクロール調整
       />
     </FormControl>
-    
   );
 };
 
-export default DateTimePicker  ;
+export default DateTimePicker;

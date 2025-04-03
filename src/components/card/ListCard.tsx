@@ -1,11 +1,11 @@
-"use client";
-import DeleteButton from "@/components/buttons/DeleteButton";
-import EditButton from "../buttons/EditButton ";
-import ViewingButton from "../buttons/ViewingButton";
-import { listStatusOptions } from "@/consts/OptionList";
-import { List } from "@/types/ListTypes";
-import Image from "next/image";
-import useFormatDate from "@/hooks/useFormattedDate";
+'use client';
+import DeleteButton from '@/components/buttons/DeleteButton';
+import EditButton from '../buttons/EditButton ';
+import ViewingButton from '../buttons/ViewingButton';
+import { listStatusOptions } from '@/consts/OptionList';
+import { List } from '@/types/ListTypes';
+import Image from 'next/image';
+import useFormatDate from '@/hooks/useFormattedDate';
 interface Props {
   list: List;
   onDelete: () => void;
@@ -13,14 +13,13 @@ interface Props {
 }
 
 const ListCard = ({ list, onDelete, onEdit }: Props) => {
-
-  console.log("Received list:", list);
+  console.log('Received list:', list);
 
   const getStatusLabel = (status: number): string => {
     const statusObj = listStatusOptions.find(
-      (option) => option.value === status
+      (option) => option.value === status,
     );
-    return statusObj ? statusObj.label : "不明";
+    return statusObj ? statusObj.label : '不明';
   };
 
   const formattedVoteStartDate = useFormatDate(list.voting_start_at, true);
@@ -50,9 +49,7 @@ const ListCard = ({ list, onDelete, onEdit }: Props) => {
           {/* 投票開始日時 */}
           <div className="flex flex-col sm:flex-row">
             <p className="text-gray-600 whitespace-nowrap">投票開始日時:</p>
-            <p className="text-gray-600 sm:ml-1">
-              {formattedVoteStartDate}
-            </p>
+            <p className="text-gray-600 sm:ml-1">{formattedVoteStartDate}</p>
           </div>
 
           {/* ステータス & 最終更新者 */}
@@ -70,21 +67,15 @@ const ListCard = ({ list, onDelete, onEdit }: Props) => {
           {/* おでかけ日 & 作成日時 */}
           <div className="flex flex-col sm:flex-row">
             <p className="text-gray-600 whitespace-nowrap">おでかけ日:</p>
-            <p className="text-gray-600 sm:ml-1">
-              {formattedOutingDate}
-            </p>
+            <p className="text-gray-600 sm:ml-1">{formattedOutingDate}</p>
             <p className="text-gray-600 whitespace-nowrap sm:ml-4">作成日時:</p>
-            <p className="text-gray-600 sm:ml-1">
-              {formattedCreateDate}
-            </p>
+            <p className="text-gray-600 sm:ml-1">{formattedCreateDate}</p>
           </div>
 
           {/* 更新日時 */}
           <div className="flex flex-col">
             <p className="text-gray-600 whitespace-nowrap">更新日時:</p>
-            <p className="text-gray-600">
-              {formattedUpdateDate}
-            </p>
+            <p className="text-gray-600">{formattedUpdateDate}</p>
           </div>
         </div>
       </div>

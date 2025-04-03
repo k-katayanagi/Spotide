@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState, useRef } from "react";
+import { useState, useRef } from 'react';
 import {
   AlertDialog,
   AlertDialogBody,
@@ -12,21 +12,21 @@ import {
   Checkbox,
   VStack,
   Flex,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 
 const defaultFields = [
-  { key: "station", label: "駅" },
-  { key: "google_rating", label: "Google評価" },
-  { key: "custom_rating", label: "カスタム評価" },
-  { key: "address", label: "住所" },
-  { key: "time_to_station", label: "駅からの所要時間" },
-  { key: "business_hours", label: "営業時間" },
-  { key: "regular_holiday", label: "定休日" },
-  { key: "time_from_nearest_station", label: "最寄り駅からの時間" },
-  { key: "category", label: "カテゴリ" },
-  { key: "sub_category", label: "サブカテゴリ" },
-  { key: "list_participants", label: "登録者" },
-  { key: "created_at", label: "登録日" },
+  { key: 'station', label: '駅' },
+  { key: 'google_rating', label: 'Google評価' },
+  { key: 'custom_rating', label: 'カスタム評価' },
+  { key: 'address', label: '住所' },
+  { key: 'time_to_station', label: '駅からの所要時間' },
+  { key: 'business_hours', label: '営業時間' },
+  { key: 'regular_holiday', label: '定休日' },
+  { key: 'time_from_nearest_station', label: '最寄り駅からの時間' },
+  { key: 'category', label: 'カテゴリ' },
+  { key: 'sub_category', label: 'サブカテゴリ' },
+  { key: 'list_participants', label: '登録者' },
+  { key: 'created_at', label: '登録日' },
 ];
 
 interface Props {
@@ -47,7 +47,7 @@ const ViewLabelSettingModal = ({
 
   const handleToggle = (key: string) => {
     setTempSelected((prev) =>
-      prev.includes(key) ? prev.filter((item) => item !== key) : [...prev, key]
+      prev.includes(key) ? prev.filter((item) => item !== key) : [...prev, key],
     );
   };
 
@@ -83,7 +83,7 @@ const ViewLabelSettingModal = ({
               <Button
                 onClick={onClose}
                 ref={cancelRef}
-                size={{ base: "md", md: "lg" }}
+                size={{ base: 'md', md: 'lg' }}
                 borderRadius="full"
               >
                 閉じる
@@ -91,7 +91,7 @@ const ViewLabelSettingModal = ({
               <Button
                 colorScheme="blue"
                 onClick={handleSave}
-                size={{ base: "md", md: "lg" }}
+                size={{ base: 'md', md: 'lg' }}
                 borderRadius="full"
               >
                 設定

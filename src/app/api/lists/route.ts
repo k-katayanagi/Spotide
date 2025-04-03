@@ -1,6 +1,5 @@
-import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
-import { List } from "@/types/ListTypes";
+import { NextResponse } from 'next/server';
+import { supabase } from '@/lib/supabase';
 
 // 日本時間に変換する関数（Dateオブジェクトを作成）
 const convertToJST = (date: string | Date): string => {
@@ -12,8 +11,8 @@ const convertToJST = (date: string | Date): string => {
 
 const generatePassword = (length: number = 12): string => {
   const charset =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
-  let password = "";
+    'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()';
+  let password = '';
   for (let i = 0; i < length; i++) {
     const randomIndex = Math.floor(Math.random() * charset.length);
     password += charset[randomIndex];
@@ -31,7 +30,7 @@ export async function POST(req: Request) {
 
     // データ挿入 - listsテーブル
     const { data: listData, error: listError } = await supabase
-      .from<List>("lists")
+      .from('lists')
       .insert([
         {
           creator_id: userId,
@@ -55,8 +54,8 @@ export async function POST(req: Request) {
 
     if (!listData || listData.length === 0) {
       return NextResponse.json(
-        { error: "リストの作成に失敗しました" },
-        { status: 500 }
+        { error: 'リストの作成に失敗しました' },
+        { status: 500 },
       );
     }
 
@@ -64,7 +63,7 @@ export async function POST(req: Request) {
     const password = generatePassword();
 
     const { error: participantError } = await supabase
-      .from("list_participants")
+      .from('list_participants')
       .insert([
         {
           list_id: listId,
@@ -82,7 +81,7 @@ export async function POST(req: Request) {
       console.log(participantError); // エラーメッセージを表示
       return NextResponse.json(
         { error: participantError.message },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -95,8 +94,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
     return NextResponse.json(
-      { error: "不明なエラーが発生しました" },
-      { status: 500 }
+      { error: '不明なエラーが発生しました' },
+      { status: 500 },
     );
   }
 }
@@ -104,33 +103,36 @@ export async function POST(req: Request) {
 // GET: リストを取得
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const userId = searchParams.get("userId");
-  const listType = (searchParams.get("listType") || "individual").replace('_list', '');
-  const listId = searchParams.get("listId");
+  const userId = searchParams.get('userId');
+  const listType = (searchParams.get('listType') || 'individual').replace(
+    '_list',
+    '',
+  );
+  const listId = searchParams.get('listId');
 
   if (!userId) {
     return NextResponse.json(
-      { error: "ユーザーIDが必要です" },
-      { status: 400 }
+      { error: 'ユーザーIDが必要です' },
+      { status: 400 },
     );
   }
 
   try {
     let query = supabase
-      .from("lists")
-      .select("*")
-      .eq("creator_id", userId)
-      .eq("list_type", listType);
+      .from('lists')
+      .select('*')
+      .eq('creator_id', userId)
+      .eq('list_type', listType);
 
     // listId がある場合にのみフィルタリング
     if (listId) {
       const numericListId = Number(listId);
 
       if (!isNaN(numericListId)) {
-        query = query.eq("list_id", numericListId.toString()); 
+        query = query.eq('list_id', numericListId.toString());
       } else {
-        console.error("エラー: list_id が数値ではありません:", listId);
-        return NextResponse.json({ error: "無効な list_id" }, { status: 400 });
+        console.error('エラー: list_id が数値ではありません:', listId);
+        return NextResponse.json({ error: '無効な list_id' }, { status: 400 });
       }
     }
 
@@ -138,18 +140,27 @@ export async function GET(request: Request) {
     const { data, error } = await query;
 
     if (error) {
-      console.error("Supabaseエラー:", error);
+      console.error('Supabaseエラー:', error);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    console.log("取得データ:", data);
+    console.log('取得データ:', data);
     return NextResponse.json(data); // 取得したリストデータを返す
-  } catch (error) {
-    console.error("リスト取得中のエラー:", error);
-    return NextResponse.json(
-      { error: "リスト取得中にエラーが発生しました", details: error.message },
-      { status: 500 }
-    );
+  } catch (error: unknown) {
+    // errorをError型にキャスト
+    if (error instanceof Error) {
+      console.error('リスト取得中のエラー:', error);
+      return NextResponse.json(
+        { error: 'リスト取得中にエラーが発生しました', details: error.message },
+        { status: 500 },
+      );
+    } else {
+      console.error('不明なエラー:', error);
+      return NextResponse.json(
+        { error: '不明なエラーが発生しました' },
+        { status: 500 },
+      );
+    }
   }
 }
 
@@ -161,22 +172,35 @@ export async function DELETE(req: Request) {
 
     // リストの削除
     const { data, error } = await supabase
-      .from("lists")
+      .from('lists')
       .delete()
-      .eq("list_id", listId);
+      .eq('list_id', listId);
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json({ message: "List deleted successfully", data });
+    // list_participants テーブルから list_id に紐づくレコードを削除
+    const { error: participantsError } = await supabase
+      .from('list_participants')
+      .delete()
+      .eq('list_id', listId);
+
+    if (participantsError) {
+      return NextResponse.json(
+        { error: participantsError.message },
+        { status: 500 },
+      );
+    }
+
+    return NextResponse.json({ message: 'List deleted successfully', data });
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
     return NextResponse.json(
-      { error: "An unknown error occurred" },
-      { status: 500 }
+      { error: 'An unknown error occurred' },
+      { status: 500 },
     );
   }
 }

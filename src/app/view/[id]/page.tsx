@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import ListView from "./ListView";
-import ParticipationAuth from "./ParticipationAuth";
+import { useState } from 'react';
+import ListView from './ListView';
+import ParticipationAuth from './ParticipationAuth';
 
 const ListViewPage = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);

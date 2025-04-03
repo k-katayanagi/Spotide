@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import React from "react";
-import Image from "next/image";
+import React from 'react';
+import Image from 'next/image';
 
 type Props = {
-  type?: "text" | "email" | "password" | "search";
+  type?: 'text' | 'email' | 'password' | 'search';
   placeholder?: string;
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -14,11 +14,11 @@ type Props = {
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
 const InputBox: React.FC<Props> = ({
-  type = "text",
-  placeholder = "",
+  type = 'text',
+  placeholder = '',
   value,
   onChange,
-  className = "",
+  className = '',
   disabled = false,
   onClick,
   showImage = false,
@@ -31,7 +31,7 @@ const InputBox: React.FC<Props> = ({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className={`input ${className} ${showImage ? "pl-9" : ""}`} 
+        className={`input ${className} ${showImage ? 'pl-9' : ''}`}
         disabled={disabled}
         onClick={onClick}
         {...restProps}

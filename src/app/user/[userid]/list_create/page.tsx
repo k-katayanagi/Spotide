@@ -1,24 +1,23 @@
-"use client";
+'use client';
 
-import { useSession } from "next-auth/react";
-import { useState } from "react";
-import ListNameInput from "@components/inputbox/ListNameInput";
-import ListSelect from "@/components/ListSelect";
-import { listTypeOptions } from "@/consts/OptionList";
-import DateTimePicker from "@/components/dateTimePicker/DateTimePicker";
-import OutingCalendarPicker from "@/components/dateTimePicker/OutingCalendarPicker";
-import SubmitButton from "@/components/buttons/SubmitButton";
-import { useToast } from "@chakra-ui/react";
+import { useSession } from 'next-auth/react';
+import { useState } from 'react';
+import ListNameInput from '@components/inputbox/ListNameInput';
+import ListSelect from '@/components/ListSelect';
+import { listTypeOptions } from '@/consts/OptionList';
+import DateTimePicker from '@/components/dateTimePicker/DateTimePicker';
+import OutingCalendarPicker from '@/components/dateTimePicker/OutingCalendarPicker';
+import SubmitButton from '@/components/buttons/SubmitButton';
+import { useToast } from '@chakra-ui/react';
 
 const ListCreate = () => {
-  const { data: session } = useSession(); 
+  const { data: session } = useSession();
   const toast = useToast();
-  const [error, setError] = useState("");
-  const [listName, setListName] = useState("");
-  const [selectedType, setSelectedType] = useState<string>("individual");
+  const [error, setError] = useState('');
+  const [listName, setListName] = useState('');
+  const [selectedType, setSelectedType] = useState<string>('individual');
   const [voteDate, setVoteDate] = useState<Date | null>(null);
   const [outingDate, setOutingDate] = useState<Date | null>(null);
-
 
   // 入力値変更ハンドラ
   const onListNameChange = (value: string) => {
@@ -43,17 +42,15 @@ const ListCreate = () => {
 
     // 入力検証
     if (!listName || error) {
-      setError("リスト名を入力してください");
+      setError('リスト名を入力してください');
       return;
     }
 
-
-
     // API 呼び出し
-    const response = await fetch("/api/lists", {
-      method: "POST",
+    const response = await fetch('/api/lists', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         listName,
@@ -61,7 +58,7 @@ const ListCreate = () => {
         voteDate,
         outingDate,
         userId: session?.user.id,
-        username:session?.user.name
+        username: session?.user.name,
       }),
     });
 
@@ -71,28 +68,28 @@ const ListCreate = () => {
     if (response.ok) {
       // 成功時のトースト表示
       toast({
-        title: "リスト作成しました",
-        status: "success",
+        title: 'リスト作成しました',
+        status: 'success',
         duration: 5000, // 表示時間（ミリ秒）
         isClosable: true, // 閉じるボタン
-        position: "top"
+        position: 'top',
       });
 
       // 成功時にフォームのリセット
-      setListName("");
-      setSelectedType("individual");
+      setListName('');
+      setSelectedType('individual');
       setVoteDate(null);
       setOutingDate(null);
-      setError("");
+      setError('');
     } else {
       // エラー時のトースト表示
       toast({
-        title: "リスト作成エラー",
-        description: data.error || "データ送信に失敗しました",
-        status: "error",
+        title: 'リスト作成エラー',
+        description: data.error || 'データ送信に失敗しました',
+        status: 'error',
         duration: 5000,
         isClosable: true,
-        position: "top",
+        position: 'top',
       });
     }
   };

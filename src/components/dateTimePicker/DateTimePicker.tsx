@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import React, { useEffect, useRef, useCallback } from "react";
-import { FormControl } from "@chakra-ui/react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import "@/components/dateTimePicker/dateTimePicker.css";
-import { registerLocale } from "react-datepicker";
-import { ja } from "date-fns/locale";
+import React, { useEffect, useRef, useCallback } from 'react';
+import { FormControl } from '@chakra-ui/react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import '@/components/dateTimePicker/dateTimePicker.css';
+import { registerLocale } from 'react-datepicker';
+import { ja } from 'date-fns/locale';
 
 type Props = {
   title: string;
@@ -15,7 +15,7 @@ type Props = {
 };
 
 // ロケール設定
-registerLocale("ja", ja);
+registerLocale('ja', ja);
 
 const DateTimePicker = ({ title, value, onDateChange }: Props) => {
   const datePickerRef = useRef<DatePicker | null>(null);
@@ -23,27 +23,33 @@ const DateTimePicker = ({ title, value, onDateChange }: Props) => {
 
   // adjustScroll を useCallback でメモ化
   const adjustScroll = useCallback(() => {
-    const calendarElement = document.querySelector(".react-datepicker__calendar");
-    const timeList = calendarElement?.querySelector(".react-datepicker__time-list");
-    const activeTime = calendarElement?.querySelector(".react-datepicker__time-list-item--selected");
+    const calendarElement = document.querySelector(
+      '.react-datepicker__calendar',
+    );
+    const timeList = calendarElement?.querySelector(
+      '.react-datepicker__time-list',
+    );
+    const activeTime = calendarElement?.querySelector(
+      '.react-datepicker__time-list-item--selected',
+    );
 
     if (timeList) {
       if (value && value.toDateString() === now.toDateString()) {
         const nowTime = new Date();
         if (value > nowTime) {
-          activeTime?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          activeTime?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
       } else {
         timeList.scrollTop = 0;
       }
     }
-  }, [value, now]); 
+  }, [value, now]);
 
   useEffect(() => {
     if (value) {
       setTimeout(adjustScroll, 0);
     }
-  }, [value, adjustScroll]); 
+  }, [value, adjustScroll]);
 
   return (
     <div>
@@ -57,7 +63,11 @@ const DateTimePicker = ({ title, value, onDateChange }: Props) => {
           showTimeSelect
           timeCaption="時間"
           minDate={now}
-          minTime={value && value.toDateString() === now.toDateString() ? now : new Date(0, 0, 0, 0, 0)}
+          minTime={
+            value && value.toDateString() === now.toDateString()
+              ? now
+              : new Date(0, 0, 0, 0, 0)
+          }
           maxTime={new Date(0, 0, 0, 23, 59)}
           timeFormat="HH:mm"
           timeIntervals={1}

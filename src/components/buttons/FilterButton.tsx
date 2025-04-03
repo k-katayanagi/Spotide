@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import Button from "../Button";
-import Image from "next/image";
+import Button from '../Button';
+import Image from 'next/image';
 
 interface Props {
   className?: string;

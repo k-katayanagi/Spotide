@@ -1,9 +1,9 @@
-"use client";
-import { useState } from "react";
-import ListSelect from "../ListSelect";
-import { listItemInfo, Sort } from "@/consts/OptionList";
-import OkButton from "../buttons/OkButton";
-import { ListItem } from "@/types/ListTypes";
+'use client';
+import { useState } from 'react';
+import ListSelect from '../ListSelect';
+import { listItemInfo, Sort } from '@/consts/OptionList';
+import OkButton from '../buttons/OkButton';
+import { ListItem } from '@/types/ListTypes';
 
 // type Props = {
 //   toggleSortDropdown?: () => void;
@@ -12,14 +12,18 @@ import { ListItem } from "@/types/ListTypes";
 
 const EditSortDropdown = () => {
   const filteredListInfo = listItemInfo.filter(
-    (item) => item.value !== "status" && item.value !== "lastUpdatedBy"
+    (item) => item.value !== 'status' && item.value !== 'lastUpdatedBy',
   );
 
-  const defaultSortKey = "create_date" as keyof ListItem;
-  const isCreateDateAvailable = filteredListInfo.some((item) => item.value === defaultSortKey);
+  const defaultSortKey = 'create_date' as keyof ListItem;
+  const isCreateDateAvailable = filteredListInfo.some(
+    (item) => item.value === defaultSortKey,
+  );
 
   const [selectedListInfo, setSelectedListInfo] = useState<keyof ListItem>(
-    isCreateDateAvailable ? defaultSortKey : (filteredListInfo[0]?.value as keyof ListItem)
+    isCreateDateAvailable
+      ? defaultSortKey
+      : (filteredListInfo[0]?.value as keyof ListItem),
   );
   const [selectedSort, setSelectedSort] = useState<number>(0);
 
@@ -28,7 +32,7 @@ const EditSortDropdown = () => {
   //   onSortChange(selectedListInfo, selectedSort);
   //   toggleSortDropdown();
   // };
-  
+
   return (
     <form
       // onSubmit={handleSubmit}
@@ -44,12 +48,17 @@ const EditSortDropdown = () => {
             onSelect={(value) => setSelectedListInfo(value as keyof ListItem)}
             className="w-[150px] h-[40px] max-w-[400px] text-center"
           />
-          <p>{filteredListInfo.find((item) => item.value === selectedListInfo)?.label}</p>
+          <p>
+            {
+              filteredListInfo.find((item) => item.value === selectedListInfo)
+                ?.label
+            }
+          </p>
 
           {/* 昇順 / 降順選択 */}
           <ListSelect
             options={Sort}
-            onSelect={(value) => setSelectedSort(Number(value))} 
+            onSelect={(value) => setSelectedSort(Number(value))}
             className="w-full h-[40px] max-w-[100px] text-center"
           />
           <p>{Sort.find((item) => item.value === selectedSort)?.label}</p>

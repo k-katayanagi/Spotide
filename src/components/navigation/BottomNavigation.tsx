@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import useNavigation from "@/hooks/useNavigation";
+import Image from 'next/image';
+import useNavigation from '@/hooks/useNavigation';
 
 const BottomNavigation = () => {
   const { handleNavigateTo } = useNavigation();
@@ -10,7 +10,7 @@ const BottomNavigation = () => {
       <ul className="flex space-x-8">
         <li
           className="text-black hover:text-gray-300 text-lg text-center"
-          onClick={() => handleNavigateTo("/")}
+          onClick={() => handleNavigateTo('/')}
         >
           <Image
             src="/images/top.svg"
@@ -23,7 +23,7 @@ const BottomNavigation = () => {
         </li>
         <li
           className="text-black hover:text-gray-300 text-lg text-center"
-          onClick={() => handleNavigateTo("/user/1/list_create")}
+          onClick={() => handleNavigateTo('/user/1/list_create')}
         >
           <Image
             src="/images/createList.svg"
@@ -37,7 +37,7 @@ const BottomNavigation = () => {
 
         <li
           className="text-black hover:text-gray-300 text-lg text-center"
-          onClick={() => handleNavigateTo("/user/1/individual_list")}
+          onClick={() => handleNavigateTo('/user/1/individual_list')}
         >
           <Image
             src="/images/individualList.svg"
@@ -51,7 +51,7 @@ const BottomNavigation = () => {
 
         <li
           className="text-black hover:text-gray-300 text-lg text-center"
-          onClick={() => handleNavigateTo("/user/1/share_list")}
+          onClick={() => handleNavigateTo('/user/1/share_list')}
         >
           <Image
             src="/images/shareList.svg"
@@ -65,7 +65,7 @@ const BottomNavigation = () => {
 
         <li
           className="text-black hover:text-gray-300 text-lg text-center"
-          onClick={() => handleNavigateTo("/user/1/mypage")}
+          onClick={() => handleNavigateTo('/user/1/mypage')}
         >
           <Image
             src="/images/myPage.svg"

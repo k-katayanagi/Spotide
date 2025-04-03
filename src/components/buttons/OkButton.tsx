@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import Button from "@components/Button";
+import Button from '@components/Button';
 
 interface Props {
-  className?: string; 
+  className?: string;
   onClick?: () => void; // ← クリック時の関数を受け取る
 }
 
-const OkButton = ({ onClick,className }: Props) => {
+const OkButton = ({ onClick, className }: Props) => {
   return (
     <Button
       className={`group relative inline-flex h-16 items-center justify-center overflow-hidden rounded-full 

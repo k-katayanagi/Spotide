@@ -2,11 +2,9 @@
 
 import Button from '@components/Button';
 
-
 interface Props {
-    onClick?: () => void;
+  onClick?: () => void;
 }
-
 
 const ParticipationButton = ({ onClick }: Props) => {
   return (

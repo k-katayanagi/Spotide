@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState } from 'react';
 
 type BottomNavContextType = {
   isBottomNavOpen: boolean;
@@ -9,7 +9,7 @@ type BottomNavContextType = {
 
 // Contextを作成
 const BottomNavContext = createContext<BottomNavContextType | undefined>(
-  undefined
+  undefined,
 );
 
 // Providerを作成
@@ -31,7 +31,7 @@ export const BottomNavProvider = ({
 export const useBottomNav = () => {
   const context = useContext(BottomNavContext);
   if (!context) {
-    throw new Error("useBottomNav must be used within a BottomNavProvider");
+    throw new Error('useBottomNav must be used within a BottomNavProvider');
   }
   return context;
 };

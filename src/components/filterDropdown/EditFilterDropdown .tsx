@@ -1,6 +1,6 @@
-"use client";
-import { useState } from "react";
-import ListSelect from "../ListSelect";
+'use client';
+import { useState } from 'react';
+import ListSelect from '../ListSelect';
 import {
   prefectures,
   cityOptions,
@@ -8,11 +8,11 @@ import {
   categories,
   subCategories,
   hours,
-} from "@/consts/OptionList";
-import OkButton from "../buttons/OkButton";
-import StarRating from "../UI/StarRating";
+} from '@/consts/OptionList';
+import OkButton from '../buttons/OkButton';
+import StarRating from '../UI/StarRating';
 // import { useListContext } from "@/contexts/ListContext";
-import InputBox from "../InputBox";
+import InputBox from '../InputBox';
 // import { ListItem } from "@/types/ListTypes";
 
 type Props = {
@@ -27,25 +27,25 @@ const EditFilterDropdown = ({ toggleFilterDropdown }: Props) => {
   const [selectedHolidays, setSelectedHolidays] = useState<string[]>([]);
   // const [selectedTimeToStation, setSelectedTimeToStation] =
   //   useState<string>("");
-  const [selectedStatus, setSelectedStatus] = useState<string>("");
+  const [selectedStatus, setSelectedStatus] = useState<string>('');
   const addAllOption = (options: { value: string; label: string }[]) => [
-    { value: "", label: "すべて" },
+    { value: '', label: 'すべて' },
     ...options,
   ];
   const daysOfWeek = [
-    { value: "monday", label: "月" },
-    { value: "tuesday", label: "火" },
-    { value: "wednesday", label: "水" },
-    { value: "thursday", label: "木" },
-    { value: "friday", label: "金" },
-    { value: "saturday", label: "土" },
-    { value: "sunday", label: "日" },
+    { value: 'monday', label: '月' },
+    { value: 'tuesday', label: '火' },
+    { value: 'wednesday', label: '水' },
+    { value: 'thursday', label: '木' },
+    { value: 'friday', label: '金' },
+    { value: 'saturday', label: '土' },
+    { value: 'sunday', label: '日' },
   ];
   const handleHolidayChange = (holiday: string) => {
     setSelectedHolidays((prev) =>
       prev.includes(holiday)
         ? prev.filter((h) => h !== holiday)
-        : [...prev, holiday]
+        : [...prev, holiday],
     );
   };
 
@@ -157,9 +157,9 @@ const EditFilterDropdown = ({ toggleFilterDropdown }: Props) => {
                 <span>最寄駅からの所要時間</span>
                 <ListSelect
                   options={[
-                    { value: "10", label: "10分" },
-                    { value: "20", label: "20分" },
-                    { value: "30", label: "30分" },
+                    { value: '10', label: '10分' },
+                    { value: '20', label: '20分' },
+                    { value: '30', label: '30分' },
                   ]}
                   onSelect={setSelectedStatus}
                   className="w-[100px] sm:w-[120px] h-[20px] sm:h-[30px]"

@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import React from 'react';
 
 type ButtonProps = {
@@ -6,17 +6,11 @@ type ButtonProps = {
   onClick?: React.MouseEventHandler<HTMLButtonElement>; // onClick イベントの型
 } & React.ButtonHTMLAttributes<HTMLButtonElement>; // ボタン要素のその他の属性
 
-
 const Button = (props: ButtonProps) => {
   const { text, onClick, className = '', ...restProps } = props;
 
-
   return (
-    <button
-      className={`${className}`} 
-      onClick={onClick}
-      {...restProps}
-    >
+    <button className={`${className}`} onClick={onClick} {...restProps}>
       {text} {/* ボタンの中身 */}
     </button>
   );

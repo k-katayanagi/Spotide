@@ -1,24 +1,24 @@
-"use client";
+'use client';
 
-import { useState, useRef, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
-import { useListContext } from "@/contexts/ListContext";
-import { useBottomNav } from "@/contexts/BottomNavContext";
-import ListCard from "@/components/card/ListCard";
-import Pagination from "@/components/pagination/Pagination";
-import FilterButton from "@/components/buttons/FilterButton";
-import SortButton from "@/components/buttons/SortButton";
-import DirectoryFilterDropdown from "@/components/filterDropdown/DirectoryFilterDropdown";
-import DirectorySortDropdown from "@/components/sortDropdown/DirectorySortDropdown";
-import { List } from "@/types/ListTypes";
-import DeleteConfirmModal from "@/components/modal/DeleteConfirmModal";
-import { useDisclosure, useToast } from "@chakra-ui/react";
+import { useState, useRef, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import { useListContext } from '@/contexts/ListContext';
+import { useBottomNav } from '@/contexts/BottomNavContext';
+import ListCard from '@/components/card/ListCard';
+import Pagination from '@/components/pagination/Pagination';
+import FilterButton from '@/components/buttons/FilterButton';
+import SortButton from '@/components/buttons/SortButton';
+import DirectoryFilterDropdown from '@/components/filterDropdown/DirectoryFilterDropdown';
+import DirectorySortDropdown from '@/components/sortDropdown/DirectorySortDropdown';
+import { List } from '@/types/ListTypes';
+import DeleteConfirmModal from '@/components/modal/DeleteConfirmModal';
+import { useDisclosure, useToast } from '@chakra-ui/react';
 
 const ShareList = () => {
   const { data: session } = useSession(); // セッションからユーザー情報を取得
   const router = useRouter();
-  const { lists, setLists, sortLists, setSortLists } = useListContext(); // Contextからリストを取得
+  const { lists, setLists,setSortLists } = useListContext(); // Contextからリストを取得
   const [userName, setUserName] = useState<string | null>(null); // ユーザー名の状態
   const [isFilter, setIsFilter] = useState(false);
   const [isSort, setIsSort] = useState(false);
@@ -42,18 +42,18 @@ const ShareList = () => {
       if (userResponse.ok) {
         setUserName(userData.user_name); // ユーザー名をステートにセット
       } else {
-        console.error("ユーザー名取得エラー:", userData.error);
+        console.error('ユーザー名取得エラー:', userData.error);
       }
 
       // リストの取得
       const listsResponse = await fetch(
-        `/api/lists?userId=${userId}&listType=share`
+        `/api/lists?userId=${userId}&listType=share`,
       );
       const listsData = await listsResponse.json();
       if (listsResponse.ok) {
         setLists(listsData); // リストデータをセット
       } else {
-        console.error("リスト取得エラー:", listsData.error);
+        console.error('リスト取得エラー:', listsData.error);
       }
     };
 
@@ -68,7 +68,7 @@ const ShareList = () => {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     if (listContainerRef.current) {
-      listContainerRef.current.scrollTo({ top: 0, behavior: "smooth" });
+      listContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -86,25 +86,25 @@ const ShareList = () => {
       let bValue = b[sortKey];
 
       const dateKeys: Array<keyof List> = [
-        "voting_start_at",
-        "created_at",
-        "updated_at",
-        "outing_at",
+        'voting_start_at',
+        'created_at',
+        'updated_at',
+        'outing_at',
       ];
       if (dateKeys.includes(sortKey)) {
         aValue = new Date(aValue as string);
         bValue = new Date(bValue as string);
       }
 
-      if (typeof aValue === "number" || typeof aValue === "string") {
+      if (typeof aValue === 'number' || typeof aValue === 'string') {
         if (bValue !== undefined) {
           return order === 0
             ? aValue > bValue
               ? 1
               : -1
             : aValue < bValue
-            ? 1
-            : -1;
+              ? 1
+              : -1;
         } else {
           return 0;
         }
@@ -126,25 +126,50 @@ const ShareList = () => {
     onOpen();
   };
 
+  // 編集ページに遷移する関数（ここでルーティングを管理）
   const handleEditClick = (listId: number) => {
     router.push(`/user/${userId}/share_list/${listId}/list_edit`);
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (selectedList) {
-      setLists(lists.filter((list) => list.list_id !== selectedList.list_id)); // リストから削除
-      toast({
-        title: `"${selectedList.list_name}" を削除しました`,
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-        position: "top",
+      // APIを呼び出してリストを削除
+      const response = await fetch('/api/lists', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          listId: selectedList.list_id,
+        }),
       });
-      onClose();
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setLists(lists.filter((list) => list.list_id !== selectedList.list_id)); // リストから削除
+        toast({
+          title: `"${selectedList.list_name}" を削除しました`,
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+          position: 'top',
+        });
+        onClose();
+      } else {
+        toast({
+          title: '削除に失敗しました',
+          description: result.error,
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+          position: 'top',
+        });
+      }
     }
   };
 
-  const paginationZIndex = !isBottomNavOpen && !isFilter ? "z-40" : "z-20";
+  const paginationZIndex = !isBottomNavOpen && !isFilter ? 'z-40' : 'z-20';
 
   return (
     <div className="p-3 overflow-auto relative">
@@ -182,7 +207,7 @@ const ShareList = () => {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {currentLists.map((list) => {
             if (!list.list_id) {
-              console.error("リストにidがありません:", list); // デバッグ用
+              console.error('リストにidがありません:', list); // デバッグ用
               return null; // idがない場合は表示しない
             }
 
@@ -203,7 +228,7 @@ const ShareList = () => {
         isOpen={isOpen}
         onClose={onClose}
         onConfirm={handleDelete}
-        selectedName={selectedList?.list_name || ""}
+        selectedName={selectedList?.list_name || ''}
       />
 
       {/* ページネーション */}

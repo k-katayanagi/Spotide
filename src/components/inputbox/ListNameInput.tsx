@@ -1,5 +1,5 @@
-"use client";
-import InputBox from "@components/InputBox";
+'use client';
+import InputBox from '@components/InputBox';
 
 const ListNameInput = ({
   listName,
@@ -17,9 +17,9 @@ const ListNameInput = ({
   // 文字数が10文字を超えた場合にエラーメッセージをセット
   const validateListName = (value: string) => {
     if (value.length > 10) {
-      setError("100文字以内で入力してください");
+      setError('100文字以内で入力してください');
     } else {
-      setError(""); // 100文字以下ならエラーメッセージを消す
+      setError(''); // 100文字以下ならエラーメッセージを消す
     }
   };
 
@@ -46,7 +46,7 @@ const ListNameInput = ({
         onBlur={() => validateListName(listName)} // フォーカスを外したときにバリデーション
         disabled={listName.length > 100}
       />
-      {error && <p style={{ color: "red" }}>{error}</p>}{" "}
+      {error && <p style={{ color: 'red' }}>{error}</p>}{' '}
       {/* エラーメッセージ表示 */}
     </div>
   );

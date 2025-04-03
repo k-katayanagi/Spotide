@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState, useRef } from "react";
+import { useState, useRef } from 'react';
 import {
   AlertDialog,
   AlertDialogBody,
@@ -12,8 +12,8 @@ import {
   Textarea,
   Text,
   Flex,
-} from "@chakra-ui/react";
-import StarRating from "../UI/StarRating";
+} from '@chakra-ui/react';
+import StarRating from '../UI/StarRating';
 
 interface Props {
   selectedName: string;
@@ -24,7 +24,7 @@ interface Props {
 
 const CustomLabelEditModal = ({ isOpen, onClose, selectedName }: Props) => {
   const cancelRef = useRef<HTMLButtonElement>(null);
-  const [memo, setMemo] = useState<string>("");
+  const [memo, setMemo] = useState<string>('');
   const [customRating, setCustomRating] = useState<number>(0);
 
   // const handleSave = () => {
@@ -65,14 +65,14 @@ const CustomLabelEditModal = ({ isOpen, onClose, selectedName }: Props) => {
               <Button
                 ref={cancelRef}
                 onClick={onClose}
-                size={{ base: "md", md: "lg" }}
+                size={{ base: 'md', md: 'lg' }}
                 borderRadius="full"
               >
                 閉じる
               </Button>
               <Button
                 colorScheme="blue"
-                size={{ base: "md", md: "lg" }}
+                size={{ base: 'md', md: 'lg' }}
                 borderRadius="full"
               >
                 {/* onClick={handleSave}  */}

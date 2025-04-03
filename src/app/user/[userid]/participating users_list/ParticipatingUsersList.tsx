@@ -1,22 +1,22 @@
-"use client";
+'use client';
 
-import { useState, useRef, useEffect } from "react";
-import { useParams } from "next/navigation";
-import { TParticipantingUser } from "@/types/UserTypes ";
-import EditButton from "@/components/buttons/EditButton ";
-import DeleteButton from "@/components/buttons/DeleteButton";
-import DetailButton from "@/components/buttons/DetailButton";
-import UserAddButton from "@/components/buttons/UserAddButton";
-import Pagination from "@/components/pagination/Pagination";
-import ParticipatingUsersAddModal from "@/components/modal/ParticipatingUsersAddModal";
-import ParticipatingUsersEditModal from "@/components/modal/ParticipatingUsersEditModal";
-import ParticipatingUsersDetailModal from "@/components/modal/ParticipatingUsersDetailModal";
-import DeleteConfirmModal from "@/components/modal/DeleteConfirmModal";
-import { IconButton } from "@chakra-ui/react";
-import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
-import MenuBar from "@/components/Menu/MenuBar";
-import { useDisclosure, useToast, Spinner } from "@chakra-ui/react";
-import useListType from "@/hooks/useListType";
+import { useState, useRef, useEffect } from 'react';
+import { useParams } from 'next/navigation';
+import { TParticipantingUser } from '@/types/UserTypes ';
+import EditButton from '@/components/buttons/EditButton ';
+import DeleteButton from '@/components/buttons/DeleteButton';
+import DetailButton from '@/components/buttons/DetailButton';
+import UserAddButton from '@/components/buttons/UserAddButton';
+import Pagination from '@/components/pagination/Pagination';
+import ParticipatingUsersAddModal from '@/components/modal/ParticipatingUsersAddModal';
+import ParticipatingUsersEditModal from '@/components/modal/ParticipatingUsersEditModal';
+import ParticipatingUsersDetailModal from '@/components/modal/ParticipatingUsersDetailModal';
+import DeleteConfirmModal from '@/components/modal/DeleteConfirmModal';
+import { IconButton } from '@chakra-ui/react';
+import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
+import MenuBar from '@/components/Menu/MenuBar';
+import { useDisclosure, useToast, Spinner } from '@chakra-ui/react';
+import useListType from '@/hooks/useListType';
 
 const ParticipatingUsersList = () => {
   const [displayUserNames, setDisplayUserNames] = useState<
@@ -30,7 +30,7 @@ const ParticipatingUsersList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
   const [selectedUser, setSelectedUser] = useState<TParticipantingUser | null>(
-    null
+    null,
   );
 
   const {
@@ -61,11 +61,11 @@ const ParticipatingUsersList = () => {
 
   const menuItems = [
     {
-      label: "場所を検索",
+      label: '場所を検索',
       url: `/user/${userid}/${listType}/${listid}/list_edit/spot_search`,
     },
     {
-      label: "編集リストに戻る",
+      label: '編集リストに戻る',
       url: `/user/${userid}/${listType}/${listid}/list_edit/`,
     },
   ];
@@ -80,25 +80,25 @@ const ParticipatingUsersList = () => {
       const response = await fetch(`/api/participants?list_id=${listId}`);
       if (response.ok) {
         const data = await response.json();
-        console.log("Fetched Participants:", data); // データを確認するためにログを出力
+        console.log('Fetched Participants:', data); // データを確認するためにログを出力
         setDisplayUserNames(data);
       } else {
         toast({
-          title: "データ取得に失敗しました",
-          status: "error",
+          title: 'データ取得に失敗しました',
+          status: 'error',
           duration: 3000,
           isClosable: true,
-          position: "top",
+          position: 'top',
         });
       }
     } catch (error) {
-      console.error("Fetch error:", error); // エラー時にもログを出力
+      console.error('Fetch error:', error); // エラー時にもログを出力
       toast({
-        title: "エラーが発生しました",
-        status: "error",
+        title: 'エラーが発生しました',
+        status: 'error',
         duration: 3000,
         isClosable: true,
-        position: "top",
+        position: 'top',
       });
     } finally {
       setLoading(false); // データ取得後にローディング状態をfalseにする
@@ -120,25 +120,25 @@ const ParticipatingUsersList = () => {
   const handleUserAdd = async (
     username: string,
     password: string,
-    listId: number | null
+    listId: number | null,
   ) => {
     if (!username || !password || !listId) {
       toast({
-        title: "情報が不足しています",
-        status: "error",
+        title: '情報が不足しています',
+        status: 'error',
         duration: 3000,
         isClosable: true,
-        position: "top",
+        position: 'top',
       });
       return;
     }
 
     try {
       // APIエンドポイントへのPOSTリクエストを送信
-      const response = await fetch("/api/participants", {
-        method: "POST",
+      const response = await fetch('/api/participants', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           participant_name: username,
@@ -149,12 +149,12 @@ const ParticipatingUsersList = () => {
 
       if (!response.ok) {
         const errorResult = await response.json();
-        console.error("Error response:", errorResult);
-        throw new Error(errorResult.message || "Unknown error occurred");
+        console.error('Error response:', errorResult);
+        throw new Error(errorResult.message || 'Unknown error occurred');
       }
 
       const result = await response.json();
-      console.log(result)
+      console.log(result);
 
       if (result) {
         setDisplayUserNames((prevUsers) => [
@@ -164,40 +164,40 @@ const ParticipatingUsersList = () => {
             list_id: result.data.list_id,
             user_id: result.data.user_id,
             participant_name: username,
-            password:result.data.password,
+            password: result.data.password,
             is_guest: result.data.is_guest,
-            created_at:result.data.created_at || new Date(),
-            updated_at:result.data.updated_at || new Date(),
+            created_at: result.data.created_at || new Date(),
+            updated_at: result.data.updated_at || new Date(),
           },
         ]);
 
         toast({
           title: `"${username}" を追加しました！`,
-          status: "success",
+          status: 'success',
           duration: 3000,
           isClosable: true,
-          position: "top",
+          position: 'top',
         });
 
         // モーダルを閉じる
         onAddModalClose();
       } else {
         toast({
-          title: "ユーザーの追加に失敗しました",
-          status: "error",
+          title: 'ユーザーの追加に失敗しました',
+          status: 'error',
           duration: 3000,
           isClosable: true,
-          position: "top",
+          position: 'top',
         });
       }
     } catch (error) {
-      console.error("ユーザー追加エラー:", error);
+      console.error('ユーザー追加エラー:', error);
       toast({
-        title: "ユーザー追加処理中にエラーが発生しました",
-        status: "error",
+        title: 'ユーザー追加処理中にエラーが発生しました',
+        status: 'error',
         duration: 3000,
         isClosable: true,
-        position: "top",
+        position: 'top',
       });
     }
   };
@@ -212,14 +212,14 @@ const ParticipatingUsersList = () => {
   const handleUserEdit = async (
     editedUsername: string,
     editedPassword: string,
-    listId: number | null
+    listId: number | null,
   ) => {
     if (!selectedUser) return;
 
     try {
-      const response = await fetch("/api/participants", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('/api/participants', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           participant_id: selectedUser.participant_id,
           participant_name: editedUsername,
@@ -230,8 +230,8 @@ const ParticipatingUsersList = () => {
 
       if (!response.ok) {
         const errorResult = await response.json();
-        console.error("Error response:", errorResult);
-        throw new Error(errorResult.message || "Unknown error occurred");
+        console.error('Error response:', errorResult);
+        throw new Error(errorResult.message || 'Unknown error occurred');
       }
 
       const result = await response.json();
@@ -247,31 +247,31 @@ const ParticipatingUsersList = () => {
                   list_id: listId !== null ? listId : user.list_id,
                   updated_at: result.updated_at || new Date(),
                 }
-              : user
+              : user,
           );
           console.log(updatedUsers);
           return updatedUsers;
         });
 
         toast({
-          title: "情報を更新しました",
-          status: "success",
+          title: '情報を更新しました',
+          status: 'success',
           duration: 3000,
           isClosable: true,
-          position: "top",
+          position: 'top',
         });
 
         setSelectedUser(null);
         onEditModalClose();
       }
     } catch (error) {
-      console.error("更新エラー:", error);
+      console.error('更新エラー:', error);
       toast({
-        title: "更新に失敗しました",
-        status: "error",
+        title: '更新に失敗しました',
+        status: 'error',
         duration: 3000,
         isClosable: true,
-        position: "top",
+        position: 'top',
       });
     }
   };
@@ -285,45 +285,45 @@ const ParticipatingUsersList = () => {
     if (!selectedUser) return;
 
     try {
-      const response = await fetch("/api/participants", {
-        method: "DELETE",
+      const response = await fetch('/api/participants', {
+        method: 'DELETE',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ participant_id: selectedUser.participant_id }),
       });
 
       if (!response.ok) {
         const errorResult = await response.json();
-        console.error("Error response:", errorResult);
-        throw new Error(errorResult.message || "削除処理に失敗しました");
+        console.error('Error response:', errorResult);
+        throw new Error(errorResult.message || '削除処理に失敗しました');
       }
 
       // フロント側のデータ更新
       setDisplayUserNames((prevUsers) =>
         prevUsers.filter(
-          (user) => user.participant_id !== selectedUser.participant_id
-        )
+          (user) => user.participant_id !== selectedUser.participant_id,
+        ),
       );
 
       toast({
         title: `"${selectedUser.participant_name}" を削除しました`,
-        status: "success",
+        status: 'success',
         duration: 3000,
         isClosable: true,
-        position: "top",
+        position: 'top',
       });
 
       setSelectedUser(null);
       onDeleteModalClose();
     } catch (error) {
-      console.error("削除エラー:", error);
+      console.error('削除エラー:', error);
       toast({
-        title: "削除に失敗しました",
-        status: "error",
+        title: '削除に失敗しました',
+        status: 'error',
         duration: 3000,
         isClosable: true,
-        position: "top",
+        position: 'top',
       });
     }
   };
@@ -337,7 +337,7 @@ const ParticipatingUsersList = () => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentUserNames = displayUserNames.slice(
     indexOfFirstItem,
-    indexOfLastItem
+    indexOfLastItem,
   );
   const totalPages = Math.ceil(displayUserNames.length / itemsPerPage);
   const listContainerRef = useRef<HTMLDivElement>(null);
@@ -345,7 +345,7 @@ const ParticipatingUsersList = () => {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     if (listContainerRef.current) {
-      listContainerRef.current.scrollTo({ top: 0, behavior: "smooth" });
+      listContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -364,7 +364,7 @@ const ParticipatingUsersList = () => {
               variant="unstyled"
               aria-label="メニュー"
               className="flex items-center justify-center text-black block"
-              style={{ width: "50px", height: "50px" }}
+              style={{ width: '50px', height: '50px' }}
               onClick={toggleMenuDropdown}
             />
           </div>
@@ -405,7 +405,7 @@ const ParticipatingUsersList = () => {
                   <p className="truncate">{user.participant_name}</p>
                 </div>
                 <div className="flex items-center gap-x-2 w-[200px]">
-                  {" "}
+                  {' '}
                   {/* 固定幅を設定してボタンの配置を調整 */}
                   <EditButton
                     className="flex items-center justify-center h-[40px] w-[70px] sm:h-[45px] sm:w-[80px]"
@@ -433,7 +433,7 @@ const ParticipatingUsersList = () => {
         isOpen={isDeleteModalOpen}
         onClose={onDeleteModalClose}
         onConfirm={handleDelete}
-        selectedName={selectedUser?.participant_name || ""}
+        selectedName={selectedUser?.participant_name || ''}
       />
 
       {/* ユーザー追加モーダル */}

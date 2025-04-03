@@ -1,43 +1,42 @@
-"use client";
+'use client';
 
-import { useState, useRef, useEffect } from "react";
-import { useParams } from "next/navigation";
-import { useSession } from "next-auth/react";
-import { useListContext } from "@/contexts/ListContext";
-import { useListItemContext } from "@/contexts/ListItemContext";
-import { useBottomNav } from "@/contexts/BottomNavContext";
-import Pagination from "@/components/pagination/Pagination";
-import FilterButton from "@/components/buttons/FilterButton";
-import SortButton from "@/components/buttons/SortButton";
-import { ListItem } from "@/types/ListTypes";
-import { List } from "@/types/ListTypes";
-import ListItemCard from "@/components/card/ListItemCard";
-import EditFilterDropdown from "@/components/filterDropdown/EditFilterDropdown ";
-import EditSortDropdown from "@/components/sortDropdown/EditSortDropdown";
-import ViewLabelSettingModal from "@/components/modal/ViewLabelSettingModal";
-import CustomLabelEditModal from "@/components/modal/CustomLabelEditModal";
-import DeleteConfirmModal from "@/components/modal/DeleteConfirmModal";
-import IssueViewButton from "@/components/buttons/IssueViewButton";
-import { motion } from "framer-motion";
-import { IconButton } from "@chakra-ui/react";
-import { useDisclosure, useToast, Spinner } from "@chakra-ui/react";
-import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
-import MenuBar from "@/components/Menu/MenuBar";
-import useListType from "@/hooks/useListType";
+import { useState, useRef, useEffect } from 'react';
+import { useParams } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import { useListContext } from '@/contexts/ListContext';
+import { useListItemContext } from '@/contexts/ListItemContext';
+import { useBottomNav } from '@/contexts/BottomNavContext';
+import Pagination from '@/components/pagination/Pagination';
+import FilterButton from '@/components/buttons/FilterButton';
+import SortButton from '@/components/buttons/SortButton';
+import { ListItem } from '@/types/ListTypes';
+import ListItemCard from '@/components/card/ListItemCard';
+import EditFilterDropdown from '@/components/filterDropdown/EditFilterDropdown ';
+import EditSortDropdown from '@/components/sortDropdown/EditSortDropdown';
+import ViewLabelSettingModal from '@/components/modal/ViewLabelSettingModal';
+import CustomLabelEditModal from '@/components/modal/CustomLabelEditModal';
+import DeleteConfirmModal from '@/components/modal/DeleteConfirmModal';
+import IssueViewButton from '@/components/buttons/IssueViewButton';
+import { motion } from 'framer-motion';
+import { IconButton } from '@chakra-ui/react';
+import { useDisclosure, useToast, Spinner } from '@chakra-ui/react';
+import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
+import MenuBar from '@/components/Menu/MenuBar';
+import useListType from '@/hooks/useListType';
 
 const defaultFields = [
-  { key: "station", label: "駅" },
-  { key: "google_rating", label: "Google評価" },
-  { key: "custom_rating", label: "カスタム評価" },
-  { key: "address", label: "住所" },
-  { key: "time_to_station", label: "駅からの所要時間" },
-  { key: "business_hours", label: "営業時間" },
-  { key: "regular_holiday", label: "定休日" },
-  { key: "time_from_nearest_station", label: "最寄り駅からの時間" },
-  { key: "category", label: "カテゴリ" },
-  { key: "sub_category", label: "サブカテゴリ" },
-  { key: "list_participants", label: "登録者" },
-  { key: "created_at", label: "登録日" },
+  { key: 'station', label: '駅' },
+  { key: 'google_rating', label: 'Google評価' },
+  { key: 'custom_rating', label: 'カスタム評価' },
+  { key: 'address', label: '住所' },
+  { key: 'time_to_station', label: '駅からの所要時間' },
+  { key: 'business_hours', label: '営業時間' },
+  { key: 'regular_holiday', label: '定休日' },
+  { key: 'time_from_nearest_station', label: '最寄り駅からの時間' },
+  { key: 'category', label: 'カテゴリ' },
+  { key: 'sub_category', label: 'サブカテゴリ' },
+  { key: 'list_participants', label: '登録者' },
+  { key: 'created_at', label: '登録日' },
 ];
 
 const ListEdit = () => {
@@ -68,7 +67,7 @@ const ListEdit = () => {
     onClose: onDeleteModalClose,
   } = useDisclosure();
   const [selectedListItem, setSelectedListItem] = useState<ListItem | null>(
-    null
+    null,
   );
   const toast = useToast();
   const { isBottomNavOpen } = useBottomNav();
@@ -76,21 +75,21 @@ const ListEdit = () => {
   const itemsPerPage = 10;
   const listContainerRef = useRef<HTMLDivElement>(null);
   const [selectedFields, setSelectedFields] = useState<string[]>(
-    defaultFields.map((f) => f.key)
+    defaultFields.map((f) => f.key),
   );
   const [loading, setLoading] = useState(true);
 
   const menuItems = [
     {
-      label: "場所を検索",
+      label: '場所を検索',
       url: `/user/${userid}/${listType}/${listid}/list_edit/spot_search`,
     },
     {
-      label: "共有ユーザー設定",
+      label: '共有ユーザー設定',
       url: `/user/${userid}/${listType}/${listid}/list_edit/participating_users_list`,
     },
-    { label: "表示ラベル設定", onClick: () => setIsLabelSettingOpen(true) },
-    { label: "投票開始日設定", onClick: () => setIsLabelSettingOpen(true) },
+    { label: '表示ラベル設定', onClick: () => setIsLabelSettingOpen(true) },
+    { label: '投票開始日設定', onClick: () => setIsLabelSettingOpen(true) },
   ];
 
   useEffect(() => {
@@ -99,11 +98,11 @@ const ListEdit = () => {
       setLoading(true); // 取得開始時にローディングを有効化
       try {
         const response = await fetch(`/api/listItems?list_id=${listId}`);
-        if (!response.ok) throw new Error("リストアイテム取得に失敗しました");
+        if (!response.ok) throw new Error('リストアイテム取得に失敗しました');
         const data = await response.json();
         setListItems(data.listItems);
       } catch (error) {
-        console.error("エラー:", error);
+        console.error('エラー:', error);
         setListItems([]);
       } finally {
         setLoading(false); // 取得完了時にローディングを無効化
@@ -113,17 +112,17 @@ const ListEdit = () => {
     // リストの情報を取得する処理
     const fetchLists = async () => {
       try {
-        console.log("id:", listId, userId, listType);
+        console.log('id:', listId, userId, listType);
         const response = await fetch(
-          `/api/lists?userId=${userId}&listId=${listId}&listType=${listType}`
+          `/api/lists?userId=${userId}&listId=${listId}&listType=${listType}`,
         );
-        if (!response.ok) throw new Error("リスト取得に失敗しました");
+        if (!response.ok) throw new Error('リスト取得に失敗しました');
         const data = await response.json();
-        console.log("responseLists:", data);
+        console.log('responseLists:', data);
         setLists(data); // 取得したリストをセット
         setLoading(false);
       } catch (error) {
-        console.error("エラー:", error);
+        console.error('エラー:', error);
       }
     };
 
@@ -147,7 +146,7 @@ const ListEdit = () => {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     if (listContainerRef.current) {
-      listContainerRef.current.scrollTo({ top: 0, behavior: "smooth" });
+      listContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -177,57 +176,65 @@ const ListEdit = () => {
 
   const handleDelete = async () => {
     if (selectedListItem) {
-      // バックエンドで削除処理を実行
       try {
-        const response = await fetch("/api/listItems", {
-          method: "DELETE",
+        const response = await fetch('/api/listItems', {
+          method: 'DELETE',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({ item_id: selectedListItem.item_id }),
         });
 
         if (!response.ok) {
-          throw new Error("削除に失敗しました");
+          throw new Error('削除に失敗しました');
         }
 
         // フロントエンドでアイテムを削除（バックエンドが成功した場合）
         setListItems((prevItem) =>
-          prevItem.filter((item) => item.item_id !== selectedListItem.item_id)
+          prevItem.filter((item) => item.item_id !== selectedListItem.item_id),
         );
 
         toast({
           title: `"${selectedListItem.store_name}" を削除しました`,
-          status: "success",
+          status: 'success',
           duration: 3000,
           isClosable: true,
-          position: "top",
+          position: 'top',
         });
+
         onDeleteModalClose();
-      } catch (error) {
+      } catch (error: unknown) {
+        let errorMessage = '不明なエラーが発生しました';
+
+        if (error instanceof Error) {
+          errorMessage = error.message;
+        } else {
+          errorMessage = String(error);
+        }
+
         toast({
-          title: "エラーが発生しました",
-          description: error.message,
-          status: "error",
+          title: 'エラーが発生しました',
+          description: errorMessage,
+          status: 'error',
           duration: 3000,
           isClosable: true,
-          position: "top",
+          position: 'top',
         });
       }
     }
   };
 
-  const paginationZIndex = !isBottomNavOpen && !isFilter ? "z-40" : "z-20";
+  const paginationZIndex = !isBottomNavOpen && !isFilter ? 'z-40' : 'z-20';
 
   return (
     <div className="p-3 overflow-auto relative">
       <div className="flex items-center justify-between mb-5 w-full">
         <h1 className="text-2xl font-bold flex-1">
           {loading
-            ? "取得中..."
+            ? '取得中...'
             : list?.list_name ||
               lists[0]?.list_name ||
-              "リストが見つかりません"}
+              'リストが見つかりません'}
         </h1>
         <div className="flex items-center gap-2">
           <IssueViewButton listId={listId} />
@@ -289,7 +296,7 @@ const ListEdit = () => {
       <CustomLabelEditModal
         isOpen={isEditModalOpen}
         onClose={onEditModalClose}
-        selectedName={selectedListItem?.store_name || ""}
+        selectedName={selectedListItem?.store_name || ''}
       />
 
       {/*削除確認モーダル*/}
@@ -297,13 +304,13 @@ const ListEdit = () => {
         isOpen={isDeleteModalOpen}
         onClose={onDeleteModalClose}
         onConfirm={handleDelete}
-        selectedName={selectedListItem?.store_name || ""}
+        selectedName={selectedListItem?.store_name || ''}
       />
 
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, ease: "easeOut" }}
+        transition={{ duration: 0.3, ease: 'easeOut' }}
         className="bg-white border border-orange-200 shadow-lg rounded-lg p-4 h-auto min-h-[320px] flex flex-col justify-between hover:shadow-xl transition-shadow"
       >
         {/* リスト部分 */}

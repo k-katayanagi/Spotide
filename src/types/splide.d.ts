@@ -2,7 +2,7 @@ declare module '@splidejs/react-splide' {
   import { ComponentType } from 'react';
 
   interface SplideOptions {
-    type?: 'slide' | 'fade' | 'loop' | 'loop-rewind';  // ここを厳密な文字列リテラル型に修正
+    type?: 'slide' | 'fade' | 'loop' | 'loop-rewind'; // ここを厳密な文字列リテラル型に修正
     autoplay?: boolean;
     interval?: number;
     perPage?: number;

@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import useNavigation from "@/hooks/useNavigation";
-import { useSession } from "next-auth/react";
-import { useState, useEffect } from "react";
+import Image from 'next/image';
+import useNavigation from '@/hooks/useNavigation';
+import { useSession } from 'next-auth/react';
+import { useState, useEffect } from 'react';
 
 const Mypage = () => {
   const { data: session } = useSession();
@@ -13,7 +13,7 @@ const Mypage = () => {
   // sessionとuserIdの取得確認
   useEffect(() => {
     if (!session?.user?.id) {
-      return; 
+      return;
     }
 
     const fetchData = async () => {
@@ -24,10 +24,10 @@ const Mypage = () => {
         if (userResponse.ok) {
           setUserName(userData.user_name); // ユーザー名をステートにセット
         } else {
-          console.error("ユーザー名取得エラー:", userData.error);
+          console.error('ユーザー名取得エラー:', userData.error);
         }
       } catch (error) {
-        console.error("データ取得中にエラーが発生しました:", error);
+        console.error('データ取得中にエラーが発生しました:', error);
       }
     };
 
@@ -38,7 +38,7 @@ const Mypage = () => {
     <div className="overflow-auto relative scrollbar-thin scrollbar-thumb-[#FF5722] scrollbar-track-[#FFE0B2]">
       <div className="flex items-center justify-between mb-[30px]">
         <h1 className="text-2xl font-bold">
-          {userName ? `${userName}さんのマイページ` : "マイページ"}
+          {userName ? `${userName}さんのマイページ` : 'マイページ'}
         </h1>
       </div>
 
@@ -63,7 +63,7 @@ const Mypage = () => {
 
           {/* リスト作成カード */}
           <div
-            className="flex flex-col items-center text-center bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-full max-w-[240px] md:w-96 cursor-pointer" 
+            className="flex flex-col items-center text-center bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-full max-w-[240px] md:w-96 cursor-pointer"
             onClick={() =>
               handleNavigateTo(`/user/${session?.user?.id}/list_create`)
             }

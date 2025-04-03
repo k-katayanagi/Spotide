@@ -1,5 +1,5 @@
-import { useEffect, useState, useRef } from "react";
-import { TParticipantingUser } from "@/types/UserTypes ";
+import { useEffect, useState, useRef } from 'react';
+import { TParticipantingUser } from '@/types/UserTypes ';
 import {
   AlertDialog,
   AlertDialogBody,
@@ -10,7 +10,7 @@ import {
   Button,
   Input,
   Flex,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 
 interface Props {
   isOpen: boolean;
@@ -18,7 +18,7 @@ interface Props {
   onConfirm: (
     username: string,
     password: string,
-    listId: number | null
+    listId: number | null,
   ) => void;
   selectedUser: TParticipantingUser | null;
   listId: number | null;
@@ -27,8 +27,8 @@ interface Props {
 // パスワード自動生成
 const generatePassword = (length: number = 12): string => {
   const charset =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
-  let password = "";
+    'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()';
+  let password = '';
   for (let i = 0; i < length; i++) {
     const randomIndex = Math.floor(Math.random() * charset.length);
     password += charset[randomIndex];
@@ -47,20 +47,17 @@ const ParticipatingUsersEditModal = ({
 
   // モーダルが開くたびに `username` と `password` をセット
   const [username, setUsername] = useState(
-    selectedUser?.participant_name || ""
+    selectedUser?.participant_name || '',
   );
-  const [password, setPassword] = useState(selectedUser?.password || "");
+  const [password, setPassword] = useState(selectedUser?.password || '');
 
   useEffect(() => {
     if (isOpen && selectedUser) {
-      console.log("Opening modal with selectedUser:", selectedUser);  // selectedUserが正しいか確認
+      console.log('Opening modal with selectedUser:', selectedUser); // selectedUserが正しいか確認
       setUsername(selectedUser.participant_name);
       setPassword(selectedUser.password);
     }
   }, [isOpen, selectedUser]);
-  
-  
-  
 
   const handleSave = () => {
     onConfirm(username, password, listId);
@@ -78,9 +75,9 @@ const ParticipatingUsersEditModal = ({
       onClose={onClose}
     >
       <AlertDialogOverlay>
-        <AlertDialogContent maxWidth={{ base: "80%", md: "500px" }}>
+        <AlertDialogContent maxWidth={{ base: '80%', md: '500px' }}>
           <AlertDialogHeader
-            fontSize={{ base: "lg", md: "2xl" }}
+            fontSize={{ base: 'lg', md: '2xl' }}
             fontWeight="bold"
           >
             ユーザー情報変更

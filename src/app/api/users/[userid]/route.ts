@@ -1,18 +1,21 @@
-import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { NextResponse } from 'next/server';
+import { supabase } from '@/lib/supabase';
 
 export async function GET(request: Request) {
   const { pathname } = new URL(request.url);
-  const userId = pathname.split("/")[3];  // （[userid]）を取得
+  const userId = pathname.split('/')[3]; // （[userid]）を取得
 
   if (!userId) {
-    return NextResponse.json({ error: "ユーザーIDが必要です" }, { status: 400 });
+    return NextResponse.json(
+      { error: 'ユーザーIDが必要です' },
+      { status: 400 },
+    );
   }
 
   const { data, error } = await supabase
-    .from("users")
-    .select("user_name")
-    .eq("user_id", userId)
+    .from('users')
+    .select('user_name')
+    .eq('user_id', userId)
     .single();
 
   if (error) {
@@ -21,4 +24,3 @@ export async function GET(request: Request) {
 
   return NextResponse.json(data);
 }
-
