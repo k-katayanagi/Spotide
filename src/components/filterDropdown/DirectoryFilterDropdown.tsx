@@ -51,7 +51,7 @@ const DirectoryFilterDropdown = ({ toggleFilterDropdown }: Props) => {
     const filterByDate = (
       dateField: keyof Pick<
         List,
-        'outing_date' | 'create_date' | 'update_date'
+        'outing_at' | 'created_at' | 'updated_at'
       >,
       startDate: Date | null,
       endDate: Date | null,
@@ -71,19 +71,19 @@ const DirectoryFilterDropdown = ({ toggleFilterDropdown }: Props) => {
 
     if (outingStartDate || outingEndDate) {
       filteredLists = filteredLists.filter(
-        filterByDate('outing_date', outingStartDate, outingEndDate),
+        filterByDate('outing_at', outingStartDate, outingEndDate),
       );
     }
 
     if (createStartDate || createEndDate) {
       filteredLists = filteredLists.filter(
-        filterByDate('create_date', createStartDate, createEndDate),
+        filterByDate('created_at', createStartDate, createEndDate),
       );
     }
 
     if (updateStartDate || updateEndDate) {
       filteredLists = filteredLists.filter(
-        filterByDate('update_date', updateStartDate, updateEndDate),
+        filterByDate('updated_at', updateStartDate, updateEndDate),
       );
     }
 
