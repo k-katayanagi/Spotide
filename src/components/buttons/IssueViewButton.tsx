@@ -1,21 +1,20 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { v4 as uuidv4 } from 'uuid'; // UUID 生成ライブラリ
 import Button from '@components/Button';
 import useNavigation from '@/hooks/useNavigation';
 
 interface Props {
   className?: string;
-  listId: number | null; // listId は null になる可能性がある
+  listId: number | null;
 }
 
 const IssueViewButton = ({ className, listId }: Props) => {
   const { handleNavigateTo } = useNavigation();
   const [viewUrl, setViewUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isUrlIssued, setIsUrlIssued] = useState(false); // URLが発行されたかどうか
 
-  //初回レンダリング時に listId をDBでチェック（仮で localStorage）
   useEffect(() => {
     if (listId === null) {
       setIsLoading(false);
@@ -24,13 +23,15 @@ const IssueViewButton = ({ className, listId }: Props) => {
 
     const fetchViewUrl = async () => {
       try {
-        // 本番では `/api/view-url?listId=${listId}` に `GET` する
-        const storedData: Record<number, string> = JSON.parse(
-          localStorage.getItem('viewUrls') || '{}',
-        );
+        const res = await fetch(`/api/viewUrl?listId=${listId}`);
+        const data = await res.json();
+        console.log('レスポンス:', data); // レスポンス内容をログ出力
 
-        if (storedData[listId]) {
-          setViewUrl(`/view/${storedData[listId]}`);
+        if (res.ok) {
+          setViewUrl(data.viewUrl);
+          setIsUrlIssued(!!data.viewUrl); // URLが発行されているかチェック
+        } else {
+          console.error('エラー:', data.error);
         }
       } catch (error) {
         console.error('閲覧URLの取得に失敗しました', error);
@@ -48,27 +49,40 @@ const IssueViewButton = ({ className, listId }: Props) => {
       return;
     }
 
-    if (!viewUrl) {
+    console.log('viewUrl:', viewUrl); // viewUrlが正しく設定されているか確認
+
+    // URLがまだ発行されていない場合
+    if (!viewUrl && !isUrlIssued) {
       try {
-        // UUID を発行
-        const newUuid = uuidv4();
-        const generatedUrl = `/view/${newUuid}`;
+        const res = await fetch(`/api/viewUrl`, {
+          method: 'POST',
+          body: JSON.stringify({ listId }),
+          headers: { 'Content-Type': 'application/json' },
+        });
 
-        // 仮のDB (localStorage) に保存（本番では API に保存）
-        const storedData: Record<number, string> = JSON.parse(
-          localStorage.getItem('viewUrls') || '{}',
-        );
-        storedData[listId] = newUuid;
-        localStorage.setItem('viewUrls', JSON.stringify(storedData));
+        const data = await res.json();
+        console.log('POSTレスポンス:', data); // 発行したURLが正しく返ってきているか確認
 
-        setViewUrl(generatedUrl);
+        if (res.ok) {
+          setViewUrl(data.viewUrl);
+          setIsUrlIssued(true); // 発行されたことを記録
+        } else {
+          console.error('閲覧URLの発行に失敗しました', data.error);
+        }
       } catch (error) {
         console.error('閲覧URLの発行に失敗しました', error);
-        return;
       }
     } else {
-      // 発行済みなら URL へ移動
-      handleNavigateTo(viewUrl);
+      // URLが発行された場合、そのURLに遷移
+      if (viewUrl) {
+        console.log('遷移先URL:', viewUrl); // 遷移先のURLを確認
+
+        // 遷移先を修正: view/uuid に遷移するように
+        const uuid = viewUrl.split('/').pop(); // URLからUUIDを取り出す
+        const correctedUrl = `/view/${uuid}`;
+        console.log('修正後の遷移先URL:', correctedUrl); // 修正後の遷移先URLを確認
+        handleNavigateTo(correctedUrl); // 修正後のURLに遷移
+      }
     }
   };
 

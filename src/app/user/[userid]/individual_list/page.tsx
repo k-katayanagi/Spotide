@@ -18,7 +18,7 @@ import { useDisclosure, useToast } from '@chakra-ui/react';
 const IndividualList = () => {
   const { data: session } = useSession(); // セッションからユーザー情報を取得
   const router = useRouter();
-  const { lists, setLists,setSortLists } = useListContext(); // Contextからリストを取得
+  const { lists, setLists, setSortLists } = useListContext(); // Contextからリストを取得
   const [userName, setUserName] = useState<string | null>(null); // ユーザー名の状態
   const [isFilter, setIsFilter] = useState(false);
   const [isSort, setIsSort] = useState(false);
@@ -131,6 +131,11 @@ const IndividualList = () => {
     router.push(`/user/${userId}/individual_list/${listId}/list_edit`);
   };
 
+  // 閲覧ページに遷移する関数
+  const handleViewClick = (list: List) => {
+    router.push(`/view/${list.url}`);
+  };
+
   const handleDelete = async () => {
     if (selectedList) {
       // APIを呼び出してリストを削除
@@ -217,6 +222,7 @@ const IndividualList = () => {
                 list={list}
                 onDelete={() => handleDeleteClick(list)}
                 onEdit={() => handleEditClick(list.list_id)}
+                onView={() => handleViewClick(list)}
               />
             );
           })}

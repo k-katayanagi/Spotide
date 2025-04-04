@@ -15,17 +15,17 @@ const getIrregularBusinessHours = (periods: any[]) => {
   const hoursMap = new Map<string, string[]>();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   periods.forEach(({ open, close }: any) => {
-    const openTime = `${open.hour}:${open.minute.toString().padStart(2, '0')}`;
-    const closeTime = `${close.hour}:${close.minute
-      .toString()
-      .padStart(2, '0')}`;
-    const timeRange = `${openTime}～${closeTime}`;
-    const day = ['日', '月', '火', '水', '木', '金', '土'][open.day];
+    if (open && close) {
+      const openTime = `${open.hour}:${open.minute.toString().padStart(2, '0')}`;
+      const closeTime = `${close.hour}:${close.minute.toString().padStart(2, '0')}`;
+      const timeRange = `${openTime}～${closeTime}`;
+      const day = ['日', '月', '火', '水', '木', '金', '土'][open.day];
 
-    if (!hoursMap.has(timeRange)) {
-      hoursMap.set(timeRange, []);
+      if (!hoursMap.has(timeRange)) {
+        hoursMap.set(timeRange, []);
+      }
+      hoursMap.get(timeRange)?.push(day);
     }
-    hoursMap.get(timeRange)?.push(day);
   });
 
   // 異なる時間帯があれば曜日を個別に表示

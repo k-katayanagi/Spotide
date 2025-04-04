@@ -10,9 +10,10 @@ interface Props {
   list: List;
   onDelete: () => void;
   onEdit: () => void;
+  onView: () => void;
 }
 
-const ListCard = ({ list, onDelete, onEdit }: Props) => {
+const ListCard = ({ list, onDelete, onEdit,onView }: Props) => {
   console.log('Received list:', list);
 
   const getStatusLabel = (status: number): string => {
@@ -31,7 +32,7 @@ const ListCard = ({ list, onDelete, onEdit }: Props) => {
     <div className="bg-white border border-orange-300 shadow-md rounded-lg p-4 h-auto min-h-[320px] flex flex-col justify-between">
       <div className="flex justify-center items-center mb-4 space-x-2 sm:space-x-6 md:space-x-10 lg:space-x-16 xl:space-x-20">
         <EditButton className="mx-2" onClick={onEdit} />
-        <ViewingButton className="mx-2" />
+        <ViewingButton className="mx-2" onClick={onView} disabled={!list.url}/>
         <DeleteButton className="mx-2" onClick={onDelete} />
       </div>
       <div className="flex-1">

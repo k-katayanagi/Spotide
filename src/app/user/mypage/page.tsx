@@ -4,6 +4,7 @@ import Image from 'next/image';
 import useNavigation from '@/hooks/useNavigation';
 import { useSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
+import { signOut } from 'next-auth/react';
 
 const Mypage = () => {
   const { data: session } = useSession();
@@ -33,6 +34,11 @@ const Mypage = () => {
 
     fetchData(); // ユーザーIDがあればデータを取得
   }, [session]); // sessionが変更されたときに実行
+
+  // ログアウト処理
+  const handleLogout = async () => {
+    signOut({ callbackUrl: '/login' });
+  };
 
   return (
     <div className="overflow-auto relative scrollbar-thin scrollbar-thumb-[#FF5722] scrollbar-track-[#FFE0B2]">
@@ -133,7 +139,10 @@ const Mypage = () => {
           </div>
 
           {/* ログアウト */}
-          <div className="flex flex-col items-center text-center bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-full max-w-[240px] md:w-96 md:justify-self-start">
+          <div
+            className="flex flex-col items-center text-center bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-full max-w-[240px] md:w-96 md:justify-self-start cursor-pointer"
+            onClick={handleLogout}
+          >
             <div className="w-full flex flex-col items-center">
               <h2 className="text-lg font-bold">ログアウト</h2>
               <Image
