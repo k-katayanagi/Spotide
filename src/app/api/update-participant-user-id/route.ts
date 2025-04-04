@@ -3,12 +3,16 @@ import { supabase } from '@/lib/supabase'; // Supabaseクライアントのイ�
 
 export async function POST(request: NextRequest) {
   try {
-    const { participantId, userId, isGuest } = await request.json();
+    const { participantId, userId, isGuest, userName } = await request.json();
 
     // list_participants テーブルで participantId を基に user_id と is_guest を更新
     const { data, error } = await supabase
       .from('list_participants')
-      .update({ user_id: userId, is_guest: isGuest })
+      .update({
+        user_id: userId,
+        is_guest: isGuest,
+        participant_name: userName,
+      })
       .eq('participant_id', participantId)
       .select();
 

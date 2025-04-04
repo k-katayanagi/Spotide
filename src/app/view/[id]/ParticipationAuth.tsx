@@ -125,6 +125,7 @@ const ParticipationAuth = ({ setIsAuthenticated }: ParticipationAuthProps) => {
       body: JSON.stringify({
         participantId: Number(existingParticipationId),
         userId: session.user.id,
+        userName:session.user.name,
         isGuest: false,
       }),
     });

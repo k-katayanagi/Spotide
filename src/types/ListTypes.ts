@@ -14,6 +14,7 @@ export type List = {
   outing_at: Date;
   created_at: Date;
   updated_at: Date;
+  is_admin?: boolean;
 };
 
 export type Photo = {

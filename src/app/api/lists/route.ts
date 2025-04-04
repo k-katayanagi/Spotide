@@ -119,24 +119,25 @@ export async function GET(request: Request) {
 
   try {
     let query = supabase
-      .from('lists')
-      .select('*')
-      .eq('creator_id', userId)
-      .eq('list_type', listType);
+      .from('list_participants')
+      .select(
+        `
+      is_admin,
+      lists:list_participants_list_id_fkey (*)
+    `,
+      )
+      .eq('user_id', userId)
+      .eq('lists.list_type', listType);
 
-    // listId がある場合にのみフィルタリング
     if (listId) {
       const numericListId = Number(listId);
-
       if (!isNaN(numericListId)) {
-        query = query.eq('list_id', numericListId.toString());
+        query = query.eq('list_id', numericListId);
       } else {
-        console.error('エラー: list_id が数値ではありません:', listId);
         return NextResponse.json({ error: '無効な list_id' }, { status: 400 });
       }
     }
 
-    // クエリの実行
     const { data, error } = await query;
 
     if (error) {
@@ -145,9 +146,16 @@ export async function GET(request: Request) {
     }
 
     console.log('取得データ:', data);
-    return NextResponse.json(data); // 取得したリストデータを返す
+
+    // データ整形：is_adminをトップ階層に、listsの中身を展開
+    const formatted = data.map((item) => ({
+      ...item.lists,
+      is_admin: item.is_admin,
+    }));
+
+    console.log('取得データ（整形後）:', formatted);
+    return NextResponse.json(formatted); // 整形済みデータを返す
   } catch (error: unknown) {
-    // errorをError型にキャスト
     if (error instanceof Error) {
       console.error('リスト取得中のエラー:', error);
       return NextResponse.json(

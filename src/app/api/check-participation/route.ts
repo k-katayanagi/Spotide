@@ -4,9 +4,7 @@ import { supabase } from '@/lib/supabase';
 export async function POST(request: NextRequest) {
   try {
     const { participantId, password, currentUserId } = await request.json();
-    console.log(participantId)
-    console.log(password)
-    console.log(currentUserId)
+  
 
 
     // 該当する participant を取得
@@ -18,7 +16,6 @@ export async function POST(request: NextRequest) {
     .maybeSingle(); 
 
    
-
     if (error || !data) {
       console.error('参加者情報の取得に失敗:', error);
       return NextResponse.json({ isValid: false }, { status: 404 });
