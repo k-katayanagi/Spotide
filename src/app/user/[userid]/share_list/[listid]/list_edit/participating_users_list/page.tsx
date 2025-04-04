@@ -1,5 +1,5 @@
 'use client';
-import ParticipatingUsersList from '@/app/user/[userid]/participating users_list/ParticipatingUsersList';
+import ParticipatingUsersList from "@/app/user/[userid]/participating users_list/ParticipatingUsersList";
 
 const SParticipatingUsersList = () => {
   return <ParticipatingUsersList />;

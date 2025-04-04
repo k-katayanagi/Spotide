@@ -4,43 +4,137 @@ import { useState } from 'react';
 import ParticipationButton from '@/components/buttons/ParticipationButton';
 import TopButton from '@/components/buttons/TopButton';
 import GoogleParticipationButton from '@/components/buttons/GoogleParticipationButton';
+import { useSession } from 'next-auth/react';
 
 interface ParticipationAuthProps {
   setIsAuthenticated: (value: boolean) => void;
 }
 
 const ParticipationAuth = ({ setIsAuthenticated }: ParticipationAuthProps) => {
+  const { data: session } = useSession(); // セッション情報を取得
   const [activeTab, setActiveTab] = useState('guest');
   const [username, setUsername] = useState('');
-  const [participationId, setParticipationId] = useState('');
-  const [password, setPassword] = useState('');
-  const [userId, setUserId] = useState('');
+  const [guestParticipationId, setGuestParticipationId] = useState('');
+  const [existingParticipationId, setExistingParticipationId] = useState('');
+  const [guestpassword, setGuestPassword] = useState('');
   const [existingPassword, setExistingPassword] = useState('');
 
-  // 仮の認証データ
-  const mockGuestUser = {
-    username: 'user',
-    participationId: '123',
-    password: '123',
-  };
 
-  const handleGuestSubmit = () => {
-    if (
-      username === mockGuestUser.username &&
-      participationId === mockGuestUser.participationId &&
-      password === mockGuestUser.password
-    ) {
-      setIsAuthenticated(true);
-    } else {
-      alert('認証失敗: ユーザー名、参加ID、またはパスワードが間違っています');
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    // 入力値をリセット
+    setUsername('');
+    setGuestParticipationId('');
+    setExistingParticipationId('');
+    setGuestPassword('');
+    setExistingPassword('');
+  }
+  
+
+  //ゲストユーザー認証
+  const handleGuestSubmit = async () => {
+    if (session?.user?.id) {
+      alert('既存ユーザーです');
+      return;
     }
+    // 共通認証
+    const commonResponse = await fetch('/api/check-participation', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        participantId: Number(guestParticipationId),
+        password:guestpassword,
+        currentUserId: null, // ゲストなので userId は null
+      }),
+    });
+
+    const commonData = await commonResponse.json();
+
+    if (!commonData.isValid) {
+      alert('認証失敗: パスワードかIDが間違っています。');
+      return;
+    }
+
+    // ユーザー名入力されてたら更新
+    if (username) {
+      const response = await fetch('/api/update-participant-name', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          participantId: Number(guestParticipationId),
+          participantName: username,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        console.log('ユーザー名が更新されました');
+      }
+    }
+
+    setIsAuthenticated(true);
   };
 
-  const handleExistingSubmit = () => {
-    if (userId === 'existingUser' && existingPassword === 'password123') {
+  // 既存ユーザー認証
+  const handleExistingSubmit = async () => {
+    if (!session?.user?.id) {
+      alert('ログイン情報が確認できません');
+      return;
+    }
+
+
+    // 既存ユーザー確認
+    const checkResponse = await fetch('/api/check-existing-user', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: session.user.id }),
+    });
+
+    const checkData = await checkResponse.json();
+
+    if (!checkData.isExisting) {
+      alert('登録がありません');
+      return;
+    }
+
+    // 共通処理で participantId & password の認証
+    console.log(existingParticipationId)
+    const commonResponse = await fetch('/api/check-participation', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        participantId: Number(existingParticipationId),
+        password:existingPassword,
+        currentUserId: session.user.id,
+      }),
+    });
+
+    const commonData = await commonResponse.json();
+    console.log('Check Participation Data:', commonData); // デバッグ用ログ
+
+    if (!commonData.isValid) {
+      alert('参加情報の認証に失敗しました');
+      return;
+    }
+
+    // 通過したら更新（user_id を紐付け）
+    const updateResponse = await fetch('/api/update-participant-user-id', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        participantId: Number(existingParticipationId),
+        userId: session.user.id,
+        isGuest: false,
+      }),
+    });
+
+    const updateData = await updateResponse.json();
+
+    if (updateData.success) {
       setIsAuthenticated(true);
     } else {
-      alert('認証失敗: ユーザーIDまたはパスワードが間違っています');
+      alert('参加者情報の更新に失敗しました');
     }
   };
 
@@ -49,7 +143,7 @@ const ParticipationAuth = ({ setIsAuthenticated }: ParticipationAuthProps) => {
       {/* タブボタン */}
       <div className="flex border border-gray-400 rounded-lg overflow-hidden">
         <button
-          onClick={() => setActiveTab('guest')}
+           onClick={() => handleTabChange('guest')}
           className={`w-1/2 h-16 border-r border-gray-400 ${
             activeTab === 'guest'
               ? 'bg-[#FF5722] text-white border-[#FF5722]'
@@ -59,7 +153,7 @@ const ParticipationAuth = ({ setIsAuthenticated }: ParticipationAuthProps) => {
           ゲストユーザー
         </button>
         <button
-          onClick={() => setActiveTab('existing')}
+         onClick={() => handleTabChange('existing')}
           className={`w-1/2 h-16 ${
             activeTab === 'existing'
               ? 'bg-[#FF5722] text-white border-[#FF5722]'
@@ -90,8 +184,8 @@ const ParticipationAuth = ({ setIsAuthenticated }: ParticipationAuthProps) => {
           <input
             type="text"
             placeholder="参加IDを入力してください"
-            value={participationId}
-            onChange={(e) => setParticipationId(e.target.value)}
+            value={guestParticipationId}
+            onChange={(e) => setGuestParticipationId(e.target.value)}
             className="w-full p-4 border border-gray-300 rounded-md mb-5 text-lg"
           />
 
@@ -99,8 +193,8 @@ const ParticipationAuth = ({ setIsAuthenticated }: ParticipationAuthProps) => {
           <input
             type="password"
             placeholder="参加パスワードを入力してください"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={guestpassword}
+            onChange={(e) =>setGuestPassword(e.target.value)}
             className="w-full p-4 border border-gray-300 rounded-md mb-5 text-lg"
           />
 
@@ -121,8 +215,8 @@ const ParticipationAuth = ({ setIsAuthenticated }: ParticipationAuthProps) => {
           <input
             type="text"
             placeholder="参加IDを入力してください"
-            value={userId}
-            onChange={(e) => setUserId(e.target.value)}
+            value={existingParticipationId}
+            onChange={(e) => setExistingParticipationId(e.target.value)}
             className="w-full p-4 border border-gray-300 rounded-md mb-5 text-lg"
           />
 
