@@ -14,7 +14,7 @@ const HeaderNavigation = () => {
       <nav className="desktop-nav flex justify-center items-center w-full">
         <ul className="flex space-x-8">
           <li
-            className="text-black hover:text-gray-300 text-lg text-center"
+            className="text-black hover:text-gray-300 text-lg text-center cursor-pointer"
             onClick={() => handleNavigateTo('/')}
           >
             <Image
@@ -34,7 +34,10 @@ const HeaderNavigation = () => {
   return (
     <nav className="desktop-nav flex justify-center items-center w-full">
       <ul className="flex space-x-8">
-        <li className="text-black hover:text-gray-300 text-lg text-center">
+        <li
+          className="text-black hover:text-gray-300 text-lg text-center cursor-pointer"
+          onClick={() => handleNavigateTo('/')}
+        >
           <Image
             src="/images/top.svg"
             alt="TOPアイコン"
