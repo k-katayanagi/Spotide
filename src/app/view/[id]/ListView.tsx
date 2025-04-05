@@ -9,7 +9,6 @@ import Pagination from '@/components/pagination/Pagination';
 import FilterButton from '@/components/buttons/FilterButton';
 import SortButton from '@/components/buttons/SortButton';
 import { ListItem } from '@/types/ListTypes';
-import { List } from '@/types/ListTypes';
 import ViewItemCard from '@/components/card/ViewItemCard';
 import EditFilterDropdown from '@/components/filterDropdown/EditFilterDropdown ';
 import EditSortDropdown from '@/components/sortDropdown/EditSortDropdown';
@@ -42,18 +41,21 @@ const defaultFields = [
   { key: 'created_at', label: '登録日' },
 ];
 
-const ListView = () => {
+interface Props {
+  getParticipantId: number | null;
+}
+
+const ListView = ({ getParticipantId }: Props) => {
   const params = useParams();
-  const uuid = params?.id;
-  const { lists, sortLists } = useListContext();
-  const { listItems } = useListItemContext();
-  // const listId = params?.listid ? Number(params.listid) : null;
-  // const list = lists.find((i) => i.id === listId);
+  const url = params?.id;
+  const { lists, setLists, sortLists } = useListContext();
+  const { listItems, setListItems } = useListItemContext();
+  const [participantId, setParticipantId] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
   const [isFilter, setIsFilter] = useState(false);
   const [isSort, setIsSort] = useState(false);
   const [isMenu, setIsMenu] = useState(false);
   const [isLabelSettingOpen, setIsLabelSettingOpen] = useState(false);
-  const [matchedList, setMatchedList] = useState<List | null>(null);
   const [selectedListItem, setSelectedListItem] = useState<ListItem | null>(
     null,
   );
@@ -62,8 +64,6 @@ const ListView = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const listContainerRef = useRef<HTMLDivElement>(null);
-  const [displayListItems, setDisplayListItems] =
-    useState<ListItem[]>(listItems);
   const [selectedFields, setSelectedFields] = useState<string[]>(
     defaultFields.map((f) => f.key),
   );
@@ -98,57 +98,86 @@ const ListView = () => {
   ];
 
   useEffect(() => {
-    if (uuid) {
-      const storedData: Record<number, string> = JSON.parse(
-        localStorage.getItem('viewUrls') || '{}',
-      );
-
-      // UUIDに一致するlistIdを取得
-      const matchedListId = Object.keys(storedData).find(
-        (key) => storedData[Number(key)] === uuid,
-      );
-
-      if (matchedListId) {
-        // listIdに基づいてリスト名を取得
-        const listId = Number(matchedListId);
-        const matchedList = lists.find((list) => list.list_id === listId);
-
-        if (matchedList) {
-          setMatchedList(matchedList);
-          console.log('投票開始日:', matchedList.voting_start_at);
-
-          // 現在の日時を取得
-          const currentTime = new Date().getTime();
-          // 投票開始日をDate型に変換して比較
-          const votingStartTime = matchedList.voting_start_at
-            ? new Date(matchedList.voting_start_at).getTime()
-            : 0;
-
-          // 動的ボタンチェック
-          const hasVotingStarted = currentTime >= votingStartTime;
-          setIsVotingStart(hasVotingStarted);
-          setIsVotingCompleted(false);
-          setIsAllVotingCompleted(true);
-          setIsAggregationCompleted(false);
-          setIsEditing(true);
-        }
+    const fetchListAndItems = async (participantIdFromStorage: number) => {
+      if (!url || !participantIdFromStorage) {
+        console.log('URLまたはparticipantIdがありません');
+        console.log('url', url);
+        console.log('参加者', participantIdFromStorage);
+        return;
       }
-    }
 
-    if (sortLists.length > 0) {
-      setDisplayListItems(listItems);
-    } else {
-      setDisplayListItems(listItems);
+      setLoading(true);
+      try {
+        const response = await fetch(
+          `/api/view?url=${url}&participantId=${participantIdFromStorage}`,
+        );
+        const data = await response.json();
+
+        if (response.ok) {
+          const { list, items, participant } = data;
+          console.log('リスト', list);
+          console.log('アイテム', items);
+          console.log('参加者', participant);
+
+          setLists(list);
+          setListItems(items);
+        } else {
+          console.error('リストの取得に失敗しました:', data.error);
+        }
+      } catch (error) {
+        console.error('API呼び出しエラー:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const storedParticipantId = localStorage.getItem('participantId');
+    console.log('storedParticipantId', storedParticipantId);
+
+    if (storedParticipantId && storedParticipantId !== '0') {
+      const id = Number(storedParticipantId);
+      console.log('setParticipantId called with:', id);
+      setParticipantId(id);
+      fetchListAndItems(id); // ここで即座に実行
     }
-  }, [lists, sortLists, listItems, uuid]);
+  }, [url]);
+
+  //       if (lists) {
+  //         setLists(lists);
+  //         console.log('投票開始日:', lists.voting_start_at);
+
+  //         // 現在の日時を取得
+  //         const currentTime = new Date().getTime();
+  //         // 投票開始日をDate型に変換して比較
+  //         const votingStartTime = lists.voting_start_at
+  //           ? new Date(lists.voting_start_at).getTime()
+  //           : 0;
+
+  //         // 動的ボタンチェック
+  //         const hasVotingStarted = currentTime >= votingStartTime;
+  //         setIsVotingStart(hasVotingStarted);
+  //         setIsVotingCompleted(false);
+  //         setIsAllVotingCompleted(true);
+  //         setIsAggregationCompleted(false);
+  //         setIsEditing(true);
+  //       }
+  //     }
+  //   }
+
+  //   if (sortLists.length > 0) {
+  //     setDisplayListItems(listItems);
+  //   } else {
+  //     setDisplayListItems(listItems);
+  //   }
+  // }, [lists, sortLists, listItems, url]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentListItems = displayListItems.slice(
-    indexOfFirstItem,
-    indexOfLastItem,
-  );
-  const totalPages = Math.ceil(displayListItems.length / itemsPerPage);
+  const currentListItems = Array.isArray(listItems)
+    ? listItems.slice(indexOfFirstItem, indexOfLastItem)
+    : [];
+
+  const totalPages = Math.ceil(listItems.length / itemsPerPage);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -201,7 +230,7 @@ const ListView = () => {
     <div className="p-3 overflow-auto relative">
       <div className="flex items-center justify-between mb-5 w-full">
         <h1 className="text-2xl font-bold flex-1">
-          {matchedList ? matchedList.list_name : 'リストが見つかりません'}
+          {lists ? lists.list_name : 'リストが見つかりません'}
         </h1>
         <div className="flex items-center gap-2 sm:gap-7">
           <UrlCopyButton />
@@ -289,12 +318,13 @@ const ListView = () => {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, ease: 'easeOut' }}
-        className="bg-white border border-orange-200 shadow-lg rounded-lg p-4 h-auto min-h-[320px] flex flex-col justify-between hover:shadow-xl transition-shadow"
+        className="bg-white border border-orange-[#B3E5FC] shadow-lg rounded-lg p-4 h-auto min-h-[320px] flex flex-col justify-between hover:shadow-xl transition-shadow"
       >
         {/* リスト部分 */}
         <div
-          className="overflow-auto max-h-[60vh] p-2 border border-[#FF5722] rounded-lg  bg-gradient-to-br from-[#FFE0B2] to-[#FFCC80]
-                scrollbar-thin scrollbar-thumb-[#FF5722] scrollbar-track-[#FFE0B2]"
+          className="overflow-auto max-h-[60vh] p-2 border border-[#0288D1] rounded-lg 
+  bg-gradient-to-br from-[#B3E5FC] to-[#81D4FA]
+  scrollbar-thin scrollbar-thumb-[#0288D1] scrollbar-track-[#B3E5FC]"
           ref={listContainerRef}
         >
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

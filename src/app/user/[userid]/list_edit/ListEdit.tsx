@@ -311,12 +311,11 @@ const ListEdit = () => {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, ease: 'easeOut' }}
-        className="bg-white border border-orange-200 shadow-lg rounded-lg p-4 h-auto min-h-[320px] flex flex-col justify-between hover:shadow-xl transition-shadow"
+        className="bg-white border border-[#C8E6C9] shadow-lg rounded-lg p-4 h-auto min-h-[320px] flex flex-col justify-between hover:shadow-xl transition-shadow"
       >
         {/* リスト部分 */}
         <div
-          className="overflow-auto h-[65vh] p-2 border border-[#FF5722] rounded-lg  bg-gradient-to-br from-[#FFE0B2] to-[#FFCC80]
-                  scrollbar-thin scrollbar-thumb-[#FF5722] scrollbar-track-[#FFE0B2]"
+          className="overflow-auto h-[65vh] p-2 border border-[#43A047] rounded-lg bg-gradient-to-br from-[#C8E6C9] to-[#A5D6A7]scrollbar-thin   scrollbar-thin scrollbar-thumb-[#2E7D32] scrollbar-track-[#C8E6C9]"
           ref={listContainerRef}
         >
           {loading ? (

@@ -50,8 +50,14 @@ const ShareList = () => {
         `/api/lists?userId=${userId}&listType=share`,
       );
       const listsData = await listsResponse.json();
+      console.log('取得したリストデータ:', listsData); 
+
       if (listsResponse.ok) {
-        setLists(listsData); // リストデータをセット
+        if (Array.isArray(listsData)) {
+          setLists(listsData); // リストデータをセット
+        } else {
+          console.error('リストデータが配列ではありません:', listsData);
+        }
       } else {
         console.error('リスト取得エラー:', listsData.error);
       }
@@ -62,7 +68,7 @@ const ShareList = () => {
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentLists = lists.slice(indexOfFirstItem, indexOfLastItem);
+  const currentLists = Array.isArray(lists) ? lists.slice(indexOfFirstItem, indexOfLastItem) : [];
   const totalPages = Math.ceil(lists.length / itemsPerPage);
 
   const handlePageChange = (page: number) => {
@@ -212,7 +218,6 @@ const ShareList = () => {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {currentLists.map((list) => {
             if (!list.list_id) {
-              console.error('リストにidがありません:', list); // デバッグ用
               return null; // idがない場合は表示しない
             }
 

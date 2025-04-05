@@ -62,7 +62,7 @@ const IndividualList = () => {
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentLists = lists.slice(indexOfFirstItem, indexOfLastItem);
+  const currentLists = Array.isArray(lists) ? lists.slice(indexOfFirstItem, indexOfLastItem) : [];
   const totalPages = Math.ceil(lists.length / itemsPerPage);
 
   const handlePageChange = (page: number) => {

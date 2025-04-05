@@ -24,6 +24,8 @@ const ResponsiveHeader = () => {
 
   // ログアウト処理
   const handleLogout = async () => {
+    // 参加認証済みフラグを削除
+    localStorage.removeItem('isAuthenticated');
     signOut({ callbackUrl: '/login' });
   };
 

@@ -145,15 +145,15 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    console.log('取得データ:', data);
+    console.log('リスト取得データ:', data);
 
-    // データ整形：is_adminをトップ階層に、listsの中身を展開
-    const formatted = data.map((item) => ({
-      ...item.lists,
-      is_admin: item.is_admin,
-    }));
-
-    console.log('取得データ（整形後）:', formatted);
+    //取得データフォーマット
+    const formatted = data
+      .filter((item) => item.lists !== null) // listsがnullのものを除外
+      .map((item) => ({
+        ...item.lists,
+        is_admin: item.is_admin,
+      }));
     return NextResponse.json(formatted); // 整形済みデータを返す
   } catch (error: unknown) {
     if (error instanceof Error) {

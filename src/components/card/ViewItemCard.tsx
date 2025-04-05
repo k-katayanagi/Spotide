@@ -1,8 +1,8 @@
 'use client';
 
 import { ListItem } from '@/types/ListTypes';
-import Image from 'next/image';
 import VotingButton from '../buttons/VotingButton';
+import ImageSlider from '../UI/ImageSlider';
 
 const defaultFields = [
   { key: 'station', label: '駅' },
@@ -41,7 +41,7 @@ const ViewItemCard = ({
   onVote,
 }: Props) => {
   return (
-    <div className="bg-white border border-orange-300 shadow-md rounded-lg p-4 h-auto min-h-[320px] flex flex-col justify-between">
+    <div className="bg-white border border-[#B3E5FC] shadow-md rounded-lg p-4 h-auto min-h-[320px] flex flex-col justify-between">
       <div className="flex justify-center items-center mb-4 space-x-2 sm:space-x-6 md:space-x-10 lg:space-x-16 xl:space-x-20">
         {isVotingStart &&
           !isVotingCompleted &&
@@ -49,14 +49,13 @@ const ViewItemCard = ({
           !isAllVotingCompleted && <VotingButton onClick={onVote} />}
       </div>
       <div className="flex-1">
-        <Image
-          src="/images/image.gif"
-          alt="画像"
-          width={0}
-          height={160}
-          className="w-full h-[160px] object-cover rounded-lg mb-4"
-          unoptimized
-        />
+        {listItem.photos && listItem.photos.length > 0 ? (
+          <ImageSlider
+            photoIds={listItem.photos.map((photo) => photo.photo_url)}
+          />
+        ) : (
+          <p>画像がありません</p>
+        )}
         <h2 className="text-lg font-bold">{listItem.store_name}</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">

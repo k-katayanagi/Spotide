@@ -6,11 +6,10 @@ import TopButton from '@/components/buttons/TopButton';
 import GoogleParticipationButton from '@/components/buttons/GoogleParticipationButton';
 import { useSession } from 'next-auth/react';
 
-interface ParticipationAuthProps {
-  setIsAuthenticated: (value: boolean) => void;
+interface Props {
+  onAuthSuccess: (id: number) => void;
 }
-
-const ParticipationAuth = ({ setIsAuthenticated }: ParticipationAuthProps) => {
+const ParticipationAuth = ({ onAuthSuccess }: Props) => {
   const { data: session } = useSession(); // セッション情報を取得
   const [activeTab, setActiveTab] = useState('guest');
   const [username, setUsername] = useState('');
@@ -72,8 +71,7 @@ const ParticipationAuth = ({ setIsAuthenticated }: ParticipationAuthProps) => {
         console.log('ユーザー名が更新されました');
       }
     }
-
-    setIsAuthenticated(true);
+    onAuthSuccess(Number(guestParticipationId));
   };
 
   // 既存ユーザー認証
@@ -133,7 +131,7 @@ const ParticipationAuth = ({ setIsAuthenticated }: ParticipationAuthProps) => {
     const updateData = await updateResponse.json();
 
     if (updateData.success) {
-      setIsAuthenticated(true);
+      onAuthSuccess(Number(existingParticipationId));
     } else {
       alert('参加者情報の更新に失敗しました');
     }
