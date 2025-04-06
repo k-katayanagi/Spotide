@@ -13,25 +13,50 @@ import {
 import { FaCrown } from 'react-icons/fa';
 import { useBreakpointValue } from '@chakra-ui/react';
 import { useRef } from 'react';
+import { ListItem } from '@/types/ListTypes';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  listItems: ListItem[];
 }
 
-const AggregatedResultsModal = ({ isOpen, onClose }: Props) => {
-  // 仮の投票データ
-  const results = [
-    { label: '○○', votes: 1, isSelected: false },
-    { label: '○○', votes: 2, isSelected: false },
-    { label: '○○', votes: 5, isSelected: true },
-  ];
-
+const AggregatedResultsModal = ({ isOpen, onClose, listItems }: Props) => {
   const paddingTop = useBreakpointValue({
     base: '2rem',
     sm: '6rem',
   });
   const cancelRef = useRef<HTMLButtonElement>(null);
+  // listItems が空でないかを確認し、最大投票数のアイテムを計算
+  const maxVoteCount = Math.max(...listItems.map((item) => item.vote_cnt ?? 0));
+
+  // 最大票数を持つアイテムをリストアップ
+  const maxVoteItems = listItems.filter(
+    (item) => item.vote_cnt === maxVoteCount,
+  );
+
+  if (maxVoteItems.length === 0) {
+    return (
+      <AlertDialog
+        isOpen={isOpen}
+        onClose={onClose}
+        leastDestructiveRef={cancelRef as React.RefObject<HTMLElement>}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader>投票結果</AlertDialogHeader>
+            <AlertDialogBody>
+              <Text color="red.500">投票データがありません。</Text>
+            </AlertDialogBody>
+            <AlertDialogFooter>
+              <Button onClick={onClose}>閉じる</Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+    );
+  }
+
   return (
     <AlertDialog
       isOpen={isOpen}
@@ -57,7 +82,7 @@ const AggregatedResultsModal = ({ isOpen, onClose }: Props) => {
           </AlertDialogHeader>
 
           <AlertDialogBody paddingTop={paddingTop}>
-            {results.map((result, index) => (
+            {listItems.map((result, index) => (
               <Flex key={index} justify="space-between" align="center" mb={2}>
                 <Flex
                   align="center"
@@ -65,7 +90,7 @@ const AggregatedResultsModal = ({ isOpen, onClose }: Props) => {
                   justify="center"
                   alignItems="center"
                 >
-                  {result.isSelected && (
+                  {maxVoteItems.includes(result) && (
                     <Icon as={FaCrown} boxSize={8} color="yellow.400" />
                   )}
                 </Flex>
@@ -76,7 +101,7 @@ const AggregatedResultsModal = ({ isOpen, onClose }: Props) => {
                   alignSelf="center"
                   mr={3}
                 >
-                  {result.label}
+                  {result.store_name}
                 </Text>
                 <Text
                   fontSize="2xl"
@@ -84,18 +109,26 @@ const AggregatedResultsModal = ({ isOpen, onClose }: Props) => {
                   textAlign="left"
                   alignSelf="center"
                 >
-                  {result.votes}票
+                  {result.vote_cnt}票
                 </Text>
               </Flex>
             ))}
 
             <Flex justify="center" mt={6}>
               <Text fontSize="3xl" fontWeight="bold">
-                ○○に
-                <Text as="span" color="red.500">
-                  決定
-                </Text>
-                しました!
+                {maxVoteItems.length === 1 ? (
+                  <>
+                    {maxVoteItems[0].store_name}に
+                    <Text as="span" color="red.500">
+                      決定
+                    </Text>
+                    しました!
+                  </>
+                ) : (
+                  <Text as="span" color="red.500">
+                    同票です
+                  </Text>
+                )}
               </Text>
             </Flex>
           </AlertDialogBody>

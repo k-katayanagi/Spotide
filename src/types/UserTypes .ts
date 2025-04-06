@@ -17,4 +17,5 @@ export type TParticipantingUser = {
   updated_at: Date; // 更新日
   is_admin:boolean;
   is_vote:boolean;
+  item_id?: number | null;
 };

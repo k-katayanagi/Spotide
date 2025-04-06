@@ -45,6 +45,7 @@ export type ListItem = {
   photos?: Photo[];
   created_at: Date;
   updated_at: Date;
+  vote_cnt?:number;
 };
 
 export type Spot = {

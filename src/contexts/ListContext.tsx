@@ -4,8 +4,8 @@ import { List } from '@/types/ListTypes';
 
 const ListContext = createContext<
   | {
-      lists: List[];
-      setLists: (lists: List[]) => void;
+      lists:List[];
+      setLists: (list:List[]) => void;
       sortLists: List[];
       setSortLists: (sortLists: List[]) => void;
     }

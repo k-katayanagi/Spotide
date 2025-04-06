@@ -3,6 +3,8 @@
 import { ListItem } from '@/types/ListTypes';
 import VotingButton from '../buttons/VotingButton';
 import ImageSlider from '../UI/ImageSlider';
+import { Text, Icon } from '@chakra-ui/react';
+import { CheckCircleIcon } from '@chakra-ui/icons';
 
 const defaultFields = [
   { key: 'station', label: '駅' },
@@ -28,6 +30,7 @@ interface Props {
   isVotingCompleted: boolean | undefined;
   isAllVotingCompleted: boolean | undefined;
   isAggregationCompleted: boolean | undefined;
+  voteItem: number | null | undefined;
   onVote: () => void;
 }
 
@@ -38,6 +41,7 @@ const ViewItemCard = ({
   isVotingCompleted,
   isAllVotingCompleted,
   isAggregationCompleted,
+  voteItem,
   onVote,
 }: Props) => {
   return (
@@ -47,6 +51,18 @@ const ViewItemCard = ({
           !isVotingCompleted &&
           !isAggregationCompleted &&
           !isAllVotingCompleted && <VotingButton onClick={onVote} />}
+
+        {/* isVotingCompleted が true の場合、voteItem と listItem.list_id が一致する場合に表示 */}
+        {isVotingCompleted ? (
+          voteItem === listItem.item_id ? (
+            <div className="flex items-center space-x-2 text-[#FF5722] font-bold">
+              <Icon as={CheckCircleIcon} boxSize={6} />
+              <Text>投票しました！</Text>
+            </div>
+          ) : (
+            <div className="w-32 h-8" /> 
+          )
+        ) : null}
       </div>
       <div className="flex-1">
         {listItem.photos && listItem.photos.length > 0 ? (

@@ -80,7 +80,7 @@ export async function GET(req: Request) {
     .select(
       `
     *,
-    list_participants (participant_name),
+     list_participants!list_participants_item_id_fkey (participant_name), 
     photos (photo_url)
   `,
     )
@@ -110,4 +110,62 @@ export async function GET(req: Request) {
 
   // 最終レスポンスに含める
   return NextResponse.json({ list, items, participant });
+}
+
+//投票処理
+export async function POST(req: Request) {
+  const { participantId, listItemId } = await req.json(); // リクエストボディから参加者IDと投票アイテムIDを取得
+
+  if (!participantId || !listItemId) {
+    return NextResponse.json(
+      { error: 'participantId または listItemId が不足しています' },
+      { status: 400 },
+    );
+  }
+
+  // 投票を行ったアイテムの vote_cnt を1増加
+  const { data: itemData, error: itemError } = await supabase
+    .from('list_items')
+    .select('vote_cnt')
+    .eq('item_id', listItemId)
+    .single(); // 単一のデータを取得
+
+  if (itemError || !itemData) {
+    return NextResponse.json(
+      { error: 'リストアイテムの取得に失敗しました' },
+      { status: 500 },
+    );
+  }
+
+  // vote_cnt をインクリメント
+  const newVoteCount = itemData.vote_cnt + 1;
+
+  // list_items テーブルの vote_cnt を更新
+  const { error: updateItemError } = await supabase
+    .from('list_items')
+    .update({ vote_cnt: newVoteCount })
+    .eq('item_id', listItemId);
+
+  if (updateItemError) {
+    return NextResponse.json(
+      { error: 'リストアイテムの更新に失敗しました' },
+      { status: 500 },
+    );
+  }
+
+  // list_participants テーブルの is_vote を true に更新
+  const { error: updateVoteError } = await supabase
+    .from('list_participants')
+    .update({ is_vote: true, item_id: listItemId }) 
+    .eq('participant_id', participantId); // participant_id を指定
+
+  if (updateVoteError) {
+    console.error('list_participants更新エラー:', updateVoteError);
+    return NextResponse.json(
+      { error: '参加者の投票状態更新に失敗しました' },
+      { status: 500 },
+    );
+  }
+
+  return NextResponse.json({ message: '投票が正常に完了しました' });
 }

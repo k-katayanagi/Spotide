@@ -16,7 +16,7 @@ const ListNameInput = ({
 }) => {
   // 文字数が10文字を超えた場合にエラーメッセージをセット
   const validateListName = (value: string) => {
-    if (value.length > 10) {
+    if (value.length > 100) {
       setError('100文字以内で入力してください');
     } else {
       setError(''); // 100文字以下ならエラーメッセージを消す

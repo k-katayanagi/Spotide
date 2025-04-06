@@ -18,13 +18,14 @@ import { IconButton } from '@chakra-ui/react';
 import { useDisclosure, useToast } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import MenuBar from '@/components/Menu/MenuBar';
-// import useListType from "@/hooks/useListType";
+import { TParticipantingUser } from '@/types/UserTypes ';
 import EditButton from '@/components/buttons/EditButton ';
 import TotallingButton from '@/components/buttons/TotallingButton';
 import AggregatedResultsButton from '@/components/buttons/AggregatedResultsButton';
 import UrlCopyButton from '@/components/buttons/UrlCopyButton';
 import VoteConfirmModal from '@/components/modal/VoteConfirmModal';
 import AggregatedResultsModal from '@/components/modal/AggregatedResultsModal';
+import { useSession } from 'next-auth/react';
 
 const defaultFields = [
   { key: 'station', label: '駅' },
@@ -41,16 +42,15 @@ const defaultFields = [
   { key: 'created_at', label: '登録日' },
 ];
 
-interface Props {
-  getParticipantId: number | null;
-}
-
-const ListView = ({ getParticipantId }: Props) => {
+const ListView = () => {
+  const { data: session } = useSession();
   const params = useParams();
   const url = params?.id;
-  const { lists, setLists, sortLists } = useListContext();
+  const { lists, setLists } = useListContext();
   const { listItems, setListItems } = useListItemContext();
+  const [participant, setParticipant] = useState<TParticipantingUser>(null);
   const [participantId, setParticipantId] = useState<number | null>(null);
+  const [voteItem, setVoteItem] = useState<number | null | undefined>(null);
   const [loading, setLoading] = useState(true);
   const [isFilter, setIsFilter] = useState(false);
   const [isSort, setIsSort] = useState(false);
@@ -101,8 +101,6 @@ const ListView = ({ getParticipantId }: Props) => {
     const fetchListAndItems = async (participantIdFromStorage: number) => {
       if (!url || !participantIdFromStorage) {
         console.log('URLまたはparticipantIdがありません');
-        console.log('url', url);
-        console.log('参加者', participantIdFromStorage);
         return;
       }
 
@@ -115,12 +113,31 @@ const ListView = ({ getParticipantId }: Props) => {
 
         if (response.ok) {
           const { list, items, participant } = data;
-          console.log('リスト', list);
-          console.log('アイテム', items);
-          console.log('参加者', participant);
+          const listArray = Array.isArray(list) ? list : [list];
 
-          setLists(list);
-          setListItems(items);
+          setLists(listArray); // リストをセット
+          setListItems(items); // アイテムをセット
+          setParticipant(participant); // 参加者をセット
+          setParticipantId(participantIdFromStorage); // participantIdをセット
+          setVoteItem(participant.item_id);
+
+          // 投票開始日時の処理
+          if (listArray && listArray.length > 0) {
+            // 現在時刻（ローカルタイム）
+            const currentTime = new Date().getTime();
+            // voting_start_atがJSTの場合、UTCに変換して比較する
+            const votingStartDate = new Date(listArray[0].voting_start_at);
+            const votingStartTime = votingStartDate.getTime();
+            // JST時間をUTC時間に変換する（JSTはUTC+9）
+            const votingStartTimeUTC = votingStartTime - 9 * 60 * 60 * 1000;
+            // 投票開始時刻と現在時刻を比較
+            const hasVotingStarted = currentTime >= votingStartTimeUTC;
+            setIsVotingStart(hasVotingStarted);
+            setIsVotingCompleted(participant.is_vote);
+            setIsAllVotingCompleted(listArray[0].is_voting_completed);
+            setIsAggregationCompleted(listArray[0].is_aggregation_completed);
+            setIsEditing(false);
+          }
         } else {
           console.error('リストの取得に失敗しました:', data.error);
         }
@@ -132,44 +149,11 @@ const ListView = ({ getParticipantId }: Props) => {
     };
 
     const storedParticipantId = localStorage.getItem('participantId');
-    console.log('storedParticipantId', storedParticipantId);
-
     if (storedParticipantId && storedParticipantId !== '0') {
       const id = Number(storedParticipantId);
-      console.log('setParticipantId called with:', id);
-      setParticipantId(id);
-      fetchListAndItems(id); // ここで即座に実行
+      fetchListAndItems(id); // データを取得
     }
-  }, [url]);
-
-  //       if (lists) {
-  //         setLists(lists);
-  //         console.log('投票開始日:', lists.voting_start_at);
-
-  //         // 現在の日時を取得
-  //         const currentTime = new Date().getTime();
-  //         // 投票開始日をDate型に変換して比較
-  //         const votingStartTime = lists.voting_start_at
-  //           ? new Date(lists.voting_start_at).getTime()
-  //           : 0;
-
-  //         // 動的ボタンチェック
-  //         const hasVotingStarted = currentTime >= votingStartTime;
-  //         setIsVotingStart(hasVotingStarted);
-  //         setIsVotingCompleted(false);
-  //         setIsAllVotingCompleted(true);
-  //         setIsAggregationCompleted(false);
-  //         setIsEditing(true);
-  //       }
-  //     }
-  //   }
-
-  //   if (sortLists.length > 0) {
-  //     setDisplayListItems(listItems);
-  //   } else {
-  //     setDisplayListItems(listItems);
-  //   }
-  // }, [lists, sortLists, listItems, url]);
+  }, [url,participant]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -191,23 +175,98 @@ const ListView = ({ getParticipantId }: Props) => {
     onVoteModalOpen();
   };
 
-  const handleVote = () => {
+  //投票処理
+  const handleVote = async () => {
+    setVoteItem(participant.item_id);
     if (selectedListItem) {
-      //TODO:ここに投票処理
+      try {
+        // 投票処理をAPIに送信
+        const response = await fetch('/api/view', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            participantId: participantId, // 参加者ID
+            listItemId: selectedListItem.item_id, // 投票アイテムID
+          }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          toast({
+            title: `"${selectedListItem.store_name}" に投票しました`,
+            status: 'success',
+            duration: 3000,
+            isClosable: true,
+            position: 'top',
+          });
+          onVoteModalClose();
+          setIsVotingCompleted(true);
+        } else {
+          toast({
+            title: '投票に失敗しました',
+            description: data.error || '予期せぬエラーが発生しました',
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+            position: 'top',
+          });
+        }
+      } catch (error) {
+        console.error('投票エラー:', error);
+      }
+    }
+  };
+
+  const handleTotalling = async () => {
+    if (!lists[0].list_id) return;
+
+    const listId = lists[0].list_id;
+
+    try {
+      const response = await fetch('/api/view/totalling', {
+        method: 'POST',
+        body: JSON.stringify({ listId }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setIsAggregationCompleted(true);
+        toast({
+          title: `"集計が完了しました`,
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+          position: 'top',
+        });
+      } else {
+        toast({
+          title: '集計に失敗しました',
+          description: result.error || '予期せぬエラーが発生しました',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+          position: 'top',
+        });
+      }
+    } catch (error) {
       toast({
-        title: `"${selectedListItem.store_name}" に投票しました`,
-        status: 'success',
+        title: 'エラーが発生しました',
+        description:
+          (error as Error).message ||
+          'ネットワークエラーなどの可能性があります',
+        status: 'error',
         duration: 3000,
         isClosable: true,
         position: 'top',
       });
-      onVoteModalClose();
-      setIsVotingCompleted(true);
     }
-  };
-
-  const handleTotalling = () => {
-    setIsAggregationCompleted(true);
   };
 
   const toggleFilterDropdown = () => {
@@ -230,7 +289,9 @@ const ListView = ({ getParticipantId }: Props) => {
     <div className="p-3 overflow-auto relative">
       <div className="flex items-center justify-between mb-5 w-full">
         <h1 className="text-2xl font-bold flex-1">
-          {lists ? lists.list_name : 'リストが見つかりません'}
+          {lists && lists.length > 0
+            ? lists[0].list_name
+            : 'リストが見つかりません'}
         </h1>
         <div className="flex items-center gap-2 sm:gap-7">
           <UrlCopyButton />
@@ -240,9 +301,12 @@ const ListView = ({ getParticipantId }: Props) => {
           )}
 
           {/* 全員投票完了で集計未完了なら TotallingButton を表示 */}
-          {isAllVotingCompleted && !isAggregationCompleted && (
-            <TotallingButton onClick={handleTotalling} />
-          )}
+          {isAllVotingCompleted &&
+            !isAggregationCompleted &&
+            participant?.is_admin &&
+            participant?.user_id === session?.user?.id && (
+              <TotallingButton onClick={handleTotalling} />
+            )}
 
           {/* 集計完了 && 投票完了なら AggregatedResultsButton を表示 */}
           {isAggregationCompleted && (
@@ -312,6 +376,7 @@ const ListView = ({ getParticipantId }: Props) => {
       <AggregatedResultsModal
         isOpen={isResultsModalOpen}
         onClose={onResultsModalClose}
+        listItems={listItems}
       />
 
       <motion.div
@@ -332,6 +397,7 @@ const ListView = ({ getParticipantId }: Props) => {
               <ViewItemCard
                 key={listItem.item_id}
                 listItem={listItem}
+                voteItem={voteItem}
                 selectedFields={selectedFields}
                 isVotingStart={isVotingStart}
                 isVotingCompleted={isVotingCompleted}

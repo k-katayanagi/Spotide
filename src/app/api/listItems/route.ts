@@ -260,7 +260,7 @@ export const GET = async (req: Request) => {
       .select(
         `
       *,
-      list_participants (participant_name),
+      list_participants!list_participants_item_id_fkey (participant_name), 
       photos (photo_url)
     `,
       )
