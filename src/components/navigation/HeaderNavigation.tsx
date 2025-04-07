@@ -8,28 +8,7 @@ const HeaderNavigation = () => {
   const { data: session } = useSession(); // セッションデータを取得
   const { handleNavigateTo } = useNavigation();
 
-  // セッションがない場合はリダイレクトや他のUIの処理を行うことができます
-  if (!session) {
-    return (
-      <nav className="desktop-nav flex justify-center items-center w-full">
-        <ul className="flex space-x-8">
-          <li
-            className="text-black hover:text-gray-300 text-lg text-center cursor-pointer"
-            onClick={() => handleNavigateTo('/')}
-          >
-            <Image
-              src="/images/top.svg"
-              alt="TOPアイコン"
-              width={50}
-              height={50}
-              priority
-            />
-            <label className="block">TOP</label>
-          </li>
-        </ul>
-      </nav>
-    );
-  }
+  if (!session) return null;
 
   return (
     <nav className="desktop-nav flex justify-center items-center w-full">

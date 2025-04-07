@@ -26,7 +26,7 @@ const ViewingButton = ({ className, disabled = false,onClick }: Props) => {
       onClick={onClick}
       text={
         <>
-          <span className="absolute h-0 w-0 rounded-full bg-blue-300 transition-all duration-300 group-hover:h-56 group-hover:w-32"></span>
+          <span className="absolute h-0 w-0 rounded-full bg-blue-300 transition-all duration-300 group-hover:h-[50px] group-hover:w-[100px]"></span>
           <span className="relative flex items-center justify-center">
             閲覧
           </span>

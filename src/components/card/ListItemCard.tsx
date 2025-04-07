@@ -10,7 +10,6 @@ const defaultFields = [
   { key: 'google_rating', label: 'Google評価' },
   { key: 'custom_rating', label: 'カスタム評価' },
   { key: 'address', label: '住所' },
-  { key: 'time_to_station', label: '駅からの所要時間' },
   { key: 'business_hours', label: '営業時間' },
   { key: 'regular_holiday', label: '定休日' },
   { key: 'time_from_nearest_station', label: '最寄り駅からの時間' },
@@ -36,6 +35,7 @@ const ListItemCard = ({
   onEdit,
   selectedFields,
 }: Props) => {
+  console.log(listItem)
   return (
     <div className="bg-white border border-[#2E7D32] shadow-md rounded-lg p-4 h-auto min-h-[320px] flex flex-col justify-between">
       <div className="flex justify-center items-center mb-4 space-x-2 sm:space-x-6 md:space-x-10 lg:space-x-16 xl:space-x-20">

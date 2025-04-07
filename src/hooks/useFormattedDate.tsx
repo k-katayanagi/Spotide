@@ -26,25 +26,30 @@ const useFormatDate = (
 
     // vote_start_date用の特別なフォーマット
     if (isVotingStartDate) {
-      const formattedDate = dateObj.toLocaleString('ja-JP', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false,
-      });
-      const [datePart, timePart] = formattedDate.split(' ');
-      const formattedDatePart = datePart.replace(/\//g, '/');
+      // UTCで日付を取得し、日本時間に変換
+      const formattedDate = new Date(dateObj.getTime() + dateObj.getTimezoneOffset() * 60000)
+        .toLocaleString('ja-JP', {
+          timeZone: 'Asia/Tokyo', // タイムゾーンを指定
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+        });
 
-      return `${formattedDatePart} ${timePart}`;
+      const [datePart, timePart] = formattedDate.split(' ');
+
+      return `${datePart} ${timePart}`;
     }
 
     // 他の日時（outing_date, create_date, update_date）は日付のみ
-    const formattedDate = dateObj.toLocaleDateString('ja-JP');
-    const formattedDatePart = formattedDate.replace(/\//g, '/');
+    const formattedDate = new Date(dateObj.getTime() + dateObj.getTimezoneOffset() * 60000)
+      .toLocaleDateString('ja-JP', {
+        timeZone: 'Asia/Tokyo', // タイムゾーンを指定
+      });
 
-    return formattedDatePart;
+    return formattedDate;
   }, [date, isVotingStartDate]);
 };
 

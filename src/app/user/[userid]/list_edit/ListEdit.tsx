@@ -320,7 +320,7 @@ const ListEdit = () => {
         >
           {loading ? (
             <div className="flex justify-center items-center w-full h-full">
-              <Spinner size="xl" color="orange.500" />
+              <Spinner size="xl" color="green.500" />
             </div>
           ) : currentListItems.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

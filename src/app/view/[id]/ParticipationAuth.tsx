@@ -7,7 +7,7 @@ import GoogleParticipationButton from '@/components/buttons/GoogleParticipationB
 import { useSession } from 'next-auth/react';
 
 interface Props {
-  onAuthSuccess: (id: number) => void;
+  onAuthSuccess: (id: number,listId: number) => void;
 }
 const ParticipationAuth = ({ onAuthSuccess }: Props) => {
   const { data: session } = useSession(); // セッション情報を取得
@@ -18,7 +18,6 @@ const ParticipationAuth = ({ onAuthSuccess }: Props) => {
   const [guestpassword, setGuestPassword] = useState('');
   const [existingPassword, setExistingPassword] = useState('');
 
-
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
     // 入力値をリセット
@@ -27,8 +26,7 @@ const ParticipationAuth = ({ onAuthSuccess }: Props) => {
     setExistingParticipationId('');
     setGuestPassword('');
     setExistingPassword('');
-  }
-  
+  };
 
   //ゲストユーザー認証
   const handleGuestSubmit = async () => {
@@ -42,7 +40,7 @@ const ParticipationAuth = ({ onAuthSuccess }: Props) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         participantId: Number(guestParticipationId),
-        password:guestpassword,
+        password: guestpassword,
         currentUserId: null, // ゲストなので userId は null
       }),
     });
@@ -53,6 +51,9 @@ const ParticipationAuth = ({ onAuthSuccess }: Props) => {
       alert('認証失敗: パスワードかIDが間違っています。');
       return;
     }
+
+    // 認証成功後
+    const listId = commonData.listId;
 
     // ユーザー名入力されてたら更新
     if (username) {
@@ -71,7 +72,8 @@ const ParticipationAuth = ({ onAuthSuccess }: Props) => {
         console.log('ユーザー名が更新されました');
       }
     }
-    onAuthSuccess(Number(guestParticipationId));
+    console.log('リストid',listId);
+    onAuthSuccess(Number(guestParticipationId),listId);
   };
 
   // 既存ユーザー認証
@@ -80,7 +82,6 @@ const ParticipationAuth = ({ onAuthSuccess }: Props) => {
       alert('ログイン情報が確認できません');
       return;
     }
-
 
     // 既存ユーザー確認
     const checkResponse = await fetch('/api/check-existing-user', {
@@ -97,24 +98,26 @@ const ParticipationAuth = ({ onAuthSuccess }: Props) => {
     }
 
     // 共通処理で participantId & password の認証
-    console.log(existingParticipationId)
+    console.log(existingParticipationId);
     const commonResponse = await fetch('/api/check-participation', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         participantId: Number(existingParticipationId),
-        password:existingPassword,
+        password: existingPassword,
         currentUserId: session.user.id,
       }),
     });
 
     const commonData = await commonResponse.json();
-    console.log('Check Participation Data:', commonData); // デバッグ用ログ
 
     if (!commonData.isValid) {
       alert('参加情報の認証に失敗しました');
       return;
     }
+
+    // 認証成功後
+    const listId = commonData.listId;
 
     // 通過したら更新（user_id を紐付け）
     const updateResponse = await fetch('/api/update-participant-user-id', {
@@ -123,7 +126,7 @@ const ParticipationAuth = ({ onAuthSuccess }: Props) => {
       body: JSON.stringify({
         participantId: Number(existingParticipationId),
         userId: session.user.id,
-        userName:session.user.name,
+        userName: session.user.name,
         isGuest: false,
       }),
     });
@@ -131,7 +134,7 @@ const ParticipationAuth = ({ onAuthSuccess }: Props) => {
     const updateData = await updateResponse.json();
 
     if (updateData.success) {
-      onAuthSuccess(Number(existingParticipationId));
+      onAuthSuccess(Number(existingParticipationId),listId);
     } else {
       alert('参加者情報の更新に失敗しました');
     }
@@ -142,7 +145,7 @@ const ParticipationAuth = ({ onAuthSuccess }: Props) => {
       {/* タブボタン */}
       <div className="flex border border-gray-400 rounded-lg overflow-hidden">
         <button
-           onClick={() => handleTabChange('guest')}
+          onClick={() => handleTabChange('guest')}
           className={`w-1/2 h-16 border-r border-gray-400 ${
             activeTab === 'guest'
               ? 'bg-[#FF5722] text-white border-[#FF5722]'
@@ -152,7 +155,7 @@ const ParticipationAuth = ({ onAuthSuccess }: Props) => {
           ゲストユーザー
         </button>
         <button
-         onClick={() => handleTabChange('existing')}
+          onClick={() => handleTabChange('existing')}
           className={`w-1/2 h-16 ${
             activeTab === 'existing'
               ? 'bg-[#FF5722] text-white border-[#FF5722]'
@@ -193,7 +196,7 @@ const ParticipationAuth = ({ onAuthSuccess }: Props) => {
             type="password"
             placeholder="参加パスワードを入力してください"
             value={guestpassword}
-            onChange={(e) =>setGuestPassword(e.target.value)}
+            onChange={(e) => setGuestPassword(e.target.value)}
             className="w-full p-4 border border-gray-300 rounded-md mb-5 text-lg"
           />
 

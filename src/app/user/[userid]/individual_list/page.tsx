@@ -13,7 +13,8 @@ import DirectoryFilterDropdown from '@/components/filterDropdown/DirectoryFilter
 import DirectorySortDropdown from '@/components/sortDropdown/DirectorySortDropdown';
 import { List } from '@/types/ListTypes';
 import DeleteConfirmModal from '@/components/modal/DeleteConfirmModal';
-import { useDisclosure, useToast } from '@chakra-ui/react';
+import { useDisclosure, useToast, Spinner } from '@chakra-ui/react';
+import { motion } from 'framer-motion';
 
 const IndividualList = () => {
   const { data: session } = useSession(); // セッションからユーザー情報を取得
@@ -29,6 +30,7 @@ const IndividualList = () => {
   const itemsPerPage = 12;
   const listContainerRef = useRef<HTMLDivElement>(null);
   const toast = useToast();
+  const [loading, setLoading] = useState(true);
 
   // セッションが存在するかチェックし、user.idを取得
   const userId = session?.user.id;
@@ -52,6 +54,7 @@ const IndividualList = () => {
       const listsData = await listsResponse.json();
       if (listsResponse.ok) {
         setLists(listsData); // リストデータをセット
+        setLoading(false);
       } else {
         console.error('リスト取得エラー:', listsData.error);
       }
@@ -62,7 +65,9 @@ const IndividualList = () => {
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentLists = Array.isArray(lists) ? lists.slice(indexOfFirstItem, indexOfLastItem) : [];
+  const currentLists = Array.isArray(lists)
+    ? lists.slice(indexOfFirstItem, indexOfLastItem)
+    : [];
   const totalPages = Math.ceil(lists.length / itemsPerPage);
 
   const handlePageChange = (page: number) => {
@@ -203,31 +208,48 @@ const IndividualList = () => {
         </div>
       )}
 
-      {/* リスト部分 */}
-      <div
-        className="overflow-auto max-h-[60vh] p-2 border border-[#FF5722] rounded-lg  bg-gradient-to-br from-[#FFE0B2] to-[#FFCC80]
-                scrollbar-thin scrollbar-thumb-[#FF5722] scrollbar-track-[#FFE0B2]"
-        ref={listContainerRef}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, ease: 'easeOut' }}
+        className="bg-white border border-[#C8E6C9] shadow-lg rounded-lg p-4 h-auto min-h-[320px] flex flex-col justify-between hover:shadow-xl transition-shadow"
       >
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {currentLists.map((list) => {
-            if (!list.list_id) {
-              console.error('リストにidがありません:', list); // デバッグ用
-              return null; // idがない場合は表示しない
-            }
+        {/* リスト部分 */}
+        <div
+          className="overflow-auto h-[65vh] p-2 border border-[#FF5722] rounded-lg  bg-gradient-to-br from-[#FFE0B2] to-[#FFCC80]
+                scrollbar-thin scrollbar-thumb-[#FF5722] scrollbar-track-[#FFE0B2]"
+          ref={listContainerRef}
+        >
+          {loading ? (
+            <div className="flex justify-center items-center w-full h-full">
+              <Spinner size="xl" color="orange.500" />
+            </div>
+          ) : currentLists.length > 0 ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {currentLists.map((list) => {
+                if (!list.list_id) {
+                  console.error('リストにidがありません:', list); // デバッグ用
+                  return null; // idがない場合は表示しない
+                }
 
-            return (
-              <ListCard
-                key={list.list_id}
-                list={list}
-                onDelete={() => handleDeleteClick(list)}
-                onEdit={() => handleEditClick(list.list_id)}
-                onView={() => handleViewClick(list)}
-              />
-            );
-          })}
+                return (
+                  <ListCard
+                    key={list.list_id}
+                    list={list}
+                    onDelete={() => handleDeleteClick(list)}
+                    onEdit={() => handleEditClick(list.list_id)}
+                    onView={() => handleViewClick(list)}
+                  />
+                );
+              })}
+            </div>
+          ) : (
+            <div className="flex justify-center items-center text-gray-500 mt-4 w-full h-full">
+              リストがありません
+            </div>
+          )}
         </div>
-      </div>
+      </motion.div>
 
       {/*削除確認モーダル*/}
       <DeleteConfirmModal

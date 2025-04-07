@@ -21,14 +21,14 @@ export async function GET(req: Request) {
     .eq('url', url)
     .single();
 
-  if (listError || !listBasic) {
-    console.error('❌ listBasic取得失敗', { url, listError, listBasic });
-    return NextResponse.json(
-      { error: 'リストの取得に失敗しました' },
-      { status: 500 },
-    );
-  }
-
+    console.log('listBasic:', listBasic);
+    if (listError || !listBasic) {
+      console.error('listBasic取得失敗', { url, listError, listBasic });
+      return NextResponse.json(
+        { error: 'リストの取得に失敗しました' },
+        { status: 500 },
+      );
+    }
   const listId = listBasic.list_id;
 
   // list_participants の全体取得（投票完了チェック用）
@@ -38,6 +38,7 @@ export async function GET(req: Request) {
     .eq('list_id', listId);
 
   if (participantsError) {
+    console.error('participantsError details:', participantsError);
     return NextResponse.json(
       { error: '参加者データの取得に失敗しました' },
       { status: 500 },
@@ -53,6 +54,7 @@ export async function GET(req: Request) {
       .eq('list_id', listId);
 
     if (updateError) {
+      console.error('voteUpdataError details:', updateError);
       return NextResponse.json(
         { error: '投票完了ステータスの更新に失敗しました' },
         { status: 500 },
@@ -68,6 +70,7 @@ export async function GET(req: Request) {
     .single();
 
   if (finalListError || !list) {
+    console.error('最新データ取得 details:', finalListError);
     return NextResponse.json(
       { error: '最新のリストの取得に失敗しました' },
       { status: 500 },
@@ -80,7 +83,7 @@ export async function GET(req: Request) {
     .select(
       `
     *,
-     list_participants!list_participants_item_id_fkey (participant_name), 
+    list_participants:participant_id (participant_name),
     photos (photo_url)
   `,
     )
@@ -102,6 +105,7 @@ export async function GET(req: Request) {
     .single();
 
   if (participantError || !participant) {
+    console.error('参加者情報の取得に失敗しました', { participantError, participant });
     return NextResponse.json(
       { error: '参加者情報の取得に失敗しました' },
       { status: 500 },

@@ -138,6 +138,8 @@ export async function GET(request: Request) {
       }
     }
 
+    // 作成日順に並べ替え（降順）
+    query = query.order('created_at', { ascending: false });
     const { data, error } = await query;
 
     if (error) {

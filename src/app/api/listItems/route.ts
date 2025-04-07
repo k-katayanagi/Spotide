@@ -260,7 +260,7 @@ export const GET = async (req: Request) => {
       .select(
         `
       *,
-      list_participants!list_participants_item_id_fkey (participant_name), 
+      list_participants:participant_id (participant_name),
       photos (photo_url)
     `,
       )
@@ -269,6 +269,7 @@ export const GET = async (req: Request) => {
     if (error) {
       console.error('Error fetching list items:', error.message);
     }
+    console.log(listItems);
     return NextResponse.json({ listItems }, { status: 200 });
   } catch (error: unknown) {
     if (error instanceof Error) {

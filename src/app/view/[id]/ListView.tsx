@@ -15,7 +15,7 @@ import EditSortDropdown from '@/components/sortDropdown/EditSortDropdown';
 import ViewLabelSettingModal from '@/components/modal/ViewLabelSettingModal';
 import { motion } from 'framer-motion';
 import { IconButton } from '@chakra-ui/react';
-import { useDisclosure, useToast } from '@chakra-ui/react';
+import { useDisclosure, useToast, Spinner } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import MenuBar from '@/components/Menu/MenuBar';
 import { TParticipantingUser } from '@/types/UserTypes ';
@@ -26,6 +26,15 @@ import UrlCopyButton from '@/components/buttons/UrlCopyButton';
 import VoteConfirmModal from '@/components/modal/VoteConfirmModal';
 import AggregatedResultsModal from '@/components/modal/AggregatedResultsModal';
 import { useSession } from 'next-auth/react';
+
+type Props = {
+  GetListId: string | null;
+};
+
+type AuthListItem = {
+  listId: string;
+  participantId: number;
+};
 
 const defaultFields = [
   { key: 'station', label: '駅' },
@@ -38,11 +47,11 @@ const defaultFields = [
   { key: 'time_from_nearest_station', label: '最寄り駅からの時間' },
   { key: 'category', label: 'カテゴリ' },
   { key: 'sub_category', label: 'サブカテゴリ' },
-  { key: 'add_by_id', label: '登録者' },
+  { key: 'list_participants', label: '登録者' },
   { key: 'created_at', label: '登録日' },
 ];
 
-const ListView = () => {
+const ListView = ({ GetListId }: Props) => {
   const { data: session } = useSession();
   const params = useParams();
   const url = params?.id;
@@ -148,12 +157,29 @@ const ListView = () => {
       }
     };
 
-    const storedParticipantId = localStorage.getItem('participantId');
-    if (storedParticipantId && storedParticipantId !== '0') {
-      const id = Number(storedParticipantId);
-      fetchListAndItems(id); // データを取得
+    const storedData = localStorage.getItem('authLists'); // 'participantId' ではなく 'authLists' に変更
+
+    if (storedData) {
+      try {
+        const parsedData = JSON.parse(storedData);
+        const listId = GetListId;
+        const foundParticipant = parsedData.find(
+          (item: AuthListItem) => item.listId === listId,
+        );
+
+        if (foundParticipant) {
+          const participantId = foundParticipant.participantId;
+          fetchListAndItems(participantId); // データを取得
+        } else {
+          console.log('指定されたlistIdに対応する参加者が見つかりません');
+        }
+      } catch (error) {
+        console.error('localStorageのデータをパースできませんでした', error);
+      }
+    } else {
+      console.log('localStorageにauthListsが存在しません');
     }
-  }, [url,participant]);
+  }, [url]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -289,11 +315,11 @@ const ListView = () => {
     <div className="p-3 overflow-auto relative">
       <div className="flex items-center justify-between mb-5 w-full">
         <h1 className="text-2xl font-bold flex-1">
-          {lists && lists.length > 0
-            ? lists[0].list_name
-            : 'リストが見つかりません'}
+          {loading
+            ? '取得中...'
+            : lists[0].list_name || 'リストが見つかりません'}
         </h1>
-        <div className="flex items-center gap-2 sm:gap-7">
+        <div className="flex items-center gap-2 sm'リストが見つかりません':gap-7">
           <UrlCopyButton />
           {/* 投票開始日以前で集計・投票未完了なら EditButton を表示 */}
           {!isVotingStart && !isVotingCompleted && !isAggregationCompleted && (
@@ -392,21 +418,31 @@ const ListView = () => {
   scrollbar-thin scrollbar-thumb-[#0288D1] scrollbar-track-[#B3E5FC]"
           ref={listContainerRef}
         >
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {currentListItems.map((listItem) => (
-              <ViewItemCard
-                key={listItem.item_id}
-                listItem={listItem}
-                voteItem={voteItem}
-                selectedFields={selectedFields}
-                isVotingStart={isVotingStart}
-                isVotingCompleted={isVotingCompleted}
-                isAllVotingCompleted={isAllVotingCompleted}
-                isAggregationCompleted={isAggregationCompleted}
-                onVote={() => handleVoteClick(listItem)}
-              />
-            ))}
-          </div>
+          {loading ? (
+            <div className="flex justify-center items-center w-full h-full">
+              <Spinner size="xl" color="blue.500" />
+            </div>
+          ) : currentListItems.length > 0 ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {currentListItems.map((listItem) => (
+                <ViewItemCard
+                  key={listItem.item_id}
+                  listItem={listItem}
+                  voteItem={voteItem}
+                  selectedFields={selectedFields}
+                  isVotingStart={isVotingStart}
+                  isVotingCompleted={isVotingCompleted}
+                  isAllVotingCompleted={isAllVotingCompleted}
+                  isAggregationCompleted={isAggregationCompleted}
+                  onVote={() => handleVoteClick(listItem)}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="flex justify-center items-center text-gray-500 mt-4 w-full h-full">
+              アイテムが追加されていません
+            </div>
+          )}
         </div>
       </motion.div>
 

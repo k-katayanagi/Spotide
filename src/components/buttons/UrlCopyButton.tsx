@@ -17,7 +17,7 @@ const UrlCopyButton = ({ onClick, className }: Props) => {
       text={
         <>
           <span className="absolute h-0 w-0 rounded-full bg-[#FF8A65] transition-all duration-300 group-hover:h-[50px] group-hover:w-[140px]"></span>
-          <span>URLをコピー</span>
+          <span className="relative z-10">URLをコピー</span>
         </>
       }
       type="submit"

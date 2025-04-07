@@ -17,7 +17,7 @@ const SearchButton = ({ onClick, className }: Props) => {
       text={
         <>
           <span className="absolute h-0 w-0 rounded-full bg-[#FF8A65] transition-all duration-300 group-hover:h-56 group-hover:w-32"></span>
-          <span>検索</span>
+          <span className="relative z-10">検索</span>
         </>
       }
       type="submit"

@@ -29,7 +29,6 @@ export async function GET(req: Request) {
   }
 }
 
-
 export async function POST(req: Request) {
   const { listId } = await req.json();
 
@@ -38,18 +37,22 @@ export async function POST(req: Request) {
   }
 
   try {
-    // 新しい UUID を発行
-    const newUuid = crypto.randomUUID();
+    // listIdを含めたカスタムURLを作成
+    const random1 = crypto.randomUUID().slice(0, 6); // ランダム前半部分
+    const random2 = crypto.randomUUID().slice(0, 3); // ランダム後半部分
+    const newUrl = `${random1}-list${listId}-${random2}`;
+
+    console.log(newUrl); // 例: abc123-list42def
 
     // `lists` テーブルの `url` カラムを更新
     const { error: updateError } = await supabase
       .from('lists')
-      .update({ url: newUuid })
+      .update({ url: newUrl })
       .eq('list_id', listId);
 
     if (updateError) throw updateError;
 
-    return NextResponse.json({ viewUrl: `/view/${newUuid}` });
+    return NextResponse.json({ viewUrl: `/view/${newUrl}` });
   } catch (error) {
     console.error('APIエラー:', error);
     return NextResponse.json(
