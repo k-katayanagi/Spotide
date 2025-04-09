@@ -86,7 +86,7 @@ const ListEdit = () => {
   const [loading, setLoading] = useState(true);
   const [hasAccess, setHasAccess] = useState(false); // アクセス制御の状態
 
-  const isCreator = lists[0]?.creator_id === session?.user.id;
+  const isCreator = lists[0]?.creator_id === userId
   const menuItems = [
     {
       label: '場所を検索',
@@ -115,18 +115,19 @@ const ListEdit = () => {
   ];
 
   useEffect(() => {
-    if (!listId || !userId || !listType) return; 
+    if (!listId) return; 
   
     const fetchLists = async () => {
-      setLoading(true); 
+      setLoading(true);
+
       try {
         const response = await fetch(
-          `/api/lists?userId=${userId}&listId=${listId}&listType=${listType}`,
+          `/api/lists-edit?&listId=${listId}`,
         );
         if (!response.ok) throw new Error('リスト取得に失敗しました');
         const data = await response.json();
         setLists(data); 
-        console.log(data)
+        fetchListItems();
   
         // アクセス制御: ローカルストレージのauthListsとリストのis_adminを確認
         const authLists = JSON.parse(localStorage.getItem('authLists') || '[]');
@@ -161,13 +162,13 @@ const ListEdit = () => {
         setListItems(data.listItems);
       } catch (error) {
         console.error('エラー:', error);
-        setListItems([]); // エラー時は空リストをセット
+        setListItems([]); 
       }
     };
   
     // 最初にリスト情報を取得
     fetchLists();
-  }, [listId, userId, listType]);
+  }, [listId]);
 
 
   // アクセスが許可されていない場合はリストを表示しない

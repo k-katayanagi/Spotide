@@ -310,7 +310,7 @@ const ListView = ({ GetListId }: Props) => {
     if (!lists[0].list_id) return;
     const listId = lists[0].list_id;
     const listType = lists[0].list_type;
-    handleNavigateTo(`/user/${listType}_list/${listId}/list_edit?participantId=${participantId}`);
+    handleNavigateTo(`/user/${listType}_list/${listId}/list_edit?`);
   };
 
   const toggleFilterDropdown = () => {

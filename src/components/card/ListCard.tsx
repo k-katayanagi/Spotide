@@ -69,23 +69,19 @@ const ListCard = ({ list, onDelete, onEdit, onView }: Props) => {
             <p className="text-gray-600 sm:ml-1">
               {getStatusLabel(list.status)}
             </p>
-            <p className="text-gray-600 whitespace-nowrap sm:ml-4">
-              最終更新者:
-            </p>
-            <p className="text-gray-600 sm:ml-1">{list.lastUpdatedBy}</p>
           </div>
 
           {/* おでかけ日 & 作成日時 */}
           <div className="flex flex-col sm:flex-row">
             <p className="text-gray-600 whitespace-nowrap">おでかけ日:</p>
             <p className="text-gray-600 sm:ml-1">{formattedOutingDate}</p>
-            <p className="text-gray-600 whitespace-nowrap sm:ml-4">作成日時:</p>
+            <p className="text-gray-600 whitespace-nowrap sm:ml-4">作成日:</p>
             <p className="text-gray-600 sm:ml-1">{formattedCreateDate}</p>
           </div>
 
           {/* 更新日時 */}
           <div className="flex flex-col">
-            <p className="text-gray-600 whitespace-nowrap">更新日時:</p>
+            <p className="text-gray-600 whitespace-nowrap">更新日:</p>
             <p className="text-gray-600">{formattedUpdateDate}</p>
           </div>
         </div>

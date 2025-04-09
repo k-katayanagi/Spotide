@@ -38,7 +38,6 @@ export type ListItem = {
   category: string;
   sub_category: string;
   photo_id: string;
-  add_by_id: string;
   list_participants?: {
     participant_name: string;
   };

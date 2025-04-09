@@ -12,6 +12,21 @@ const convertToJST = (date: string | Date): string => {
   return dateObj.toISOString();
 };
 
+// ゲストユーザーの場合、localStorageからparticipant_idを取得する関数
+const getGuestParticipantId = (listid: number) => {
+  // localStorageからauthListsを取得
+  const authLists = JSON.parse(localStorage.getItem('authLists') || '[]');
+  console.log(authLists);
+
+  // 指定されたlistIdに対応するparticipantIdを取得
+  const authList = authLists.find(
+    (item: { listId: string; participantId: number }) =>
+      item.listId === listid.toString(),
+  );
+
+  return authList ? authList.participantId : null; // participantIdが見つからなければnull
+};
+
 // list_itemsテーブルで重複をチェックする関数
 const checkExistingSpot = async (
   listid: number,
@@ -45,16 +60,15 @@ const checkExistingSpot = async (
 export const POST = async (req: Request) => {
   try {
     const body = await req.json();
-    const { spot, listid } = body;
+    const { spot, listid, participantId } = body;
     const photoUrls = spot.photo_ids || [];
 
-    // セッションからuserIdを取得
+    // セッションからuserIdを取得 (ゲストの場合はlocalStorageから取得)
     const session = await getServerSession(authOptions);
-    if (!session || !session.user || !session.user.id) {
-      throw new Error('ユーザーが認証されていません');
+    let userId = null;
+    if (session && session.user && session.user.id) {
+      userId = session.user.id;
     }
-
-    const userId = session.user.id;
 
     // list_itemsテーブルで重複チェック
     const existingSpot = await checkExistingSpot(
@@ -78,7 +92,13 @@ export const POST = async (req: Request) => {
     const photoIds = await Promise.all(photoIdPromises);
 
     // list_itemsにデータを追加
-    const spotData = await addSpotToList(spot, photoIds, userId, listid); // photoIdsを渡す
+    const spotData = await addSpotToList(
+      spot,
+      photoIds,
+      userId,
+      listid,
+      participantId,
+    ); // photoIdsを渡す
 
     // 写真のitem_idを更新
     if (spotData) {
@@ -144,31 +164,43 @@ const addPhotoToDb = async (photoUrl: string, itemId: number | null) => {
   }
 };
 
+// list_participants から participant_id を取得する関数
+const getParticipantIdFromDb = async (
+  listid: number,
+  userId: string | null,
+) => {
+  if (!userId) {
+    throw new Error('User ID is required');
+  }
+
+  const { data, error } = await supabase
+    .from('list_participants')
+    .select('participant_id')
+    .eq('list_id', listid)
+    .eq('user_id', userId)
+    .single(); // 単一のデータを取得
+
+  if (error || !data) {
+    console.error('Error fetching participant_id:', error?.message);
+    throw new Error('参加者情報を取得できませんでした');
+  }
+
+  const participantId = data.participant_id;
+
+  return participantId;
+};
+
 // list_itemsテーブルにスポット情報を追加する関数
 const addSpotToList = async (
   spot: Spot,
   photoIds: number[], // 配列でphotoIdsを受け取る
-  userId: string,
+  userId: string | null,
   listid: number,
+  participantId: string | null, // 直接渡されたparticipantIdを使用
 ) => {
   try {
-    // list_participants から participant_id を取得
-    const { data: participantData, error: participantError } = await supabase
-      .from('list_participants')
-      .select('participant_id')
-      .eq('list_id', listid)
-      .eq('user_id', userId)
-      .single(); // 単一の値を取得
-
-    if (participantError || !participantData) {
-      console.error(
-        'Error fetching participant_id:',
-        participantError?.message,
-      );
-      throw new Error('参加者情報を取得できませんでした');
-    }
-
-    const participantId = participantData.participant_id;
+    const participantToUse =
+      participantId || (await getParticipantIdFromDb(listid, userId));
 
     // list_items にスポットを追加
     const { data, error } = await supabase
@@ -176,7 +208,7 @@ const addSpotToList = async (
       .insert([
         {
           list_id: listid,
-          participant_id: participantId, // 取得した participant_id をセット
+          participant_id: participantToUse, // 取得した participant_id をセット
           store_name: spot.store_name,
           station: spot.station,
           google_rating: spot.google_rating,
@@ -189,7 +221,7 @@ const addSpotToList = async (
           business_hours: spot.business_hours,
           regular_holiday: spot.regular_holiday,
           time_from_nearest_station: spot.time_from_nearest_station,
-          add_by_id: userId,
+          // add_by_id: userId,
           created_at: convertToJST(new Date()),
           updated_at: convertToJST(new Date()),
         },

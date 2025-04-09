@@ -19,6 +19,11 @@ import MenuBar from '@/components/Menu/MenuBar';
 import useListType from '@/hooks/useListType';
 import axios from 'axios';
 
+type AuthListItem = {
+  listId: string;
+  participantId: number;
+};
+
 const SpotSearch = () => {
   const { data: session } = useSession();
   const userId = session?.user.id;
@@ -40,7 +45,7 @@ const SpotSearch = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
   const listContainerRef = useRef<HTMLDivElement>(null);
-  
+
   const searchParams = useSearchParams();
   const isCreator = searchParams.get('isCreator') === 'true';
   const menuItems = [
@@ -95,6 +100,9 @@ const SpotSearch = () => {
   };
 
   const handleAddListItem = async (spot: Spot) => {
+    const participantId = JSON.parse(
+      localStorage.getItem('authLists') || '[]',
+    ).find((item:AuthListItem) => item.listId === listid)?.participantId;
     try {
       const response = await fetch('/api/listItems', {
         method: 'POST',
@@ -105,6 +113,7 @@ const SpotSearch = () => {
           spot,
           userId: userId,
           listid: listid,
+          participantId: participantId,
         }),
       });
 
