@@ -12,20 +12,6 @@ const convertToJST = (date: string | Date): string => {
   return dateObj.toISOString();
 };
 
-// ゲストユーザーの場合、localStorageからparticipant_idを取得する関数
-const getGuestParticipantId = (listid: number) => {
-  // localStorageからauthListsを取得
-  const authLists = JSON.parse(localStorage.getItem('authLists') || '[]');
-  console.log(authLists);
-
-  // 指定されたlistIdに対応するparticipantIdを取得
-  const authList = authLists.find(
-    (item: { listId: string; participantId: number }) =>
-      item.listId === listid.toString(),
-  );
-
-  return authList ? authList.participantId : null; // participantIdが見つからなければnull
-};
 
 // list_itemsテーブルで重複をチェックする関数
 const checkExistingSpot = async (
