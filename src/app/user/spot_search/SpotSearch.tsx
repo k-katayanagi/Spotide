@@ -2,7 +2,9 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useParams } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { useSearchSpotContext } from '@/contexts/SearchSpotContext';
+import { useSearchParams } from 'next/navigation';
 import { useBottomNav } from '@/contexts/BottomNavContext';
 import Pagination from '@/components/pagination/Pagination';
 import SortButton from '@/components/buttons/SortButton';
@@ -10,7 +12,7 @@ import { Spot } from '@/types/ListTypes';
 import SearchSpotCard from '@/components/card/SearchSpotCard';
 import SpotSearchFilterDropdown from '@/components/filterDropdown/SpotSearchFilterDropdown';
 import SpotSearchSortDropdown from '@/components/sortDropdown/SpotSearchSortDropdown';
-import { IconButton,Spinner,useToast } from '@chakra-ui/react';
+import { IconButton, Spinner, useToast } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import InputBox from '@/components/InputBox';
 import MenuBar from '@/components/Menu/MenuBar';
@@ -18,8 +20,10 @@ import useListType from '@/hooks/useListType';
 import axios from 'axios';
 
 const SpotSearch = () => {
+  const { data: session } = useSession();
+  const userId = session?.user.id;
   const params = useParams();
-  const { userid, listid } = params;
+  const { listid } = params;
   const listType = useListType();
   const { searchSpots, setSearchSpots } = useSearchSpotContext();
   const [isFilter, setIsFilter] = useState(false);
@@ -36,23 +40,30 @@ const SpotSearch = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
   const listContainerRef = useRef<HTMLDivElement>(null);
-
+  
+  const searchParams = useSearchParams();
+  const isCreator = searchParams.get('isCreator') === 'true';
   const menuItems = [
     {
-      label: '共有ユーザー設定',
-      url: `/user/${userid}/${listType}/${listid}/list_edit/participating_users_list`,
-    },
-    {
       label: '編集リストに戻る',
-      url: `/user/${userid}/${listType}/${listid}/list_edit`,
+      url: `/user/${listType}/${listid}/list_edit`,
     },
+    // 条件付きで「共有ユーザー設定」を追加
+    ...(isCreator
+      ? [
+          {
+            label: '共有ユーザー設定',
+            url: `/user/${listType}/${listid}/list_edit/participating_users_list`,
+          },
+        ]
+      : []),
   ];
 
   // 新しいリストIDまたはユーザーIDが変更されたときに検索結果をリセット
   useEffect(() => {
     setSearchSpots([]); // ここで検索結果をリセット
     setSearchKeyword(''); // 検索キーワードもリセット
-  }, [userid, listid, setSearchSpots]);
+  }, [userId, listid, setSearchSpots]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -92,7 +103,7 @@ const SpotSearch = () => {
         },
         body: JSON.stringify({
           spot,
-          userId: userid,
+          userId: userId,
           listid: listid,
         }),
       });

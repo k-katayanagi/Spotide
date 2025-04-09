@@ -23,6 +23,12 @@ import { useDisclosure, useToast, Spinner } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import MenuBar from '@/components/Menu/MenuBar';
 import useListType from '@/hooks/useListType';
+import { List } from '@/types/ListTypes';
+
+type AuthListItem = {
+  listId: string;
+  participantId: number;
+};
 
 const defaultFields = [
   { key: 'station', label: '駅' },
@@ -45,8 +51,8 @@ const ListEdit = () => {
   const { lists, setLists } = useListContext();
   const { listItems, setListItems } = useListItemContext();
   const listType = useListType();
-  const { userid, listid } = params;
-  const listId = listid ? Number(listid) : null; // listidを数値に変換
+  const { listid } = params;
+  const listId = listid ? Number(listid) : null;
   const list = lists.find((i) => i.list_id === listId);
   const userId = session?.user.id;
   const [isFilter, setIsFilter] = useState(false);
@@ -78,24 +84,76 @@ const ListEdit = () => {
     defaultFields.map((f) => f.key),
   );
   const [loading, setLoading] = useState(true);
+  const [hasAccess, setHasAccess] = useState(false); // アクセス制御の状態
 
+  const isCreator = lists[0]?.creator_id === session?.user.id;
   const menuItems = [
     {
       label: '場所を検索',
-      url: `/user/${userid}/${listType}/${listid}/list_edit/spot_search`,
+      url: `/user/${listType}/${listid}/list_edit/spot_search?isCreator=${isCreator}`,
     },
-    {
-      label: '共有ユーザー設定',
-      url: `/user/${userid}/${listType}/${listid}/list_edit/participating_users_list`,
-    },
+    ...(isCreator
+      ? [
+          {
+            label: '共有ユーザー設定',
+            url: `/user/${listType}/${listid}/list_edit/participating_users_list`,
+          },
+        ]
+      : []),
+
     { label: '表示ラベル設定', onClick: () => setIsLabelSettingOpen(true) },
-    { label: '投票開始日設定', onClick: () => setIsLabelSettingOpen(true) },
+
+    // 条件付きで「投票開始日設定」を追加
+    ...(isCreator
+      ? [
+          {
+            label: '投票開始日設定',
+            onClick: () => setIsLabelSettingOpen(true),
+          },
+        ]
+      : []),
   ];
 
   useEffect(() => {
-    if (!listId) return;
+    if (!listId || !userId || !listType) return; 
+  
+    const fetchLists = async () => {
+      setLoading(true); 
+      try {
+        const response = await fetch(
+          `/api/lists?userId=${userId}&listId=${listId}&listType=${listType}`,
+        );
+        if (!response.ok) throw new Error('リスト取得に失敗しました');
+        const data = await response.json();
+        setLists(data); 
+        console.log(data)
+  
+        // アクセス制御: ローカルストレージのauthListsとリストのis_adminを確認
+        const authLists = JSON.parse(localStorage.getItem('authLists') || '[]');
+        const isAccessible =
+          authLists.some(
+            (authList: AuthListItem) =>
+              String(authList.listId) === String(listId),
+          ) ||
+          data.some((list: List) => list.list_id === listId && list.is_admin);
+  
+        setHasAccess(isAccessible);
+  
+        if (!isAccessible) {
+          alert('このリストへのアクセス権限がありません。');
+          window.location.href = '/login'; // ログインページにリダイレクト
+        } else {
+          // アクセスが許可されている場合、リストアイテムを取得
+          fetchListItems();
+        }
+      } catch (error) {
+        console.error('エラー:', error);
+      } finally {
+        setLoading(false); // リスト取得完了時にローディングを無効化
+      }
+    };
+  
     const fetchListItems = async () => {
-      setLoading(true); // 取得開始時にローディングを有効化
       try {
         const response = await fetch(`/api/listItems?list_id=${listId}`);
         if (!response.ok) throw new Error('リストアイテム取得に失敗しました');
@@ -103,37 +161,19 @@ const ListEdit = () => {
         setListItems(data.listItems);
       } catch (error) {
         console.error('エラー:', error);
-        setListItems([]);
-      } finally {
-        setLoading(false); // 取得完了時にローディングを無効化
+        setListItems([]); // エラー時は空リストをセット
       }
     };
+  
+    // 最初にリスト情報を取得
+    fetchLists();
+  }, [listId, userId, listType]);
 
-    // リストの情報を取得する処理
-    const fetchLists = async () => {
-      try {
-        console.log('id:', listId, userId, listType);
-        const response = await fetch(
-          `/api/lists?userId=${userId}&listId=${listId}&listType=${listType}`,
-        );
-        if (!response.ok) throw new Error('リスト取得に失敗しました');
-        const data = await response.json();
-        console.log('responseLists:', data);
-        setLists(data); // 取得したリストをセット
-        setLoading(false);
-      } catch (error) {
-        console.error('エラー:', error);
-      }
-    };
 
-    // listsが空の場合にのみリストを取得
-    if (!Array.isArray(lists) || lists.length === 0) {
-      fetchLists();
-    }
-
-    // listItemsは常に取得
-    fetchListItems();
-  }, []);
+  // アクセスが許可されていない場合はリストを表示しない
+  if (!hasAccess) {
+    return null; 
+  }
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;

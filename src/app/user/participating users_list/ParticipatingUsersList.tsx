@@ -2,6 +2,8 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useParams } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import { useSearchParams } from 'next/navigation';
 import { TParticipantingUser } from '@/types/UserTypes ';
 import EditButton from '@/components/buttons/EditButton ';
 import DeleteButton from '@/components/buttons/DeleteButton';
@@ -19,12 +21,14 @@ import { useDisclosure, useToast, Spinner } from '@chakra-ui/react';
 import useListType from '@/hooks/useListType';
 
 const ParticipatingUsersList = () => {
+  const { data: session } = useSession();
+  const userId = session?.user.id;
   const [displayUserNames, setDisplayUserNames] = useState<
     TParticipantingUser[]
   >([]);
   const [loading, setLoading] = useState<boolean>(true);
   const params = useParams();
-  const { userid, listid } = params;
+  const { listid } = params;
   const listId = params?.listid ? Number(params.listid) : null;
   const listType = useListType();
   const [currentPage, setCurrentPage] = useState(1);
@@ -58,16 +62,22 @@ const ParticipatingUsersList = () => {
 
   const [isMenu, setIsMenu] = useState(false);
   const toast = useToast();
+  const searchParams = useSearchParams();
+  const votingStart = searchParams.get('votingStart') === 'true';
 
   const menuItems = [
-    {
-      label: '場所を検索',
-      url: `/user/${userid}/${listType}/${listid}/list_edit/spot_search`,
-    },
-    {
-      label: '編集リストに戻る',
-      url: `/user/${userid}/${listType}/${listid}/list_edit/`,
-    },
+    ...(!votingStart
+      ? [
+          {
+            label: '場所を検索',
+            url: `/user/${listType}/${listid}/list_edit/spot_search`,
+          },
+          {
+            label: '編集リストに戻る',
+            url: `/user/${listType}/${listid}/list_edit/`,
+          },
+        ]
+      : []),
   ];
 
   const fetchParticipants = async () => {
@@ -168,7 +178,7 @@ const ParticipatingUsersList = () => {
             is_guest: result.data.is_guest,
             created_at: result.data.created_at || new Date(),
             updated_at: result.data.updated_at || new Date(),
-          },
+          } as TParticipantingUser,
         ]);
 
         toast({
@@ -359,14 +369,16 @@ const ParticipatingUsersList = () => {
             <UserAddButton onClick={handleUserAddClick} />
           </div>
           <div className="flex gap-2 items-center">
-            <IconButton
-              icon={<HamburgerIcon boxSize={5} />}
-              variant="unstyled"
-              aria-label="メニュー"
-              className="flex items-center justify-center text-black block"
-              style={{ width: '50px', height: '50px' }}
-              onClick={toggleMenuDropdown}
-            />
+            {!votingStart && (
+              <IconButton
+                icon={<HamburgerIcon boxSize={5} />}
+                variant="unstyled"
+                aria-label="メニュー"
+                className="flex items-center justify-center text-black block"
+                style={{ width: '50px', height: '50px' }}
+                onClick={toggleMenuDropdown}
+              />
+            )}
           </div>
         </div>
 
@@ -394,7 +406,7 @@ const ParticipatingUsersList = () => {
           <p className="text-center text-gray-600">参加者がいません</p>
         ) : (
           currentUserNames.map((user) => {
-            const isCurrentUser = user.user_id === userid;
+            const isCurrentUser = user.user_id === userId;
 
             return (
               <div

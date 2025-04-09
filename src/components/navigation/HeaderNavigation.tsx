@@ -30,7 +30,7 @@ const HeaderNavigation = () => {
         <li
           className="text-black hover:text-gray-300 text-lg text-center cursor-pointer"
           onClick={() =>
-            handleNavigateTo(`/user/${session.user.id}/list_create`)
+            handleNavigateTo(`/user/list_create`)
           }
         >
           <Image
@@ -46,7 +46,7 @@ const HeaderNavigation = () => {
         <li
           className="text-black hover:text-gray-300 text-lg text-center cursor-pointer"
           onClick={() =>
-            handleNavigateTo(`/user/${session.user.id}/individual_list`)
+            handleNavigateTo(`/user/individual_list`)
           }
         >
           <Image
@@ -62,7 +62,7 @@ const HeaderNavigation = () => {
         <li
           className="text-black hover:text-gray-300 text-lg text-center cursor-pointer"
           onClick={() =>
-            handleNavigateTo(`/user/${session.user.id}/share_list`)
+            handleNavigateTo(`/user/share_list`)
           }
         >
           <Image

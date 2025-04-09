@@ -26,6 +26,7 @@ import UrlCopyButton from '@/components/buttons/UrlCopyButton';
 import VoteConfirmModal from '@/components/modal/VoteConfirmModal';
 import AggregatedResultsModal from '@/components/modal/AggregatedResultsModal';
 import { useSession } from 'next-auth/react';
+import useNavigation from '@/hooks/useNavigation';
 
 type Props = {
   GetListId: string | null;
@@ -57,6 +58,7 @@ const ListView = ({ GetListId }: Props) => {
   const url = params?.id;
   const { lists, setLists } = useListContext();
   const { listItems, setListItems } = useListItemContext();
+  const { handleNavigateTo } = useNavigation();
   const [participant, setParticipant] = useState<TParticipantingUser>(null);
   const [participantId, setParticipantId] = useState<number | null>(null);
   const [voteItem, setVoteItem] = useState<number | null | undefined>(null);
@@ -102,8 +104,17 @@ const ListView = ({ GetListId }: Props) => {
     onClose: onResultsModalClose,
   } = useDisclosure();
 
+
+  const isCreator = lists[0]?.creator_id === session?.user.id;
   const menuItems = [
-    { label: '表示ラベル設定', onClick: () => setIsLabelSettingOpen(true) },
+    { label: '表示ラベル設定', onClick: () => setIsLabelSettingOpen(true) }, ...(isCreator
+      ? [
+          {
+            label: '共有ユーザー設定',
+            url: `/user/${lists[0]?.list_type}_list/${lists[0]?.list_id}/list_edit/participating_users_list?votingStart=${isVotingStart}`,
+          },
+        ]
+      : []),
   ];
 
   useEffect(() => {
@@ -112,6 +123,7 @@ const ListView = ({ GetListId }: Props) => {
         console.log('URLまたはparticipantIdがありません');
         return;
       }
+
 
       setLoading(true);
       try {
@@ -157,7 +169,7 @@ const ListView = ({ GetListId }: Props) => {
       }
     };
 
-    const storedData = localStorage.getItem('authLists'); // 'participantId' ではなく 'authLists' に変更
+    const storedData = localStorage.getItem('authLists'); 
 
     if (storedData) {
       try {
@@ -248,7 +260,6 @@ const ListView = ({ GetListId }: Props) => {
 
   const handleTotalling = async () => {
     if (!lists[0].list_id) return;
-
     const listId = lists[0].list_id;
 
     try {
@@ -295,6 +306,13 @@ const ListView = ({ GetListId }: Props) => {
     }
   };
 
+  const handleEdit = () => {
+    if (!lists[0].list_id) return;
+    const listId = lists[0].list_id;
+    const listType = lists[0].list_type;
+    handleNavigateTo(`/user/${listType}_list/${listId}/list_edit?participantId=${participantId}`);
+  };
+
   const toggleFilterDropdown = () => {
     setIsFilter((prevState) => !prevState);
     console.log(isFilter);
@@ -323,7 +341,7 @@ const ListView = ({ GetListId }: Props) => {
           <UrlCopyButton />
           {/* 投票開始日以前で集計・投票未完了なら EditButton を表示 */}
           {!isVotingStart && !isVotingCompleted && !isAggregationCompleted && (
-            <EditButton isEditing={isEditing} />
+            <EditButton isEditing={isEditing} onClick={handleEdit}/>
           )}
 
           {/* 全員投票完了で集計未完了なら TotallingButton を表示 */}
