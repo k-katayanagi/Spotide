@@ -73,7 +73,7 @@ const Mypage = () => {
           <div
             className="flex flex-col items-center text-center bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-full max-w-[240px] md:w-96 cursor-pointer"
             onClick={() =>
-              handleNavigateTo(`/user/${session?.user?.id}/list_create`)
+              handleNavigateTo(`/user/list_create`)
             }
           >
             <div className="w-full flex flex-col items-center">
@@ -106,7 +106,7 @@ const Mypage = () => {
           <div
             className="flex flex-col items-center text-center bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-full max-w-[240px] md:w-96 md:justify-self-end cursor-pointer"
             onClick={() =>
-              handleNavigateTo(`/user/${session?.user?.id}/individual_list`)
+              handleNavigateTo(`/user/individual_list`)
             }
           >
             <div className="w-full flex flex-col items-center">
@@ -125,7 +125,7 @@ const Mypage = () => {
           <div
             className="flex flex-col items-center text-center bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-full max-w-[240px] md:w-96 cursor-pointer"
             onClick={() =>
-              handleNavigateTo(`/user/${session?.user?.id}/share_list`)
+              handleNavigateTo(`/user/share_list`)
             }
           >
             <div className="w-full flex flex-col items-center">

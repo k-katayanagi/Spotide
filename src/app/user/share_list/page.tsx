@@ -138,7 +138,7 @@ const ShareList = () => {
 
   // 編集ページに遷移する関数（ここでルーティングを管理）
   const handleEditClick = (listId: number) => {
-    router.push(`/user/${userId}/share_list/${listId}/list_edit`);
+    router.push(`/user/share_list/${listId}/list_edit`);
   };
 
   // 閲覧ページに遷移する関数
@@ -221,7 +221,7 @@ const ShareList = () => {
       >
         {/* リスト部分 */}
         <div
-          className="overflow-auto h-[65vh] p-2 border border-[#FF5722] rounded-lg  bg-gradient-to-br from-[#FFE0B2] to-[#FFCC80]
+          className="overflow-auto h-[60vh] p-2 border border-[#FF5722] rounded-lg  bg-gradient-to-br from-[#FFE0B2] to-[#FFCC80]
                 scrollbar-thin scrollbar-thumb-[#FF5722] scrollbar-track-[#FFE0B2]"
           ref={listContainerRef}
         >
