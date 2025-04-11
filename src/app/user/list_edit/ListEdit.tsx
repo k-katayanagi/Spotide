@@ -127,29 +127,40 @@ const ListEdit = () => {
         const data = await response.json();
         setLists(data);
 
-        // アクセス制御: ローカルストレージのauthListsとリストのis_adminを確認
+        // アクセス制御: localStorage の authLists に listId があるか、もしくは is_admin が true ならOK
         const localAuthLists = JSON.parse(
           localStorage.getItem('authLists') || '[]',
         );
+
+        // localStorage に対象の listId があるか
+        const hasLocalAccess = localAuthLists.some(
+          (authList: AuthListItem) =>
+            String(authList.listId) === String(listId),
+        );
+        //adminかどうか
+        const sessionUserId = userId
+        const hasAdminAccess = data.some(
+          (list: List) => String(list.creator_id) === String(sessionUserId),
+        );
+
+        // アクセス権限があるかどうか
+        const isAccessible = hasLocalAccess || hasAdminAccess;
+        setHasAccess(isAccessible);
+
+        // アクセスできない場合はログインページにリダイレクト
+        if (!isAccessible) {
+          alert('このリストへのアクセス権限がありません。');
+          window.location.href = '/login';
+          return;
+        }
+
+        // localStorage に一致する認証情報を取得しておく（必要あれば）
         const matchedAuth = localAuthLists.find(
           (authList: AuthListItem) =>
             String(authList.listId) === String(listId),
         );
         setAuthLists(matchedAuth || null);
 
-        const isAccessible =
-          localAuthLists.some(
-            (authList: AuthListItem) =>
-              String(authList.listId) === String(listId),
-          ) ||
-          data.some((list: List) => list.list_id === listId && list.is_admin);
-        setHasAccess(isAccessible);
-
-        if (!isAccessible) {
-          alert('このリストへのアクセス権限がありません。');
-          window.location.href = '/login'; // ログインページにリダイレクト
-          return;
-        }
         // アクセスが許可されている場合のみリストアイテムを取得
         await fetchListItems();
       } catch (error) {
