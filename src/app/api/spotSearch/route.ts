@@ -100,7 +100,20 @@ export async function GET(req: NextRequest) {
     const placesResponse = await axios.post(
       GOOGLE_PLACES_API_URL,
       {
-        textQuery: query, // 検索クエリ
+        textQuery: query,
+        languageCode: 'ja', // 日本語で返す
+        locationBias: {
+          rectangle: {
+            low: {
+              latitude: 24.396308, // 日本の南端
+              longitude: 122.93457,
+            },
+            high: {
+              latitude: 45.551483, // 日本の北端
+              longitude: 153.986672,
+            },
+          },
+        },
       },
       {
         headers: {
