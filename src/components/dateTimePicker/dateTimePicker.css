@@ -1,0 +1,101 @@
+/* dateTimePicker.css */
+
+/* カレンダーとタイムピッカーを横並びにする */
+.react-datepicker {
+  display: flex !important;
+}
+
+/* カレンダーの幅を調整 */
+.react-datepicker__month-container {
+  width: auto;
+}
+
+/* タイムピッカーを右側に配置 */
+.react-datepicker__time-container {
+  width: 85px !important;
+  position: relative !important;
+  right: 0 !important;
+}
+
+.react-datepicker__time {
+  position: absolute;
+  right: 0;
+  background: white;
+}
+
+/* カレンダー外枠 */
+.react-datepicker-wrapper,
+.react-datepicker__input-container {
+  display: block !important;
+}
+
+/* ヘッダー部分 */
+.react-datepicker__header {
+  background-color: #fff !important;
+  border-color: #fff !important;
+}
+
+/* 日付のホバー時 */
+.react-datepicker__day:hover {
+  background: #db4d6d !important;
+  color: #fafafa !important;
+}
+
+/* 曜日 */
+.react-datepicker__day-name {
+  color: rgba(0, 0, 0, 0.54) !important;
+}
+
+/* 今日の日付 */
+.react-datepicker__day--keyboard-selected,
+.react-datepicker__month-text--keyboard-selected,
+.react-datepicker__quarter-text--keyboard-selected,
+.react-datepicker__year-text--keyboard-selected {
+  border-radius: 0.3rem !important;
+  background-color: #fff !important;
+}
+
+/* 選択された日付 */
+.react-datepicker__day--selected,
+.react-datepicker__day--in-selecting-range,
+.react-datepicker__day--in-range,
+.react-datepicker__month-text--selected,
+.react-datepicker__month-text--in-selecting-range,
+.react-datepicker__month-text--in-range,
+.react-datepicker__time-container
+  .react-datepicker__time
+  .react-datepicker__time-box
+  ul.react-datepicker__time-list
+  li.react-datepicker__time-list-item--selected {
+  background: #e87a90 !important;
+  font-weight: normal !important;
+  color: #fafafa !important;
+}
+
+/* 選択中の日付 */
+.react-datepicker__day--in-selecting-range:not(
+    .react-datepicker__day--in-range,
+    .react-datepicker__month-text--in-range,
+    .react-datepicker__quarter-text--in-range,
+    .react-datepicker__year-text--in-range
+  ),
+.react-datepicker__month-text--in-selecting-range:not(
+    .react-datepicker__day--in-range,
+    .react-datepicker__month-text--in-range,
+    .react-datepicker__quarter-text--in-range,
+    .react-datepicker__year-text--in-range
+  ),
+.react-datepicker__quarter-text--in-selecting-range:not(
+    .react-datepicker__day--in-range,
+    .react-datepicker__month-text--in-range,
+    .react-datepicker__quarter-text--in-range,
+    .react-datepicker__year-text--in-range
+  ),
+.react-datepicker__year-text--in-selecting-range:not(
+    .react-datepicker__day--in-range,
+    .react-datepicker__month-text--in-range,
+    .react-datepicker__quarter-text--in-range,
+    .react-datepicker__year-text--in-range
+  ) {
+  background-color: #f596aa !important;
+}
