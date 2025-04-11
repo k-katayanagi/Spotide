@@ -102,16 +102,14 @@ export async function GET(req: NextRequest) {
       {
         textQuery: query,
         languageCode: 'ja',
+        regionCode: 'JP',
         locationBias: {
-          rectangle: {
-            low: {
-              latitude: 24.396308,
-              longitude: 122.93457,
+          circle: {
+            center: {
+              latitude: 35.6895,
+              longitude: 139.6917,
             },
-            high: {
-              latitude: 45.551483,
-              longitude: 153.986672,
-            },
+            radius: 50000.0,
           },
         },
       },
@@ -120,12 +118,7 @@ export async function GET(req: NextRequest) {
           'Content-Type': 'application/json',
           'X-Goog-Api-Key': GOOGLE_MAPS_API_KEY,
           'X-Goog-FieldMask':
-            'places.displayName,places.formattedAddress,places.rating,places.addressComponents,places.types,places.regularOpeningHours,places.photos,places.id', // 必要なフィールドを指定
-        },
-        params: {
-          regionCode: 'JP',
-          languageCode: 'ja',
-          pageSize: 13,
+            'places.displayName,places.formattedAddress,places.rating,places.addressComponents,places.types,places.regularOpeningHours,places.photos,places.id,places.location',
         },
       },
     );
