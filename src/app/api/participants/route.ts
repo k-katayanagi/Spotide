@@ -22,23 +22,33 @@ export async function GET(request: Request) {
       );
     }
 
-    // DBからlist_participantsテーブルのデータを取得
     const { data, error } = await supabase
       .from('list_participants')
       .select('participant_id, participant_name, password, user_id,is_guest')
-      .eq('list_id', listId); // list_idを条件にデータを取得
+      .eq('list_id', listId);
 
     if (error) {
       throw new Error(error.message);
     }
 
-    return NextResponse.json(data);
+    const { data: listData, error: listError } = await supabase
+      .from('lists')
+      .select('url')
+      .eq('list_id', listId)
+      .single();
+    if (listError) {
+      throw new Error(listError.message);
+    }
+
+    const listUrl = listData?.url || '未発行';
+    return NextResponse.json({
+      data,
+      listUrl: listUrl,
+    });
   } catch (error) {
-    // エラーがError型か確認
     if (error instanceof Error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     } else {
-      // エラーがError型でない場合の処理
       return NextResponse.json(
         { error: 'Unknown error occurred' },
         { status: 500 },
@@ -50,10 +60,8 @@ export async function GET(request: Request) {
 //参加者追加
 export async function POST(req: Request) {
   try {
-    // リクエストボディからデータを取得
     const { participant_name, password, list_id } = await req.json();
 
-    // 必要なデータをSupabaseにインサート
     const { data, error } = await supabase
       .from('list_participants')
       .insert([
@@ -97,7 +105,6 @@ export async function DELETE(req: Request) {
       );
     }
 
-    // Supabase から参加者を削除
     const { error } = await supabase
       .from('list_participants')
       .delete()
@@ -120,10 +127,8 @@ export async function DELETE(req: Request) {
   }
 }
 
-//参加者編集
 export async function PUT(req: Request) {
   try {
-    // リクエストボディからデータを取得
     const { participant_id, participant_name, password, list_id } =
       await req.json();
 
@@ -142,14 +147,13 @@ export async function PUT(req: Request) {
       );
     }
 
-    // Supabaseから指定した参加者を更新
     const { data, error } = await supabase
       .from('list_participants')
       .update({
         participant_name,
         password,
-        list_id, // list_id を更新
-        updated_at: convertToJST(new Date()), // 更新時刻を設定
+        list_id,
+        updated_at: convertToJST(new Date()),
       })
       .eq('participant_id', participant_id)
       .select()
@@ -165,7 +169,6 @@ export async function PUT(req: Request) {
       { status: 200 },
     );
   } catch (error) {
-    // エラーがError型か確認
     if (error instanceof Error) {
       console.error('Server error:', error);
       return NextResponse.json(
@@ -173,7 +176,6 @@ export async function PUT(req: Request) {
         { status: 500 },
       );
     } else {
-      // エラーがError型でない場合の処理
       console.error('Unknown error:', error);
       return NextResponse.json(
         {

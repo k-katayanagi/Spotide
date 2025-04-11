@@ -61,7 +61,6 @@ const ListEdit = () => {
   const [isLabelSettingOpen, setIsLabelSettingOpen] = useState(false);
   const [authLists, setAuthLists] = useState<AuthListItem | null>(null);
 
-  // モーダル用の useDisclosure
   const {
     isOpen: isEditModalOpen,
     onOpen: onEditModalOpen,
@@ -85,7 +84,7 @@ const ListEdit = () => {
     defaultFields.map((f) => f.key),
   );
   const [loading, setLoading] = useState(true);
-  const [hasAccess, setHasAccess] = useState(false); // アクセス制御の状態
+  const [hasAccess, setHasAccess] = useState(false);
 
   const isCreator = lists[0]?.creator_id === userId;
   const menuItems = [
@@ -104,7 +103,6 @@ const ListEdit = () => {
 
     { label: '表示ラベル設定', onClick: () => setIsLabelSettingOpen(true) },
 
-    // 条件付きで「投票開始日設定」を追加
     ...(isCreator
       ? [
           {
@@ -127,46 +125,38 @@ const ListEdit = () => {
         const data = await response.json();
         setLists(data);
 
-        // アクセス制御: localStorage の authLists に listId があるか、もしくは is_admin が true ならOK
         const localAuthLists = JSON.parse(
           localStorage.getItem('authLists') || '[]',
         );
-
-        // localStorage に対象の listId があるか
         const hasLocalAccess = localAuthLists.some(
           (authList: AuthListItem) =>
             String(authList.listId) === String(listId),
         );
-        //adminかどうか
-        const sessionUserId = userId
+        const sessionUserId = userId;
         const hasAdminAccess = data.some(
           (list: List) => String(list.creator_id) === String(sessionUserId),
         );
 
-        // アクセス権限があるかどうか
         const isAccessible = hasLocalAccess || hasAdminAccess;
         setHasAccess(isAccessible);
 
-        // アクセスできない場合はログインページにリダイレクト
         if (!isAccessible) {
           alert('このリストへのアクセス権限がありません。');
           window.location.href = '/login';
           return;
         }
 
-        // localStorage に一致する認証情報を取得しておく（必要あれば）
         const matchedAuth = localAuthLists.find(
           (authList: AuthListItem) =>
             String(authList.listId) === String(listId),
         );
         setAuthLists(matchedAuth || null);
 
-        // アクセスが許可されている場合のみリストアイテムを取得
         await fetchListItems();
       } catch (error) {
         console.error('エラー:', error);
       } finally {
-        setLoading(false); // リスト取得完了時にローディングを無効化
+        setLoading(false);
       }
     };
 
@@ -181,12 +171,8 @@ const ListEdit = () => {
         setListItems([]);
       }
     };
-
-    // 最初にリスト情報を取得
     fetchLists();
   }, [listId]);
-
-  // アクセスが許可されていない場合はリストを表示しない
   if (!hasAccess) {
     return null;
   }
@@ -244,8 +230,6 @@ const ListEdit = () => {
         if (!response.ok) {
           throw new Error('削除に失敗しました');
         }
-
-        // フロントエンドでアイテムを削除（バックエンドが成功した場合）
         setListItems((prevItem) =>
           prevItem.filter((item) => item.item_id !== selectedListItem.item_id),
         );
@@ -294,8 +278,6 @@ const ListEdit = () => {
         </h1>
         <div className="flex items-center gap-2">
           <IssueViewButton listId={listId} />
-
-          {/* フィルター & ソートボタンをアイコンと揃える */}
           <div className="flex gap-5 items-center">
             <FilterButton onClick={toggleFilterDropdown} disabled={isSort} />
             <SortButton onClick={toggleSortDropdown} disabled={isFilter} />
@@ -318,14 +300,10 @@ const ListEdit = () => {
 
       {isSort && (
         <div className="absolute top-[60px] left-1/2 transform -translate-x-1/2 z-30 w-full max-w-[1024px]">
-          <EditSortDropdown
-          // toggleSortDropdown={toggleSortDropdown}
-          // onSortChange={handleSortChange}
-          />
+          <EditSortDropdown />
         </div>
       )}
 
-      {/*absoluteにしてリストの上に被せる */}
       {isMenu && (
         <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 z-10 flex justify-center">
           <MenuBar onClick={toggleMenuDropdown} menuItems={menuItems} />
@@ -387,8 +365,8 @@ const ListEdit = () => {
                   selectedFields={selectedFields}
                   onEdit={() => handleEditClick(listItem)}
                   onDelete={() => handleDeleteClick(listItem)}
-                  authLists={authLists} // ← 追加
-                  userId={userId} // ← 追加（必要なら）
+                  authLists={authLists}
+                  userId={userId}
                 />
               ))}
             </div>

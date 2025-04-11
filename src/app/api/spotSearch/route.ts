@@ -61,7 +61,7 @@ const transformToSpot = (place: any, index: number) => {
     ) || [];
 
   return {
-    id: index, // 配列のインデックスを item_id に設定
+    id: index,
     store_name: place.displayName?.text || '名称不明',
     station: '不明',
     google_rating: place.rating || 0,
@@ -101,15 +101,15 @@ export async function GET(req: NextRequest) {
       GOOGLE_PLACES_API_URL,
       {
         textQuery: query,
-        languageCode: 'ja', // 日本語で返す
+        languageCode: 'ja',
         locationBias: {
           rectangle: {
             low: {
-              latitude: 24.396308, // 日本の南端
+              latitude: 24.396308,
               longitude: 122.93457,
             },
             high: {
-              latitude: 45.551483, // 日本の北端
+              latitude: 45.551483,
               longitude: 153.986672,
             },
           },
@@ -118,13 +118,13 @@ export async function GET(req: NextRequest) {
       {
         headers: {
           'Content-Type': 'application/json',
-          'X-Goog-Api-Key': GOOGLE_MAPS_API_KEY, // APIキー
+          'X-Goog-Api-Key': GOOGLE_MAPS_API_KEY,
           'X-Goog-FieldMask':
             'places.displayName,places.formattedAddress,places.rating,places.addressComponents,places.types,places.regularOpeningHours,places.photos,places.id', // 必要なフィールドを指定
         },
         params: {
-          regionCode: 'JP', // 日本国内に限定
-          languageCode: 'ja', // 日本語で結果を返す
+          regionCode: 'JP',
+          languageCode: 'ja',
           pageSize: 13,
         },
       },
@@ -132,7 +132,6 @@ export async function GET(req: NextRequest) {
 
     const placesData = placesResponse.data.places || [];
 
-    // 取得した photos の中身をログに出力
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     placesData.forEach((place: any, index: number) => {
       console.log(`Place ${index + 1}:`);
@@ -148,7 +147,6 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'No results found' }, { status: 404 });
     }
 
-    // 変換してからクライアントに返す]
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const transformedData = placesData.map((place: any, index: number) =>
       transformToSpot(place, index),

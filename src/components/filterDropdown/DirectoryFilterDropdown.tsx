@@ -49,10 +49,7 @@ const DirectoryFilterDropdown = ({ toggleFilterDropdown }: Props) => {
     }
 
     const filterByDate = (
-      dateField: keyof Pick<
-        List,
-        'outing_at' | 'created_at' | 'updated_at'
-      >,
+      dateField: keyof Pick<List, 'outing_at' | 'created_at' | 'updated_at'>,
       startDate: Date | null,
       endDate: Date | null,
     ) => {

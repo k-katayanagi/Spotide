@@ -20,12 +20,14 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   selectedUser: TParticipantingUser | null;
+  viewUrl: string;
 }
 
 const ParticipatingUsersDetailModal = ({
   isOpen,
   onClose,
   selectedUser,
+  viewUrl,
 }: Props) => {
   const cancelRef = useRef<HTMLButtonElement>(null);
   const toast = useToast();
@@ -33,8 +35,7 @@ const ParticipatingUsersDetailModal = ({
   const handleCopyAll = () => {
     if (!selectedUser) return;
 
-    const textToCopy = `ユーザー名: ${selectedUser.participant_name}\n参加ID: ${selectedUser.participant_id}\n参加パスワード: ${selectedUser.password}`;
-
+    const textToCopy = `URL: https://spotide.vercel.app/view/${viewUrl}\nユーザー名: ${selectedUser.participant_name}\n参加ID: ${selectedUser.participant_id}\n参加パスワード: ${selectedUser.password}`;
     navigator.clipboard.writeText(textToCopy);
 
     toast({
@@ -90,8 +91,24 @@ const ParticipatingUsersDetailModal = ({
                   align="center"
                   gap={{ base: 2, md: 4 }} // スマホ時は間隔を小さく
                   w="100%"
-                  maxW={{ base: '300px', md: '400px' }} // スマホ時は小さく
+                  maxW={{ base: '400px', md: '500px' }} // スマホ時は小さく
                 >
+                  <Flex w="100%" justify="flex-start">
+                    <Text
+                      fontSize="2xl"
+                      fontWeight="bold"
+                      whiteSpace={{ base: 'normal', md: 'nowrap' }}
+                      overflow="auto"
+                      minWidth="120px"
+                      textAlign="left"
+                    >
+                      URL:
+                    </Text>
+                    <Text fontSize="2xl" textAlign="left">
+                      {viewUrl}
+                    </Text>
+                  </Flex>
+
                   <Flex w="100%" justify="flex-start">
                     <Text
                       fontSize="2xl"
@@ -101,7 +118,7 @@ const ParticipatingUsersDetailModal = ({
                     >
                       ユーザー名:
                     </Text>
-                    <Text fontSize={{ base: 'md', md: '2xl' }} textAlign="left">
+                    <Text fontSize="2xl" textAlign="left">
                       {selectedUser.participant_name}
                     </Text>
                   </Flex>
@@ -115,7 +132,7 @@ const ParticipatingUsersDetailModal = ({
                     >
                       参加ID:
                     </Text>
-                    <Text fontSize={{ base: 'md', md: '2xl' }} textAlign="left">
+                    <Text fontSize="2xl" textAlign="left">
                       {selectedUser.participant_id}
                     </Text>
                   </Flex>

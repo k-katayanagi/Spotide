@@ -34,14 +34,10 @@ const SpotSearch = () => {
   const [isFilter, setIsFilter] = useState(false);
   const [isSort, setIsSort] = useState(false);
   const [isMenu, setIsMenu] = useState(false);
-  const [searchKeyword, setSearchKeyword] = useState(''); // 検索キーワードを管理する状態
+  const [searchKeyword, setSearchKeyword] = useState('');
   const { isBottomNavOpen } = useBottomNav();
   const [loading, setLoading] = useState(false);
   const toast = useToast();
-  //   const [selectedSearchSpot, setSelectedSearchSpot] = useState<Spot | null>(
-  //     null
-  //   );
-  //   const toast = useToast();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
   const listContainerRef = useRef<HTMLDivElement>(null);
@@ -53,7 +49,6 @@ const SpotSearch = () => {
       label: '編集リストに戻る',
       url: `/user/${listType}/${listid}/list_edit`,
     },
-    // 条件付きで「共有ユーザー設定」を追加
     ...(isCreator
       ? [
           {
@@ -64,10 +59,9 @@ const SpotSearch = () => {
       : []),
   ];
 
-  // 新しいリストIDまたはユーザーIDが変更されたときに検索結果をリセット
   useEffect(() => {
-    setSearchSpots([]); // ここで検索結果をリセット
-    setSearchKeyword(''); // 検索キーワードもリセット
+    setSearchSpots([]);
+    setSearchKeyword('');
   }, [userId, listid, setSearchSpots]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -102,7 +96,7 @@ const SpotSearch = () => {
   const handleAddListItem = async (spot: Spot) => {
     const participantId = JSON.parse(
       localStorage.getItem('authLists') || '[]',
-    ).find((item:AuthListItem) => item.listId === listid)?.participantId;
+    ).find((item: AuthListItem) => item.listId === listid)?.participantId;
     try {
       const response = await fetch('/api/listItems', {
         method: 'POST',
@@ -185,7 +179,7 @@ const SpotSearch = () => {
 
       console.log(response.data.results);
       if (response.data.results && response.data.results.length > 0) {
-        setSearchSpots(response.data.results); // 検索結果を context にセット
+        setSearchSpots(response.data.results);
         toast({
           title: '検索が完了しました。',
           status: 'success',
@@ -226,7 +220,7 @@ const SpotSearch = () => {
       }
     } finally {
       setLoading(false);
-      toggleFilterDropdown(); // フィルターメニューを閉じる
+      toggleFilterDropdown();
     }
   };
 

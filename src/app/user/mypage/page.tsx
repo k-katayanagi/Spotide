@@ -11,7 +11,6 @@ const Mypage = () => {
   const { handleNavigateTo } = useNavigation();
   const [userName, setUserName] = useState<string | null>(null);
 
-  // sessionとuserIdの取得確認
   useEffect(() => {
     if (!session?.user?.id) {
       return;
@@ -23,7 +22,7 @@ const Mypage = () => {
         const userData = await userResponse.json();
 
         if (userResponse.ok) {
-          setUserName(userData.user_name); // ユーザー名をステートにセット
+          setUserName(userData.user_name);
         } else {
           console.error('ユーザー名取得エラー:', userData.error);
         }
@@ -32,12 +31,11 @@ const Mypage = () => {
       }
     };
 
-    fetchData(); // ユーザーIDがあればデータを取得
-  }, [session]); // sessionが変更されたときに実行
+    fetchData();
+  }, [session]);
 
   // ログアウト処理
   const handleLogout = async () => {
-    // 参加認証済みフラグを削除
     localStorage.removeItem('isAuthenticated');
     signOut({ callbackUrl: '/login' });
   };
@@ -52,7 +50,6 @@ const Mypage = () => {
 
       <div className="h-[70vh] mt-[30px]">
         <div className="grid grid-cols-2 md:grid-cols-3 grid-rows-1 gap-5 md:gap-x-2 md:gap-y-[100px] justify-items-center lg:scale-90">
-          {/* TOPカード */}
           <div
             className="flex flex-col items-center text-center bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-full max-w-[240px] md:w-96 md:justify-self-end cursor-pointer"
             onClick={() => handleNavigateTo(`/`)}
@@ -69,12 +66,9 @@ const Mypage = () => {
             </div>
           </div>
 
-          {/* リスト作成カード */}
           <div
             className="flex flex-col items-center text-center bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-full max-w-[240px] md:w-96 cursor-pointer"
-            onClick={() =>
-              handleNavigateTo(`/user/list_create`)
-            }
+            onClick={() => handleNavigateTo(`/user/list_create`)}
           >
             <div className="w-full flex flex-col items-center">
               <h2 className="text-lg font-bold">リスト作成</h2>
@@ -88,7 +82,6 @@ const Mypage = () => {
             </div>
           </div>
 
-          {/* ユーザー名変更カード */}
           <div className="flex flex-col items-center text-center bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-full max-w-[240px] md:w-96 md:justify-self-start">
             <div className="w-full flex flex-col items-center">
               <h2 className="text-lg font-bold">ユーザー名変更</h2>
@@ -101,13 +94,9 @@ const Mypage = () => {
               />
             </div>
           </div>
-
-          {/* 個人リスト */}
           <div
             className="flex flex-col items-center text-center bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-full max-w-[240px] md:w-96 md:justify-self-end cursor-pointer"
-            onClick={() =>
-              handleNavigateTo(`/user/individual_list`)
-            }
+            onClick={() => handleNavigateTo(`/user/individual_list`)}
           >
             <div className="w-full flex flex-col items-center">
               <h2 className="text-lg font-bold">個人リスト</h2>
@@ -120,13 +109,9 @@ const Mypage = () => {
               />
             </div>
           </div>
-
-          {/* 共有リスト */}
           <div
             className="flex flex-col items-center text-center bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-full max-w-[240px] md:w-96 cursor-pointer"
-            onClick={() =>
-              handleNavigateTo(`/user/share_list`)
-            }
+            onClick={() => handleNavigateTo(`/user/share_list`)}
           >
             <div className="w-full flex flex-col items-center">
               <h2 className="text-lg font-bold">共有リスト</h2>
@@ -139,8 +124,6 @@ const Mypage = () => {
               />
             </div>
           </div>
-
-          {/* ログアウト */}
           <div
             className="flex flex-col items-center text-center bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-full max-w-[240px] md:w-96 md:justify-self-start cursor-pointer"
             onClick={handleLogout}
@@ -156,8 +139,6 @@ const Mypage = () => {
               />
             </div>
           </div>
-
-          {/* 退会 */}
           <div className="flex flex-col items-center text-center bg-white shadow-lg hover:shadow-2xl rounded-lg transition-shadow duration-300 w-full max-w-[240px] md:w-96 md:justify-self-end">
             <div className="w-full flex flex-col items-center">
               <h2 className="text-lg font-bold">退会</h2>

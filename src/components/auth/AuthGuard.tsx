@@ -12,14 +12,11 @@ const AuthGuard = ({ children }: { children: React.ReactNode }) => {
   // ログイン不要なページ
   const publicRoutes = ['/login', '/registry'];
   const searchSpot = pathname.includes('spot_search');
-  // '/view' とその動的IDにマッチする正規表現
-  const isViewPage = /^\/view(\/.*)?$/.test(pathname); // `/view` とその動的IDにマッチする正規表現
-  // '/user/share_list/{id}/list_edit' とその動的IDにマッチする正規表現
-  const isShareListPage = /^\/user\/share_list\/\d+\/list_edit$/.test(pathname); // `/user/share_list/95/list_edit` のようなパスにマッチ
-  // '/user/individual_list/{id}/list_edit' とその動的IDにマッチする正規表現
+  const isViewPage = /^\/view(\/.*)?$/.test(pathname);
+  const isShareListPage = /^\/user\/share_list\/\d+\/list_edit$/.test(pathname);
   const isIndividualListPage = /^\/user\/individual_list\/\d+\/list_edit$/.test(
     pathname,
-  ); // `/user/individual_list/95/list_edit` のようなパスにマッチ
+  );
   useEffect(() => {
     if (status === 'loading') return;
 

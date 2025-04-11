@@ -51,7 +51,6 @@ const ViewItemCard = ({
           !isAggregationCompleted &&
           !isAllVotingCompleted && <VotingButton onClick={onVote} />}
 
-        {/* isVotingCompleted が true の場合、voteItem と listItem.list_id が一致する場合に表示 */}
         {isVotingCompleted ? (
           voteItem === listItem.item_id ? (
             <div className="flex items-center space-x-2 text-[#FF5722] font-bold">
@@ -90,7 +89,7 @@ const ViewItemCard = ({
                       ? listItem.list_participants?.participant_name || '未登録'
                       : key === 'custom_rating'
                         ? listItem.custom_rating === null
-                          ? '未設定' // custom_ratingがnullの場合
+                          ? '未設定'
                           : String(listItem.custom_rating)
                         : String(listItem[key as keyof ListItem])}
                 </span>

@@ -36,6 +36,7 @@ const ParticipatingUsersList = () => {
   const [selectedUser, setSelectedUser] = useState<TParticipantingUser | null>(
     null,
   );
+  const [viewUrl, setViewUrl] = useState<string>('未発行');
 
   const {
     isOpen: isAddModalOpen,
@@ -90,8 +91,9 @@ const ParticipatingUsersList = () => {
       const response = await fetch(`/api/participants?list_id=${listId}`);
       if (response.ok) {
         const data = await response.json();
-        console.log('Fetched Participants:', data); // データを確認するためにログを出力
-        setDisplayUserNames(data);
+        console.log('Fetched Participants:', data);
+        setDisplayUserNames(data.data);
+        setViewUrl(data.listUrl);
       } else {
         toast({
           title: 'データ取得に失敗しました',
@@ -102,7 +104,7 @@ const ParticipatingUsersList = () => {
         });
       }
     } catch (error) {
-      console.error('Fetch error:', error); // エラー時にもログを出力
+      console.error('Fetch error:', error);
       toast({
         title: 'エラーが発生しました',
         status: 'error',
@@ -111,7 +113,7 @@ const ParticipatingUsersList = () => {
         position: 'top',
       });
     } finally {
-      setLoading(false); // データ取得後にローディング状態をfalseにする
+      setLoading(false);
     }
   };
 
@@ -144,7 +146,6 @@ const ParticipatingUsersList = () => {
     }
 
     try {
-      // APIエンドポイントへのPOSTリクエストを送信
       const response = await fetch('/api/participants', {
         method: 'POST',
         headers: {
@@ -309,7 +310,6 @@ const ParticipatingUsersList = () => {
         throw new Error(errorResult.message || '削除処理に失敗しました');
       }
 
-      // フロント側のデータ更新
       setDisplayUserNames((prevUsers) =>
         prevUsers.filter(
           (user) => user.participant_id !== selectedUser.participant_id,
@@ -417,8 +417,6 @@ const ParticipatingUsersList = () => {
                   <p className="truncate">{user.participant_name}</p>
                 </div>
                 <div className="flex items-center gap-x-2 w-[200px]">
-                  {' '}
-                  {/* 固定幅を設定してボタンの配置を調整 */}
                   <EditButton
                     className="flex items-center justify-center h-[40px] w-[70px] sm:h-[45px] sm:w-[80px]"
                     onClick={() => handleUserEditClick(user)}
@@ -470,6 +468,7 @@ const ParticipatingUsersList = () => {
         isOpen={isDetailModalOpen}
         onClose={onDetailModalClose}
         selectedUser={selectedUser || null}
+        viewUrl={viewUrl}
       />
 
       {/* ページネーション */}

@@ -48,7 +48,7 @@ export async function POST(req: Request) {
       .select();
 
     if (listError) {
-      console.log(listError); // エラーメッセージを表示
+      console.log(listError);
       return NextResponse.json({ error: listError.message }, { status: 500 });
     }
 
@@ -78,7 +78,7 @@ export async function POST(req: Request) {
       ]);
 
     if (participantError) {
-      console.log(participantError); // エラーメッセージを表示
+      console.log(participantError);
       return NextResponse.json(
         { error: participantError.message },
         { status: 500 },
@@ -89,7 +89,7 @@ export async function POST(req: Request) {
       data: listData,
     });
   } catch (error) {
-    console.log(error); // エラー内容を表示
+    console.log(error);
     if (error instanceof Error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
@@ -151,12 +151,12 @@ export async function GET(request: Request) {
 
     //取得データフォーマット
     const formatted = data
-      .filter((item) => item.lists !== null) // listsがnullのものを除外
+      .filter((item) => item.lists !== null)
       .map((item) => ({
         ...item.lists,
         is_admin: item.is_admin,
       }));
-    return NextResponse.json(formatted); // 整形済みデータを返す
+    return NextResponse.json(formatted);
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error('リスト取得中のエラー:', error);
@@ -180,7 +180,6 @@ export async function DELETE(req: Request) {
     const body = await req.json();
     const { listId } = body;
 
-    // リストの削除
     const { data, error } = await supabase
       .from('lists')
       .delete()
@@ -190,7 +189,6 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    // list_participants テーブルから list_id に紐づくレコードを削除
     const { error: participantsError } = await supabase
       .from('list_participants')
       .delete()

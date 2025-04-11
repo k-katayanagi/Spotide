@@ -37,12 +37,10 @@ const ResponsiveHeader = () => {
       {/* PC用ナビゲーション */}
       <div className="nav-pc hidden lg:flex items-center justify-center space-x-9">
         <HeaderNavigation />
-        {session &&
-          <LogoutButton onClick={handleLogout} />}
+        {session && <LogoutButton onClick={handleLogout} />}
       </div>
     </header>
   );
-
 };
 
 export default ResponsiveHeader;

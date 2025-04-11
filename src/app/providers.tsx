@@ -10,13 +10,12 @@ export function Providers({
   session,
 }: {
   children: React.ReactNode;
-  session: Session | null; // sessionを受け取る
+  session: Session | null;
 }) {
   return (
     <ChakraProvider>
       <BottomNavProvider>
-        <NextAuthProvider session={session}>{children}</NextAuthProvider>{' '}
-        {/* sessionを渡す */}
+        <NextAuthProvider session={session}>{children}</NextAuthProvider>
       </BottomNavProvider>
     </ChakraProvider>
   );

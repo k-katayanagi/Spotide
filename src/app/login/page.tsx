@@ -8,7 +8,7 @@ import TopButton from '@/components/buttons/TopButton';
 
 const Login = () => {
   const [errorMessage, setErrorMessage] = useState('');
-  const toast = useToast(); // useToast を使用
+  const toast = useToast();
 
   // ログイン処理
   const handleLogin = async () => {

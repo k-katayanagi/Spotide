@@ -37,12 +37,11 @@ export async function POST(req: Request) {
   }
 
   try {
-    // listIdを含めたカスタムURLを作成
-    const random1 = crypto.randomUUID().slice(0, 6); // ランダム前半部分
-    const random2 = crypto.randomUUID().slice(0, 3); // ランダム後半部分
+    const random1 = crypto.randomUUID().slice(0, 6);
+    const random2 = crypto.randomUUID().slice(0, 3);
     const newUrl = `${random1}-list${listId}-${random2}`;
 
-    console.log(newUrl); // 例: abc123-list42def
+    console.log(newUrl);
 
     // `lists` テーブルの `url` カラムを更新
     const { error: updateError } = await supabase

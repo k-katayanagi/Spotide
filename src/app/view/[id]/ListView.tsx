@@ -136,23 +136,20 @@ const ListView = ({ GetListId }: Props) => {
         if (response.ok) {
           const { list, items, participant } = data;
           const listArray = Array.isArray(list) ? list : [list];
-
-          setLists(listArray); // リストをセット
-          setListItems(items); // アイテムをセット
-          setParticipant(participant); // 参加者をセット
-          setParticipantId(participantIdFromStorage); // participantIdをセット
+          setLists(listArray);
+          setListItems(items);
+          setParticipant(participant);
+          setParticipantId(participantIdFromStorage);
           setVoteItem(participant.item_id);
 
-          // 投票開始日時の処理
           if (listArray && listArray.length > 0) {
-            // 現在時刻（ローカルタイム）
             const currentTime = new Date().getTime();
-            // voting_start_atがJSTの場合、UTCに変換して比較する
+
             const votingStartDate = new Date(listArray[0].voting_start_at);
             const votingStartTime = votingStartDate.getTime();
-            // JST時間をUTC時間に変換する（JSTはUTC+9）
+
             const votingStartTimeUTC = votingStartTime - 9 * 60 * 60 * 1000;
-            // 投票開始時刻と現在時刻を比較
+
             const hasVotingStarted = currentTime >= votingStartTimeUTC;
             setIsVotingStart(hasVotingStarted);
             setIsVotingCompleted(participant.is_vote);
@@ -182,7 +179,7 @@ const ListView = ({ GetListId }: Props) => {
 
         if (foundParticipant) {
           const participantId = foundParticipant.participantId;
-          fetchListAndItems(participantId); // データを取得
+          fetchListAndItems(participantId);
         } else {
           console.log('指定されたlistIdに対応する参加者が見つかりません');
         }
@@ -221,20 +218,18 @@ const ListView = ({ GetListId }: Props) => {
     onVoteModalOpen();
   };
 
-  //投票処理
   const handleVote = async () => {
     setVoteItem(selectedListItem?.item_id);
     if (selectedListItem) {
       try {
-        // 投票処理をAPIに送信
         const response = await fetch('/api/view', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            participantId: participantId, // 参加者ID
-            listItemId: selectedListItem.item_id, // 投票アイテムID
+            participantId: participantId,
+            listItemId: selectedListItem.item_id,
           }),
         });
 
@@ -335,6 +330,28 @@ const ListView = ({ GetListId }: Props) => {
     setIsMenu((prevState) => !prevState);
   };
 
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      toast({
+        title: 'URLをコピーしました!',
+        status: 'success',
+        duration: 2000,
+        isClosable: true,
+        position: 'top',
+      });
+    } catch (err) {
+      console.error('Clipboard copy failed:', err);
+      toast({
+        title: 'コピーに失敗しました',
+        status: 'error',
+        duration: 2000,
+        isClosable: true,
+        position: 'top',
+      });
+    }
+  };
+
   const paginationZIndex = !isBottomNavOpen && !isFilter ? 'z-40' : 'z-20';
 
   return (
@@ -346,8 +363,7 @@ const ListView = ({ GetListId }: Props) => {
             : lists[0].list_name || 'リストが見つかりません'}
         </h1>
         <div className="flex items-center gap-2 sm'リストが見つかりません':gap-7">
-          <UrlCopyButton />
-          {/* 投票開始日以前で集計・投票未完了なら EditButton を表示 */}
+          <UrlCopyButton onClick={handleCopy} />
           {((lists[0]?.list_type === 'individual' &&
             participant?.is_admin === true) ||
             lists[0]?.list_type === 'share') &&
@@ -356,8 +372,6 @@ const ListView = ({ GetListId }: Props) => {
             !isAggregationCompleted && (
               <EditButton isEditing={isEditing} onClick={handleEdit} />
             )}
-
-          {/* 全員投票完了で集計未完了なら TotallingButton を表示 */}
           {isAllVotingCompleted &&
             !isAggregationCompleted &&
             participant?.is_admin &&
@@ -365,7 +379,6 @@ const ListView = ({ GetListId }: Props) => {
               <TotallingButton onClick={handleTotalling} />
             )}
 
-          {/* 集計完了 && 投票完了なら AggregatedResultsButton を表示 */}
           {isAggregationCompleted && (
             <AggregatedResultsButton onClick={onResultsModalOpen} />
           )}
@@ -392,10 +405,7 @@ const ListView = ({ GetListId }: Props) => {
 
       {isSort && (
         <div className="absolute top-[60px] left-1/2 transform -translate-x-1/2 z-30 w-full max-w-[1024px]">
-          <EditSortDropdown
-          // toggleSortDropdown={toggleSortDropdown}
-          // onSortChange={handleSortChange}
-          />
+          <EditSortDropdown />
         </div>
       )}
 

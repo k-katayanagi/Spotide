@@ -48,9 +48,7 @@ const BottomNavigation = () => {
         </li>
         <li
           className="text-black hover:text-gray-300 text-lg text-center"
-          onClick={() =>
-            handleNavigateTo(`/user/list_create`)
-          }
+          onClick={() => handleNavigateTo(`/user/list_create`)}
         >
           <Image
             src="/images/createList.svg"
@@ -64,9 +62,7 @@ const BottomNavigation = () => {
 
         <li
           className="text-black hover:text-gray-300 text-lg text-center"
-          onClick={() =>
-            handleNavigateTo(`/user/individual_list`)
-          }
+          onClick={() => handleNavigateTo(`/user/individual_list`)}
         >
           <Image
             src="/images/individualList.svg"
@@ -80,9 +76,7 @@ const BottomNavigation = () => {
 
         <li
           className="text-black hover:text-gray-300 text-lg text-center"
-          onClick={() =>
-            handleNavigateTo(`/user/share_list`)
-          }
+          onClick={() => handleNavigateTo(`/user/share_list`)}
         >
           <Image
             src="/images/shareList.svg"

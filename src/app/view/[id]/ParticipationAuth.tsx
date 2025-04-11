@@ -7,10 +7,10 @@ import GoogleParticipationButton from '@/components/buttons/GoogleParticipationB
 import { useSession } from 'next-auth/react';
 
 interface Props {
-  onAuthSuccess: (id: number,listId: number) => void;
+  onAuthSuccess: (id: number, listId: number) => void;
 }
 const ParticipationAuth = ({ onAuthSuccess }: Props) => {
-  const { data: session } = useSession(); // セッション情報を取得
+  const { data: session } = useSession();
   const [activeTab, setActiveTab] = useState('guest');
   const [username, setUsername] = useState('');
   const [guestParticipationId, setGuestParticipationId] = useState('');
@@ -20,7 +20,6 @@ const ParticipationAuth = ({ onAuthSuccess }: Props) => {
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
-    // 入力値をリセット
     setUsername('');
     setGuestParticipationId('');
     setExistingParticipationId('');
@@ -28,20 +27,19 @@ const ParticipationAuth = ({ onAuthSuccess }: Props) => {
     setExistingPassword('');
   };
 
-  //ゲストユーザー認証
   const handleGuestSubmit = async () => {
     if (session?.user?.id) {
       alert('既存ユーザーです');
       return;
     }
-    // 共通認証
+
     const commonResponse = await fetch('/api/check-participation', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         participantId: Number(guestParticipationId),
         password: guestpassword,
-        currentUserId: null, // ゲストなので userId は null
+        currentUserId: null,
       }),
     });
 
@@ -51,11 +49,7 @@ const ParticipationAuth = ({ onAuthSuccess }: Props) => {
       alert('認証失敗: パスワードかIDが間違っています。');
       return;
     }
-
-    // 認証成功後
     const listId = commonData.listId;
-
-    // ユーザー名入力されてたら更新
     if (username) {
       const response = await fetch('/api/update-participant-name', {
         method: 'POST',
@@ -72,18 +66,16 @@ const ParticipationAuth = ({ onAuthSuccess }: Props) => {
         console.log('ユーザー名が更新されました');
       }
     }
-    console.log('リストid',listId);
-    onAuthSuccess(Number(guestParticipationId),listId);
+    console.log('リストid', listId);
+    onAuthSuccess(Number(guestParticipationId), listId);
   };
 
-  // 既存ユーザー認証
   const handleExistingSubmit = async () => {
     if (!session?.user?.id) {
       alert('ログイン情報が確認できません');
       return;
     }
 
-    // 既存ユーザー確認
     const checkResponse = await fetch('/api/check-existing-user', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -97,7 +89,6 @@ const ParticipationAuth = ({ onAuthSuccess }: Props) => {
       return;
     }
 
-    // 共通処理で participantId & password の認証
     console.log(existingParticipationId);
     const commonResponse = await fetch('/api/check-participation', {
       method: 'POST',
@@ -116,10 +107,8 @@ const ParticipationAuth = ({ onAuthSuccess }: Props) => {
       return;
     }
 
-    // 認証成功後
     const listId = commonData.listId;
 
-    // 通過したら更新（user_id を紐付け）
     const updateResponse = await fetch('/api/update-participant-user-id', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -134,7 +123,7 @@ const ParticipationAuth = ({ onAuthSuccess }: Props) => {
     const updateData = await updateResponse.json();
 
     if (updateData.success) {
-      onAuthSuccess(Number(existingParticipationId),listId);
+      onAuthSuccess(Number(existingParticipationId), listId);
     } else {
       alert('参加者情報の更新に失敗しました');
     }
@@ -142,7 +131,6 @@ const ParticipationAuth = ({ onAuthSuccess }: Props) => {
 
   return (
     <div className="tabs mt-5 pb-10 bg-white shadow-lg w-[400px] max-w-[90%] sm:w-[700px] mx-auto">
-      {/* タブボタン */}
       <div className="flex border border-gray-400 rounded-lg overflow-hidden">
         <button
           onClick={() => handleTabChange('guest')}
@@ -165,8 +153,6 @@ const ParticipationAuth = ({ onAuthSuccess }: Props) => {
           既存ユーザー
         </button>
       </div>
-
-      {/* ゲストユーザー認証 */}
       {activeTab === 'guest' && (
         <div className="p-12 sm:p-8">
           <h2 className="text-3xl sm:text-2xl font-semibold mb-8">
@@ -207,7 +193,6 @@ const ParticipationAuth = ({ onAuthSuccess }: Props) => {
         </div>
       )}
 
-      {/* 既存ユーザー認証 */}
       {activeTab === 'existing' && (
         <div className="p-12 sm:p-8">
           <h2 className="text-3xl sm:text-2xl font-semibold mb-8">

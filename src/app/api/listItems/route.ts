@@ -12,7 +12,6 @@ const convertToJST = (date: string | Date): string => {
   return dateObj.toISOString();
 };
 
-
 // list_itemsテーブルで重複をチェックする関数
 const checkExistingSpot = async (
   listid: number,
@@ -26,16 +25,16 @@ const checkExistingSpot = async (
       .eq('list_id', listid)
       .eq('store_name', storeName)
       .eq('address', address)
-      .maybeSingle(); // 存在しない場合でもエラーをスローせず、null を返す
+      .maybeSingle();
     if (error) {
       console.error('Error checking existing spot:', error.message);
       throw new Error('Error checking existing spot');
     }
-    return data; // 存在する場合はスポットのデータを返す
+    return data;
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error('Error message:', error.message);
-      throw error; // 必要に応じてエラーを再スロー
+      throw error;
     } else {
       console.error('Unknown error:', error);
       throw new Error('Unknown error occurred');
@@ -49,7 +48,6 @@ export const POST = async (req: Request) => {
     const { spot, listid, participantId } = body;
     const photoUrls = spot.photo_ids || [];
 
-    // セッションからuserIdを取得 (ゲストの場合はlocalStorageから取得)
     const session = await getServerSession(authOptions);
     let userId = null;
     if (session && session.user && session.user.id) {
@@ -72,8 +70,8 @@ export const POST = async (req: Request) => {
     }
 
     // 写真をphotosテーブルに追加
-    const photoIdPromises = photoUrls.map(
-      (photoUrl: string) => addPhotoToDb(photoUrl, null), // 最初はitem_idをnullとして挿入
+    const photoIdPromises = photoUrls.map((photoUrl: string) =>
+      addPhotoToDb(photoUrl, null),
     );
     const photoIds = await Promise.all(photoIdPromises);
 
@@ -84,11 +82,11 @@ export const POST = async (req: Request) => {
       userId,
       listid,
       participantId,
-    ); // photoIdsを渡す
+    );
 
     // 写真のitem_idを更新
     if (spotData) {
-      await updatePhotoItemIds(photoIds, spotData.item_id); // item_idを更新
+      await updatePhotoItemIds(photoIds, spotData.item_id);
     } else {
       throw new Error('Spot ID is undefined');
     }
@@ -99,14 +97,12 @@ export const POST = async (req: Request) => {
     );
   } catch (error: unknown) {
     if (error instanceof Error) {
-      // Error型の場合のみmessageを使用
       console.error('Error in addSpot API route:', error.message);
       return NextResponse.json(
         { message: '追加に失敗しました', error: error.message },
         { status: 500 },
       );
     } else {
-      // Error型ではない場合の処理
       console.error('Unknown error:', error);
       return NextResponse.json(
         { message: '追加に失敗しました', error: 'Unknown error occurred' },
@@ -128,7 +124,7 @@ const addPhotoToDb = async (photoUrl: string, itemId: number | null) => {
       .from('photos')
       .insert([
         {
-          item_id: itemId, // 最初はnull
+          item_id: itemId,
           photo_url: photoUrl,
         },
       ])
@@ -139,11 +135,9 @@ const addPhotoToDb = async (photoUrl: string, itemId: number | null) => {
     return data[0].photos_id;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      // errorがError型の場合
       console.error('Error adding photo:', error.message);
       throw error;
     } else {
-      // errorがError型でない場合
       console.error('Unknown error adding photo:', error);
       throw new Error('Unknown error occurred while adding photo.');
     }
@@ -164,7 +158,7 @@ const getParticipantIdFromDb = async (
     .select('participant_id')
     .eq('list_id', listid)
     .eq('user_id', userId)
-    .single(); // 単一のデータを取得
+    .single();
 
   if (error || !data) {
     console.error('Error fetching participant_id:', error?.message);
@@ -179,10 +173,10 @@ const getParticipantIdFromDb = async (
 // list_itemsテーブルにスポット情報を追加する関数
 const addSpotToList = async (
   spot: Spot,
-  photoIds: number[], // 配列でphotoIdsを受け取る
+  photoIds: number[],
   userId: string | null,
   listid: number,
-  participantId: string | null, // 直接渡されたparticipantIdを使用
+  participantId: string | null,
 ) => {
   try {
     const participantToUse =
@@ -194,7 +188,7 @@ const addSpotToList = async (
       .insert([
         {
           list_id: listid,
-          participant_id: participantToUse, // 取得した participant_id をセット
+          participant_id: participantToUse,
           store_name: spot.store_name,
           station: spot.station,
           google_rating: spot.google_rating,
@@ -203,7 +197,7 @@ const addSpotToList = async (
           city: spot.city,
           category: spot.category,
           sub_category: spot.sub_category,
-          photo_id: JSON.stringify(photoIds), // photoIdsをJSON文字列に変換して格納
+          photo_id: JSON.stringify(photoIds),
           business_hours: spot.business_hours,
           regular_holiday: spot.regular_holiday,
           time_from_nearest_station: spot.time_from_nearest_station,
@@ -218,7 +212,7 @@ const addSpotToList = async (
       throw new Error('Error inserting spot: ' + error.message);
     }
 
-    return data[0]; // 追加したスポット情報を返す
+    return data[0];
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error('Error adding photo:', error.message);
@@ -242,8 +236,8 @@ const updatePhotoItemIds = async (photoIds: number[], itemId: number) => {
 
     const { error } = await supabase
       .from('photos')
-      .update({ item_id: itemId }) // photos テーブルの item_id を更新
-      .in('photos_id', validPhotoIds); // photos_id が一致するものに対して item_id を更新
+      .update({ item_id: itemId })
+      .in('photos_id', validPhotoIds);
 
     if (error) {
       throw new Error('Error updating photo item_id: ' + error.message);
@@ -318,7 +312,6 @@ export const DELETE = async (req: Request) => {
       );
     }
 
-    // list_itemsテーブルからアイテムを削除
     const { error: listItemsError } = await supabase
       .from('list_items')
       .delete()
@@ -340,7 +333,6 @@ export const DELETE = async (req: Request) => {
       throw new Error('Error deleting photos');
     }
 
-    // 削除が成功した場合
     return NextResponse.json(
       { message: 'スポットと関連する写真を削除しました' },
       { status: 200 },

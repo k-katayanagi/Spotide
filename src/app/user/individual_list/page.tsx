@@ -17,10 +17,10 @@ import { useDisclosure, useToast, Spinner } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 
 const IndividualList = () => {
-  const { data: session } = useSession(); // セッションからユーザー情報を取得
+  const { data: session } = useSession();
   const router = useRouter();
-  const { lists, setLists, setSortLists } = useListContext(); // Contextからリストを取得
-  const [userName, setUserName] = useState<string | null>(null); // ユーザー名の状態
+  const { lists, setLists, setSortLists } = useListContext();
+  const [userName, setUserName] = useState<string | null>(null);
   const [isFilter, setIsFilter] = useState(false);
   const [isSort, setIsSort] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -31,18 +31,14 @@ const IndividualList = () => {
   const listContainerRef = useRef<HTMLDivElement>(null);
   const toast = useToast();
   const [loading, setLoading] = useState(true);
-
-  // セッションが存在するかチェックし、user.idを取得
   const userId = session?.user.id;
 
   useEffect(() => {
-    // ユーザー名とリストを一緒に取得する処理
     const fetchData = async () => {
-      // ユーザー名の取得
       const userResponse = await fetch(`/api/users/${userId}`);
       const userData = await userResponse.json();
       if (userResponse.ok) {
-        setUserName(userData.user_name); // ユーザー名をステートにセット
+        setUserName(userData.user_name);
       } else {
         console.error('ユーザー名取得エラー:', userData.error);
       }
@@ -53,15 +49,15 @@ const IndividualList = () => {
       );
       const listsData = await listsResponse.json();
       if (listsResponse.ok) {
-        setLists(listsData); // リストデータをセット
+        setLists(listsData);
         setLoading(false);
       } else {
         console.error('リスト取得エラー:', listsData.error);
       }
     };
 
-    fetchData(); // ユーザーIDがあればデータを取得
-  }, [session, userId, setLists]); // sessionとuserIdが変わる度に実行
+    fetchData();
+  }, [session, userId, setLists]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -131,7 +127,7 @@ const IndividualList = () => {
     onOpen();
   };
 
-  // 編集ページに遷移する関数（ここでルーティングを管理）
+  // 編集ページに遷移する関数
   const handleEditClick = (listId: number) => {
     router.push(`/user/individual_list/${listId}/list_edit`);
   };
@@ -143,7 +139,6 @@ const IndividualList = () => {
 
   const handleDelete = async () => {
     if (selectedList) {
-      // APIを呼び出してリストを削除
       const response = await fetch('/api/lists', {
         method: 'DELETE',
         headers: {
@@ -228,8 +223,8 @@ const IndividualList = () => {
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {currentLists.map((list) => {
                 if (!list.list_id) {
-                  console.error('リストにidがありません:', list); // デバッグ用
-                  return null; // idがない場合は表示しない
+                  console.error('リストにidがありません:', list);
+                  return null;
                 }
 
                 return (

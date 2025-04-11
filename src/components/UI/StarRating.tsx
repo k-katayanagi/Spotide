@@ -4,7 +4,7 @@ import { IconButton, Flex } from '@chakra-ui/react';
 import { StarIcon } from '@chakra-ui/icons';
 
 const StarRating = ({
-  count = 5, // デフォルトを 5 に設定
+  count = 5,
   value,
   onChange,
 }: {

@@ -17,10 +17,10 @@ import { useDisclosure, useToast, Spinner } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 
 const ShareList = () => {
-  const { data: session } = useSession(); // セッションからユーザー情報を取得
+  const { data: session } = useSession();
   const router = useRouter();
-  const { lists, setLists, setSortLists } = useListContext(); // Contextからリストを取得
-  const [userName, setUserName] = useState<string | null>(null); // ユーザー名の状態
+  const { lists, setLists, setSortLists } = useListContext();
+  const [userName, setUserName] = useState<string | null>(null);
   const [isFilter, setIsFilter] = useState(false);
   const [isSort, setIsSort] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -31,23 +31,17 @@ const ShareList = () => {
   const listContainerRef = useRef<HTMLDivElement>(null);
   const toast = useToast();
   const [loading, setLoading] = useState(true);
-
-  // セッションが存在するかチェックし、user.idを取得
   const userId = session?.user.id;
 
   useEffect(() => {
-    // ユーザー名とリストを一緒に取得する処理
     const fetchData = async () => {
-      // ユーザー名の取得
       const userResponse = await fetch(`/api/users/${userId}`);
       const userData = await userResponse.json();
       if (userResponse.ok) {
-        setUserName(userData.user_name); // ユーザー名をステートにセット
+        setUserName(userData.user_name);
       } else {
         console.error('ユーザー名取得エラー:', userData.error);
       }
-
-      // リストの取得
       const listsResponse = await fetch(
         `/api/lists?userId=${userId}&listType=share`,
       );
@@ -56,7 +50,7 @@ const ShareList = () => {
 
       if (listsResponse.ok) {
         if (Array.isArray(listsData)) {
-          setLists(listsData); // リストデータをセット
+          setLists(listsData);
           setLoading(false);
           console.error('リストデータが配列ではありません:', listsData);
         }
@@ -65,8 +59,8 @@ const ShareList = () => {
       }
     };
 
-    fetchData(); // ユーザーIDがあればデータを取得
-  }, [session, userId, setLists]); // sessionとuserIdが変わる度に実行
+    fetchData();
+  }, [session, userId, setLists]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -136,7 +130,7 @@ const ShareList = () => {
     onOpen();
   };
 
-  // 編集ページに遷移する関数（ここでルーティングを管理）
+  // 編集ページに遷移する関数
   const handleEditClick = (listId: number) => {
     router.push(`/user/share_list/${listId}/list_edit`);
   };
@@ -148,7 +142,6 @@ const ShareList = () => {
 
   const handleDelete = async () => {
     if (selectedList) {
-      // APIを呼び出してリストを削除
       const response = await fetch('/api/lists', {
         method: 'DELETE',
         headers: {
@@ -162,7 +155,7 @@ const ShareList = () => {
       const result = await response.json();
 
       if (response.ok) {
-        setLists(lists.filter((list) => list.list_id !== selectedList.list_id)); // リストから削除
+        setLists(lists.filter((list) => list.list_id !== selectedList.list_id));
         toast({
           title: `"${selectedList.list_name}" を削除しました`,
           status: 'success',
@@ -233,7 +226,7 @@ const ShareList = () => {
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {currentLists.map((list) => {
                 if (!list.list_id) {
-                  return null; // idがない場合は表示しない
+                  return null;
                 }
 
                 return (

@@ -20,9 +20,8 @@ const ImageUploader = ({ onImageUpload, list }: ImageUploaderProps) => {
 
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('list_id', list.list_id.toString()); // list_id を送る
+    formData.append('list_id', list.list_id.toString());
 
- 
     const res = await fetch('/api/imageUpload', {
       method: 'POST',
       body: formData,
@@ -30,8 +29,8 @@ const ImageUploader = ({ onImageUpload, list }: ImageUploaderProps) => {
 
     const data = await res.json();
     if (data?.url) {
-      setPreview(data.url); 
-      onImageUpload(data.url); 
+      setPreview(data.url);
+      onImageUpload(data.url);
     } else {
       alert('アップロードに失敗しました');
     }

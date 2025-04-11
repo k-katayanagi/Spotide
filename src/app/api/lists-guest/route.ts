@@ -1,17 +1,13 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 
-
 // GET: リストを取得
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const listId = searchParams.get('listId');
 
   if (!listId) {
-    return NextResponse.json(
-      { error: 'IDが必要です' },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: 'IDが必要です' }, { status: 400 });
   }
 
   try {
@@ -23,7 +19,7 @@ export async function GET(request: Request) {
       lists:list_participants_list_id_fkey (*)
     `,
       )
-      .eq('list_id',listId)
+      .eq('list_id', listId);
 
     if (listId) {
       const numericListId = Number(listId);
@@ -45,12 +41,12 @@ export async function GET(request: Request) {
 
     //取得データフォーマット
     const formatted = data
-      .filter((item) => item.lists !== null) // listsがnullのものを除外
+      .filter((item) => item.lists !== null)
       .map((item) => ({
         ...item.lists,
         is_admin: item.is_admin,
       }));
-    return NextResponse.json(formatted); // 整形済みデータを返す
+    return NextResponse.json(formatted);
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error('リスト取得中のエラー:', error);
@@ -67,4 +63,3 @@ export async function GET(request: Request) {
     }
   }
 }
-

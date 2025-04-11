@@ -17,7 +17,6 @@ export async function POST(req: NextRequest) {
   const buffer = Buffer.from(arrayBuffer);
   const fileName = `public/${Date.now()}-${file.name}`;
 
-
   const { data, error } = await supabase.storage
     .from('images')
     .upload(fileName, buffer, {
@@ -31,19 +30,17 @@ export async function POST(req: NextRequest) {
   }
   console.log('アップロード成功:', data);
 
-  // 公開URLの取得
   const publicUrl = supabase.storage.from('images').getPublicUrl(fileName)
     .data.publicUrl;
-  console.log(publicUrl); 
+  console.log(publicUrl);
 
-  // lists テーブルの該当レコードに photo_url を保存
   const { error: updateError } = await supabase
     .from('lists')
     .update({ photo_url: publicUrl })
     .eq('list_id', Number(listId));
 
   if (updateError) {
-    console.error(updateError); 
+    console.error(updateError);
     return NextResponse.json({ error: updateError.message }, { status: 500 });
   }
 

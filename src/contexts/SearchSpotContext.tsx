@@ -1,5 +1,5 @@
 'use client';
-import { createContext, useContext, useState} from 'react';
+import { createContext, useContext, useState } from 'react';
 import { Spot } from '@/types/ListTypes';
 
 type SearchSpotContextType = {

@@ -2,16 +2,13 @@
 
 import Button from '@components/Button';
 
-
 interface Props {
   className?: string;
   disabled?: boolean;
   onClick?: () => void;
 }
 
-const ViewingButton = ({ className, disabled = false,onClick }: Props) => {
-
-
+const ViewingButton = ({ className, disabled = false, onClick }: Props) => {
   return (
     <Button
       className={`group relative inline-flex items-center justify-center overflow-hidden rounded-full 

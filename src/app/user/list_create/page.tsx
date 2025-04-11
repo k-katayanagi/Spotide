@@ -19,7 +19,6 @@ const ListCreate = () => {
   const [voteDate, setVoteDate] = useState<Date | null>(null);
   const [outingDate, setOutingDate] = useState<Date | null>(null);
 
-  // 入力値変更ハンドラ
   const onListNameChange = (value: string) => {
     setListName(value);
   };
@@ -40,13 +39,11 @@ const ListCreate = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // 入力検証
     if (!listName || error) {
       setError('リスト名を入力してください');
       return;
     }
 
-    // API 呼び出し
     const response = await fetch('/api/lists', {
       method: 'POST',
       headers: {
@@ -66,23 +63,20 @@ const ListCreate = () => {
     console.log(data);
 
     if (response.ok) {
-      // 成功時のトースト表示
       toast({
         title: 'リスト作成しました',
         status: 'success',
-        duration: 5000, // 表示時間（ミリ秒）
-        isClosable: true, // 閉じるボタン
+        duration: 5000,
+        isClosable: true,
         position: 'top',
       });
 
-      // 成功時にフォームのリセット
       setListName('');
       setSelectedType('individual');
       setVoteDate(null);
       setOutingDate(null);
       setError('');
     } else {
-      // エラー時のトースト表示
       toast({
         title: 'リスト作成エラー',
         description: data.error || 'データ送信に失敗しました',
@@ -135,8 +129,6 @@ const ListCreate = () => {
               value={outingDate}
             />
           </div>
-
-          {/* 🔹 SubmitButton だけ右端に配置 */}
           <div className="w-full flex justify-end mt-5">
             <SubmitButton />
           </div>

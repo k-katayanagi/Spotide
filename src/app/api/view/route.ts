@@ -1,8 +1,7 @@
-import { supabase } from '@/lib/supabase'; // パスはプロジェクトに合わせて
+import { supabase } from '@/lib/supabase';
 import { NextResponse } from 'next/server';
 
 export async function GET(req: Request) {
-  // クエリパラメータから url と participantId を取得
   const urlParams = new URL(req.url).searchParams;
   const url = urlParams.get('url');
   const participantId = urlParams.get('participantId');
@@ -14,24 +13,22 @@ export async function GET(req: Request) {
     );
   }
 
-  // listの id を先に取得（is_voting_completed含まず）
   const { data: listBasic, error: listError } = await supabase
     .from('lists')
     .select('list_id')
     .eq('url', url)
     .single();
 
-    console.log('listBasic:', listBasic);
-    if (listError || !listBasic) {
-      console.error('listBasic取得失敗', { url, listError, listBasic });
-      return NextResponse.json(
-        { error: 'リストの取得に失敗しました' },
-        { status: 500 },
-      );
-    }
+  console.log('listBasic:', listBasic);
+  if (listError || !listBasic) {
+    console.error('listBasic取得失敗', { url, listError, listBasic });
+    return NextResponse.json(
+      { error: 'リストの取得に失敗しました' },
+      { status: 500 },
+    );
+  }
   const listId = listBasic.list_id;
 
-  // list_participants の全体取得（投票完了チェック用）
   const { data: participants, error: participantsError } = await supabase
     .from('list_participants')
     .select('is_vote')
@@ -62,7 +59,6 @@ export async function GET(req: Request) {
     }
   }
 
-  // 最新の list を再取得
   const { data: list, error: finalListError } = await supabase
     .from('lists')
     .select('*')
@@ -97,7 +93,6 @@ export async function GET(req: Request) {
     );
   }
 
-  // 該当の list_participant の取得
   const { data: participant, error: participantError } = await supabase
     .from('list_participants')
     .select('*')
@@ -105,14 +100,16 @@ export async function GET(req: Request) {
     .single();
 
   if (participantError || !participant) {
-    console.error('参加者情報の取得に失敗しました', { participantError, participant });
+    console.error('参加者情報の取得に失敗しました', {
+      participantError,
+      participant,
+    });
     return NextResponse.json(
       { error: '参加者情報の取得に失敗しました' },
       { status: 500 },
     );
   }
 
-  // 最終レスポンスに含める
   return NextResponse.json({ list, items, participant });
 }
 
@@ -127,7 +124,6 @@ export async function POST(req: Request) {
     );
   }
 
-  // 投票を行ったアイテムの vote_cnt を1増加
   const { data: itemData, error: itemError } = await supabase
     .from('list_items')
     .select('vote_cnt')
@@ -141,10 +137,8 @@ export async function POST(req: Request) {
     );
   }
 
-  // vote_cnt をインクリメント
   const newVoteCount = itemData.vote_cnt + 1;
 
-  // list_items テーブルの vote_cnt を更新
   const { error: updateItemError } = await supabase
     .from('list_items')
     .update({ vote_cnt: newVoteCount })
@@ -157,11 +151,10 @@ export async function POST(req: Request) {
     );
   }
 
-  // list_participants テーブルの is_vote を true に更新
   const { error: updateVoteError } = await supabase
     .from('list_participants')
-    .update({ is_vote: true, item_id: listItemId }) 
-    .eq('participant_id', participantId); // participant_id を指定
+    .update({ is_vote: true, item_id: listItemId })
+    .eq('participant_id', participantId);
 
   if (updateVoteError) {
     console.error('list_participants更新エラー:', updateVoteError);

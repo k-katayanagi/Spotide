@@ -29,9 +29,7 @@ const HeaderNavigation = () => {
 
         <li
           className="text-black hover:text-gray-300 text-lg text-center cursor-pointer"
-          onClick={() =>
-            handleNavigateTo(`/user/list_create`)
-          }
+          onClick={() => handleNavigateTo(`/user/list_create`)}
         >
           <Image
             src="/images/createList.svg"
@@ -45,9 +43,7 @@ const HeaderNavigation = () => {
 
         <li
           className="text-black hover:text-gray-300 text-lg text-center cursor-pointer"
-          onClick={() =>
-            handleNavigateTo(`/user/individual_list`)
-          }
+          onClick={() => handleNavigateTo(`/user/individual_list`)}
         >
           <Image
             src="/images/individualList.svg"
@@ -61,9 +57,7 @@ const HeaderNavigation = () => {
 
         <li
           className="text-black hover:text-gray-300 text-lg text-center cursor-pointer"
-          onClick={() =>
-            handleNavigateTo(`/user/share_list`)
-          }
+          onClick={() => handleNavigateTo(`/user/share_list`)}
         >
           <Image
             src="/images/shareList.svg"

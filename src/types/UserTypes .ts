@@ -15,7 +15,7 @@ export type TParticipantingUser = {
   is_guest: boolean; // ゲストかどうか（true = ゲスト, false = ユーザー）
   created_at: Date; // 登録日
   updated_at: Date; // 更新日
-  is_admin:boolean;
-  is_vote:boolean;
+  is_admin: boolean;
+  is_vote: boolean;
   item_id?: number | null;
 };
