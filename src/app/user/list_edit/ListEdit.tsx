@@ -59,8 +59,7 @@ const ListEdit = () => {
   const [isSort, setIsSort] = useState(false);
   const [isMenu, setIsMenu] = useState(false);
   const [isLabelSettingOpen, setIsLabelSettingOpen] = useState(false);
-  const [authLists, setAuthLists] = useState<AuthListItem| null>(null);
-
+  const [authLists, setAuthLists] = useState<AuthListItem | null>(null);
 
   // モーダル用の useDisclosure
   const {
@@ -88,7 +87,7 @@ const ListEdit = () => {
   const [loading, setLoading] = useState(true);
   const [hasAccess, setHasAccess] = useState(false); // アクセス制御の状態
 
-  const isCreator = lists[0]?.creator_id === userId
+  const isCreator = lists[0]?.creator_id === userId;
   const menuItems = [
     {
       label: '場所を検索',
@@ -117,49 +116,49 @@ const ListEdit = () => {
   ];
 
   useEffect(() => {
-    if (!listId) return; 
-  
+    if (!listId) return;
+
     const fetchLists = async () => {
       setLoading(true);
 
       try {
-        const response = await fetch(
-          `/api/lists-edit?&listId=${listId}`,
-        );
+        const response = await fetch(`/api/lists-edit?&listId=${listId}`);
         if (!response.ok) throw new Error('リスト取得に失敗しました');
         const data = await response.json();
-        setLists(data); 
-        fetchListItems();
-  
+        setLists(data);
+
         // アクセス制御: ローカルストレージのauthListsとリストのis_adminを確認
-        const localAuthLists = JSON.parse(localStorage.getItem('authLists') || '[]');
-        const matchedAuth = localAuthLists.find(
-          (authList: AuthListItem) => String(authList.listId) === String(listId)
+        const localAuthLists = JSON.parse(
+          localStorage.getItem('authLists') || '[]',
         );
-        setAuthLists(matchedAuth || null); 
+        const matchedAuth = localAuthLists.find(
+          (authList: AuthListItem) =>
+            String(authList.listId) === String(listId),
+        );
+        setAuthLists(matchedAuth || null);
 
         const isAccessible =
-        localAuthLists.some(
+          localAuthLists.some(
             (authList: AuthListItem) =>
               String(authList.listId) === String(listId),
           ) ||
           data.some((list: List) => list.list_id === listId && list.is_admin);
         setHasAccess(isAccessible);
-  
+
         if (!isAccessible) {
           alert('このリストへのアクセス権限がありません。');
           window.location.href = '/login'; // ログインページにリダイレクト
-        } else {
-          // アクセスが許可されている場合、リストアイテムを取得
-          fetchListItems();
+          return;
         }
+        // アクセスが許可されている場合のみリストアイテムを取得
+        await fetchListItems();
       } catch (error) {
         console.error('エラー:', error);
       } finally {
         setLoading(false); // リスト取得完了時にローディングを無効化
       }
     };
-  
+
     const fetchListItems = async () => {
       try {
         const response = await fetch(`/api/listItems?list_id=${listId}`);
@@ -168,18 +167,17 @@ const ListEdit = () => {
         setListItems(data.listItems);
       } catch (error) {
         console.error('エラー:', error);
-        setListItems([]); 
+        setListItems([]);
       }
     };
-  
+
     // 最初にリスト情報を取得
     fetchLists();
   }, [listId]);
 
-
   // アクセスが許可されていない場合はリストを表示しない
   if (!hasAccess) {
-    return null; 
+    return null;
   }
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -379,7 +377,7 @@ const ListEdit = () => {
                   onEdit={() => handleEditClick(listItem)}
                   onDelete={() => handleDeleteClick(listItem)}
                   authLists={authLists} // ← 追加
-                  userId = {userId}     // ← 追加（必要なら）
+                  userId={userId} // ← 追加（必要なら）
                 />
               ))}
             </div>
