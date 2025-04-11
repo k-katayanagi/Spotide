@@ -15,6 +15,7 @@ export type List = {
   created_at: Date;
   updated_at: Date;
   is_admin?: boolean;
+  photo_url?: string;
 };
 
 export type Photo = {
@@ -40,11 +41,13 @@ export type ListItem = {
   photo_id: string;
   list_participants?: {
     participant_name: string;
+    user_id: string | null;
   };
   photos?: Photo[];
   created_at: Date;
   updated_at: Date;
-  vote_cnt?:number;
+  vote_cnt?: number;
+  participant_id?: number;
 };
 
 export type Spot = {

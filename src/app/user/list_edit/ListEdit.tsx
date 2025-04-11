@@ -59,6 +59,8 @@ const ListEdit = () => {
   const [isSort, setIsSort] = useState(false);
   const [isMenu, setIsMenu] = useState(false);
   const [isLabelSettingOpen, setIsLabelSettingOpen] = useState(false);
+  const [authLists, setAuthLists] = useState<AuthListItem| null>(null);
+
 
   // モーダル用の useDisclosure
   const {
@@ -130,14 +132,18 @@ const ListEdit = () => {
         fetchListItems();
   
         // アクセス制御: ローカルストレージのauthListsとリストのis_adminを確認
-        const authLists = JSON.parse(localStorage.getItem('authLists') || '[]');
+        const localAuthLists = JSON.parse(localStorage.getItem('authLists') || '[]');
+        const matchedAuth = localAuthLists.find(
+          (authList: AuthListItem) => String(authList.listId) === String(listId)
+        );
+        setAuthLists(matchedAuth || null); 
+
         const isAccessible =
-          authLists.some(
+        localAuthLists.some(
             (authList: AuthListItem) =>
               String(authList.listId) === String(listId),
           ) ||
           data.some((list: List) => list.list_id === listId && list.is_admin);
-  
         setHasAccess(isAccessible);
   
         if (!isAccessible) {
@@ -372,6 +378,8 @@ const ListEdit = () => {
                   selectedFields={selectedFields}
                   onEdit={() => handleEditClick(listItem)}
                   onDelete={() => handleDeleteClick(listItem)}
+                  authLists={authLists} // ← 追加
+                  userId = {userId}     // ← 追加（必要なら）
                 />
               ))}
             </div>

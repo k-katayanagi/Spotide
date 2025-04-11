@@ -27,20 +27,32 @@ interface Props {
   onDelete?: () => void;
   onEdit?: () => void;
   selectedFields: string[];
+  userId: string | null | undefined;
+  authLists: AuthListItem | null;
 }
+
+type AuthListItem = {
+  listId: string;
+  participantId: number;
+};
 
 const ListItemCard = ({
   listItem,
   onDelete,
   onEdit,
   selectedFields,
+  userId,
+  authLists,
 }: Props) => {
-  console.log(listItem)
+  console.log(listItem);
   return (
     <div className="bg-white border border-[#2E7D32] shadow-md rounded-lg p-4 h-auto min-h-[320px] flex flex-col justify-between">
       <div className="flex justify-center items-center mb-4 space-x-2 sm:space-x-6 md:space-x-10 lg:space-x-16 xl:space-x-20">
         <CustomEditButton className="mx-2" onClick={onEdit} />
-        <DeleteButton className="mx-2" onClick={onDelete} />
+        {(listItem.list_participants?.user_id === userId ||
+          listItem.participant_id === authLists?.participantId) && (
+          <DeleteButton className="mx-2" onClick={onDelete} />
+        )}
       </div>
       <div className="flex-1">
         {listItem.photos && listItem.photos.length > 0 ? (

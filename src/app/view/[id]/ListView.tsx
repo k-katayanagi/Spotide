@@ -59,7 +59,9 @@ const ListView = ({ GetListId }: Props) => {
   const { lists, setLists } = useListContext();
   const { listItems, setListItems } = useListItemContext();
   const { handleNavigateTo } = useNavigation();
-  const [participant, setParticipant] = useState<TParticipantingUser>(null);
+  const [participant, setParticipant] = useState<TParticipantingUser | null>(
+    null,
+  );
   const [participantId, setParticipantId] = useState<number | null>(null);
   const [voteItem, setVoteItem] = useState<number | null | undefined>(null);
   const [loading, setLoading] = useState(true);
@@ -80,17 +82,17 @@ const ListView = ({ GetListId }: Props) => {
   );
   const [isVotingCompleted, setIsVotingCompleted] = useState<
     boolean | undefined
-  >(undefined);
+  >(false);
   const [isAllVotingCompleted, setIsAllVotingCompleted] = useState<
     boolean | undefined
-  >(undefined);
+  >(false);
   const [isAggregationCompleted, setIsAggregationCompleted] = useState<
     boolean | undefined
-  >(undefined);
+  >(false);
   const [isVotingStart, setIsVotingStart] = useState<boolean | undefined>(
-    undefined,
+    false,
   );
-  const [isEditing, setIsEditing] = useState<boolean | undefined>(undefined);
+  const [isEditing, setIsEditing] = useState<boolean | undefined>(false);
 
   const {
     isOpen: isVoteModalOpen,
@@ -104,10 +106,10 @@ const ListView = ({ GetListId }: Props) => {
     onClose: onResultsModalClose,
   } = useDisclosure();
 
-
   const isCreator = lists[0]?.creator_id === session?.user.id;
   const menuItems = [
-    { label: '表示ラベル設定', onClick: () => setIsLabelSettingOpen(true) }, ...(isCreator
+    { label: '表示ラベル設定', onClick: () => setIsLabelSettingOpen(true) },
+    ...(isCreator
       ? [
           {
             label: '共有ユーザー設定',
@@ -123,7 +125,6 @@ const ListView = ({ GetListId }: Props) => {
         console.log('URLまたはparticipantIdがありません');
         return;
       }
-
 
       setLoading(true);
       try {
@@ -169,7 +170,7 @@ const ListView = ({ GetListId }: Props) => {
       }
     };
 
-    const storedData = localStorage.getItem('authLists'); 
+    const storedData = localStorage.getItem('authLists');
 
     if (storedData) {
       try {
@@ -191,7 +192,14 @@ const ListView = ({ GetListId }: Props) => {
     } else {
       console.log('localStorageにauthListsが存在しません');
     }
-  }, [url]);
+  }, [
+    url,
+    isVotingStart,
+    isVotingCompleted,
+    isAllVotingCompleted,
+    isAggregationCompleted,
+    isEditing,
+  ]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -215,7 +223,7 @@ const ListView = ({ GetListId }: Props) => {
 
   //投票処理
   const handleVote = async () => {
-    setVoteItem(participant.item_id);
+    setVoteItem(selectedListItem?.item_id);
     if (selectedListItem) {
       try {
         // 投票処理をAPIに送信
@@ -340,9 +348,14 @@ const ListView = ({ GetListId }: Props) => {
         <div className="flex items-center gap-2 sm'リストが見つかりません':gap-7">
           <UrlCopyButton />
           {/* 投票開始日以前で集計・投票未完了なら EditButton を表示 */}
-          {!isVotingStart && !isVotingCompleted && !isAggregationCompleted && (
-            <EditButton isEditing={isEditing} onClick={handleEdit}/>
-          )}
+          {((lists[0]?.list_type === 'individual' &&
+            participant?.is_admin === true) ||
+            lists[0]?.list_type === 'share') &&
+            !isVotingStart &&
+            !isVotingCompleted &&
+            !isAggregationCompleted && (
+              <EditButton isEditing={isEditing} onClick={handleEdit} />
+            )}
 
           {/* 全員投票完了で集計未完了なら TotallingButton を表示 */}
           {isAllVotingCompleted &&

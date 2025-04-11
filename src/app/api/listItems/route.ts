@@ -207,7 +207,6 @@ const addSpotToList = async (
           business_hours: spot.business_hours,
           regular_holiday: spot.regular_holiday,
           time_from_nearest_station: spot.time_from_nearest_station,
-          // add_by_id: userId,
           created_at: convertToJST(new Date()),
           updated_at: convertToJST(new Date()),
         },
@@ -278,7 +277,7 @@ export const GET = async (req: Request) => {
       .select(
         `
       *,
-      list_participants:participant_id (participant_name),
+      list_participants:participant_id (participant_name,user_id),
       photos (photo_url)
     `,
       )

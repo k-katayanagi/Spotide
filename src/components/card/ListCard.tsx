@@ -4,8 +4,11 @@ import EditButton from '../buttons/EditButton ';
 import ViewingButton from '../buttons/ViewingButton';
 import { listStatusOptions } from '@/consts/OptionList';
 import { List } from '@/types/ListTypes';
-import Image from 'next/image';
+import ImageUploader from '../UI/ImageUploader';
 import useFormatDate from '@/hooks/useFormattedDate';
+import { useState } from 'react';
+import Image from 'next/image';
+
 interface Props {
   list: List;
   onDelete: () => void;
@@ -14,7 +17,38 @@ interface Props {
 }
 
 const ListCard = ({ list, onDelete, onEdit, onView }: Props) => {
-  console.log('Received list:', list);
+  const coverImages = [
+    '/images/cover/image1.jpg',
+    '/images/cover/image2.jpg',
+    '/images/cover/image3.jpg',
+    '/images/cover/image4.jpg',
+    '/images/cover/image6.jpg',
+    '/images/cover/image7.jpg',
+    '/images/cover/image8.jpg',
+    '/images/cover/image9.jpg',
+  ];
+
+  // ランダムに画像を選んでセット
+  const getRandomImage = () => {
+    const randomIndex = Math.floor(Math.random() * coverImages.length);
+    return coverImages[randomIndex];
+  };
+
+  const DEFAULT_IMAGE = getRandomImage();
+  const [imageUrl, setImageUrl] = useState<string>(
+    list.photo_url || DEFAULT_IMAGE,
+  );
+  const [isImageUploading, setIsImageUploading] = useState<boolean>(false);
+
+  const handleImageUpload = (url: string) => {
+    setImageUrl(url);
+    setIsImageUploading(false);
+  };
+
+  // 画像アップロードのオン・オフを切り替える関数
+  const toggleImageUploader = () => {
+    setIsImageUploading((prev) => !prev);
+  };
 
   const getStatusLabel = (status: number): string => {
     const statusObj = listStatusOptions.find(
@@ -46,14 +80,20 @@ const ListCard = ({ list, onDelete, onEdit, onView }: Props) => {
         {list.is_admin && <DeleteButton className="mx-2" onClick={onDelete} />}
       </div>
       <div className="flex-1">
-        <Image
-          src="/images/image.gif"
-          alt="画像"
-          width={0} // 自動調整のため0に設定
-          height={160}
-          className="w-full h-[160px] object-cover rounded-lg mb-4"
-          unoptimized
-        />
+        <div className="cursor-pointer" onClick={toggleImageUploader}>
+          <Image
+            src={imageUrl}
+            alt="List image"
+            width={500}
+            height={300}
+            className="rounded-md object-cover w-full h-60"
+          />
+        </div>
+
+        {/* 画像アップローダー（表示状態を制御） */}
+        {isImageUploading && (
+          <ImageUploader onImageUpload={handleImageUpload} list={list} />
+        )}
         <h2 className="text-lg font-bold">{list.list_name}</h2>
 
         <div className="flex flex-wrap gap-x-4 gap-y-2 mt-2 min-w-0">
