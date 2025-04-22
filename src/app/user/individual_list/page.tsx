@@ -32,6 +32,9 @@ const IndividualList = () => {
   const toast = useToast();
   const [loading, setLoading] = useState(true);
   const userId = session?.user.id;
+  const [openMenuId, setOpenMenuId] = useState<number | null>(null);
+  const [viewUrlIssued, setViewUrlIssued] = useState(false);
+  const [listUrl, setListUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -132,9 +135,33 @@ const IndividualList = () => {
     router.push(`/user/individual_list/${listId}/list_edit`);
   };
 
-  // 閲覧ページに遷移する関数
-  const handleViewClick = (list: List) => {
-    router.push(`/view/${list.url}`);
+  const handleViewClick = async (list: List) => {
+    if (!listUrl && !viewUrlIssued) {
+      // 閲覧URL発行ボタンが押された場合
+      try {
+        const res = await fetch('/api/viewUrl', {
+          method: 'POST',
+          body: JSON.stringify({ listId: list.list_id }),
+          headers: { 'Content-Type': 'application/json' },
+        });
+
+        const data = await res.json();
+        console.log('POSTレスポンス:', data);
+
+        if (res.ok) {
+          setListUrl(data.viewUrl); // URLをセット
+          setViewUrlIssued(true); // ボタンを閲覧ボタンに切り替え
+        } else {
+          console.error('閲覧URLの発行に失敗しました', data.error);
+        }
+      } catch (error) {
+        console.error('閲覧URLの発行に失敗しました', error);
+      }
+    } else if (listUrl && viewUrlIssued) {
+      // 閲覧ボタンが押された場合
+      const uuid = listUrl.split('/').pop();
+      router.push(`/view/${uuid}`);
+    }
   };
 
   const handleDelete = async () => {
@@ -234,6 +261,8 @@ const IndividualList = () => {
                     onDelete={() => handleDeleteClick(list)}
                     onEdit={() => handleEditClick(list.list_id)}
                     onView={() => handleViewClick(list)}
+                    openMenuId={openMenuId}
+                    setOpenMenuId={setOpenMenuId}
                   />
                 );
               })}
