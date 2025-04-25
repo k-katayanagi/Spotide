@@ -364,9 +364,12 @@ const ListView = ({ GetListId }: Props) => {
         </h1>
         <div className="flex items-center gap-2 sm'リストが見つかりません':gap-7">
           <UrlCopyButton onClick={handleCopy} />
-          {((lists[0]?.list_type === 'individual' &&
-            participant?.is_admin === true) ||
-            lists[0]?.list_type === 'share') &&
+          {!loading &&
+            lists.length > 0 &&
+            participant &&
+            ((lists[0].list_type === 'individual' &&
+              participant.is_admin === true) ||
+              lists[0].list_type === 'share') &&
             !isVotingStart &&
             !isVotingCompleted &&
             !isAggregationCompleted && (

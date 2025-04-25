@@ -241,7 +241,7 @@ const ShareList = () => {
       >
         {/* リスト部分 */}
         <div
-          className="overflow-auto h-[60vh] p-2 border border-[#FF5722] rounded-lg  bg-gradient-to-br from-[#FFE0B2] to-[#FFCC80]
+          className="overflow-auto h-[80vh] lg:h-[60vh] p-2 border border-[#FF5722] rounded-lg  bg-gradient-to-br from-[#FFE0B2] to-[#FFCC80]
                 scrollbar-thin scrollbar-thumb-[#FF5722] scrollbar-track-[#FFE0B2]"
           ref={listContainerRef}
         >
@@ -250,7 +250,7 @@ const ShareList = () => {
               <Spinner size="xl" color="orange.500" />
             </div>
           ) : currentLists.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {currentLists.map((list) => {
                 if (!list.list_id) {
                   return null;

@@ -230,7 +230,7 @@ const SpotSearch = () => {
       <div className="flex items-center justify-between mb-5 w-full">
         <div className="flex-1 flex items-end justify-center gap-2">
           <InputBox
-            placeholder="検索するキーワードを入力"
+            placeholder="検索するキーワードを入力 例：「イタリアン」「中華」"
             className="border border-gray-400 rounded-md p-2 w-[300px] h-10 sm:w-[400px] sm:h-12 relative"
             onClick={toggleFilterDropdown}
             showImage={true}

@@ -3,6 +3,7 @@ import { List } from '@/types/ListTypes';
 import ImageUploader from '../UI/ImageUploader';
 import useFormatDate from '@/hooks/useFormattedDate';
 import { useState, useRef, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
 interface Props {
@@ -32,7 +33,7 @@ const ListCard = ({
     '/images/cover/image8.jpg',
     '/images/cover/image9.jpg',
   ];
-
+  const router = useRouter();
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [imageUrl, setImageUrl] = useState<string>(
@@ -42,6 +43,12 @@ const ListCard = ({
   const [isImageUploading, setIsImageUploading] = useState<boolean>(false);
   const [hasViewed, setHasViewed] = useState<boolean>(!!list.url);
   const isOpen = openMenuId === list.list_id;
+
+  const handleGoToUserSettings = () => {
+    router.push(
+      `/user/${list.list_type}_list/${list.list_id}/list_edit/participating_users_list?votingStart=${isVotingStarted}`,
+    );
+  };
 
   const handleView = async () => {
     await onView(); // 完了を待ってから
@@ -54,6 +61,15 @@ const ListCard = ({
     } else {
       setOpenMenuId(list.list_id);
     }
+  };
+
+  const handleImageUpload = (url: string) => {
+    setImageUrl(url);
+    setIsImageUploading(false);
+  };
+
+  const toggleImageUploader = () => {
+    setIsImageUploading((prev) => !prev);
   };
 
   const formattedVoteStartDate = useFormatDate(list.voting_start_at, true);
@@ -75,7 +91,6 @@ const ListCard = ({
         setOpenMenuId(null);
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
@@ -83,7 +98,7 @@ const ListCard = ({
   }, []);
 
   return (
-    <div className="bg-white rounded-xl border shadow-md overflow-hidden">
+    <div className="bg-white rounded-xl border shadow-md overflow-hidden lg:h-[55vh] ">
       <div className="flex items-center justify-between bg-white px-4 py-2 rounded-t-xl">
         <h1 className="text-2xl font-bold">{list.list_name}</h1>
 
@@ -92,12 +107,12 @@ const ListCard = ({
             <span
               className={`px-3 py-1 text-base font-semibold rounded-full ${
                 list.is_aggregation_completed
-                  ? 'bg-blue-100 text-blue-600' // 集計完了
+                  ? 'bg-blue-100 text-blue-600' 
                   : list.is_voting_completed
                     ? list.is_admin
-                      ? 'bg-orange-100 text-red-600' // 集計してください
-                      : 'bg-orange-100 text-red-600' // 集計待ちです
-                    : 'bg-orange-100 text-red-600' // 投票開始しました
+                      ? 'bg-orange-100 text-red-600' 
+                      : 'bg-orange-100 text-red-600' 
+                    : 'bg-orange-100 text-red-600'
               }`}
             >
               {list.is_aggregation_completed
@@ -137,6 +152,14 @@ const ListCard = ({
               </button>
               {list.is_admin && (
                 <button
+                  onClick={handleGoToUserSettings}
+                  className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-orange-600 whitespace-nowrap"
+                >
+                  👫 共有ユーザー設定
+                </button>
+              )}
+              {list.is_admin && (
+                <button
                   onClick={onDelete}
                   className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600 whitespace-nowrap"
                 >
@@ -149,30 +172,23 @@ const ListCard = ({
       </div>
 
       <div className="flex-1">
-        <div
-          className="cursor-pointer"
-          onClick={() => setIsImageUploading((prev) => !prev)}
-        >
+        <div className="cursor-pointer" onClick={toggleImageUploader}>
           <Image
             src={imageUrl}
             alt="List image"
             width={500}
-            height={300}
-            className="rounded-md object-cover w-full h-60"
+            height={500}
+            className="rounded-md object-cover px-2 w-full h-[30vh]"
           />
         </div>
-
         {isImageUploading && (
-          <ImageUploader
-            onImageUpload={(url) => setImageUrl(url)}
-            list={list}
-          />
+          <ImageUploader onImageUpload={handleImageUpload} list={list} />
         )}
       </div>
 
-      <div className="bg-gray-100 p-4 m-4 rounded-lg shadow-sm border">
+      <div className="bg-[#f5f5f5] h-[19vh] p-4 m-2 rounded-lg shadow-sm border">
         <h1 className="text-gray-800 font-semibold mb-2 text-xl">日程情報</h1>
-
+ 
         <div className="space-y-1 text-lg text-gray-700">
           <p>投票開始日時: {formattedVoteStartDate}</p>
           <p>おでかけ日: {formattedOutingDate}</p>
