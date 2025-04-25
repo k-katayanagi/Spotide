@@ -51,8 +51,8 @@ const ListCard = ({
   };
 
   const handleView = async () => {
-    await onView(); // 完了を待ってから
-    setHasViewed(true); // 発行されてからボタン表示を「閲覧」に変更
+    await onView();
+    setHasViewed(true);
   };
 
   const toggleMenu = () => {
@@ -98,7 +98,7 @@ const ListCard = ({
   }, []);
 
   return (
-    <div className="bg-white rounded-xl border shadow-md overflow-hidden lg:h-[55vh] ">
+    <div className="bg-white rounded-xl border shadow-md overflow-hidden h-[50vh] lg:h-[55vh] ">
       <div className="flex items-center justify-between bg-white px-4 py-2 rounded-t-xl">
         <h1 className="text-2xl font-bold">{list.list_name}</h1>
 
@@ -107,11 +107,11 @@ const ListCard = ({
             <span
               className={`px-3 py-1 text-base font-semibold rounded-full ${
                 list.is_aggregation_completed
-                  ? 'bg-blue-100 text-blue-600' 
+                  ? 'bg-blue-100 text-blue-600'
                   : list.is_voting_completed
                     ? list.is_admin
-                      ? 'bg-orange-100 text-red-600' 
-                      : 'bg-orange-100 text-red-600' 
+                      ? 'bg-orange-100 text-red-600'
+                      : 'bg-orange-100 text-red-600'
                     : 'bg-orange-100 text-red-600'
               }`}
             >
@@ -186,10 +186,12 @@ const ListCard = ({
         )}
       </div>
 
-      <div className="bg-[#f5f5f5] h-[19vh] p-4 m-2 rounded-lg shadow-sm border">
-        <h1 className="text-gray-800 font-semibold mb-2 text-xl">日程情報</h1>
- 
-        <div className="space-y-1 text-lg text-gray-700">
+      <div className="bg-[#f5f5f5] h-[15vh] lg:h-[19vh] p-4 m-2 rounded-lg shadow-sm border">
+        <h1 className="text-gray-800 font-semibold mb-2 lg:text-xl">
+          日程情報
+        </h1>
+
+        <div className="space-y-1 text-2xl sm:text-xl text-gray-700">
           <p>投票開始日時: {formattedVoteStartDate}</p>
           <p>おでかけ日: {formattedOutingDate}</p>
           <p>作成日: {formattedCreateDate}</p>

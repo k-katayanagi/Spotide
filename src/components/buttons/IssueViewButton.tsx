@@ -100,8 +100,8 @@ const IssueViewButton = ({ className, listId }: Props) => {
           : listId === null
             ? 'リストIDが無効'
             : viewUrl
-              ? '閲覧する'
-              : '閲覧URL発行'
+              ? '👁 閲覧する'
+              : '👁 招待URL発行'
       }
     />
   );

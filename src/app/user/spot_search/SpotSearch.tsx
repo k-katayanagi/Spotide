@@ -230,7 +230,7 @@ const SpotSearch = () => {
       <div className="flex items-center justify-between mb-5 w-full">
         <div className="flex-1 flex items-end justify-center gap-2">
           <InputBox
-            placeholder="検索するキーワードを入力 例：「イタリアン」「中華」"
+            placeholder="検索するキーワードを入力 例：「中華」"
             className="border border-gray-400 rounded-md p-2 w-[300px] h-10 sm:w-[400px] sm:h-12 relative"
             onClick={toggleFilterDropdown}
             showImage={true}
@@ -281,7 +281,7 @@ const SpotSearch = () => {
 
       {/* リスト部分 */}
       <div
-        className="overflow-auto h-[65vh] p-2 border border-[#FF5722] rounded-lg  bg-gradient-to-br from-[#FFE0B2] to-[#FFCC80]
+        className="overflow-auto h-[72vh] lg:h-[60vh] p-2 border border-[#FF5722] rounded-lg  bg-gradient-to-br from-[#FFE0B2] to-[#FFCC80]
                   scrollbar-thin scrollbar-thumb-[#FF5722] scrollbar-track-[#FFE0B2]"
         ref={listContainerRef}
       >
@@ -291,7 +291,7 @@ const SpotSearch = () => {
             <Spinner size="lg" color="orange.400" />
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {currentSearchSpot.length > 0 ? (
               currentSearchSpot.map((Item) => (
                 <SearchSpotCard

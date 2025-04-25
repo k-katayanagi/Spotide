@@ -57,7 +57,7 @@ const ListViewPage = () => {
       {!isAuthenticated ? (
         <ParticipationAuth onAuthSuccess={handleAuthSuccess} />
       ) : (
-        <div className="absolute top-0 left-0 w-full h-full bg-white z-50">
+        <div className="absolute top-0 left-0 w-full h-full bg-white">
           <ListView GetListId={listId} />
         </div>
       )}

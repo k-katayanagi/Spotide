@@ -238,7 +238,7 @@ const IndividualList = () => {
       >
         {/* リスト部分 */}
         <div
-          className="overflow-auto h-[80vh] lg:h-[60vh] p-2 border border-[#FF5722] rounded-lg  bg-gradient-to-br from-[#FFE0B2] to-[#FFCC80]
+          className="overflow-auto h-[72vh] lg:h-[60vh] p-2 border border-[#FF5722] rounded-lg  bg-gradient-to-br from-[#FFE0B2] to-[#FFCC80]
                 scrollbar-thin scrollbar-thumb-[#FF5722] scrollbar-track-[#FFE0B2]"
           ref={listContainerRef}
         >
@@ -284,7 +284,6 @@ const IndividualList = () => {
       />
 
       {/* ページネーション */}
-      {totalPages > 1 && (
         <div className={`mt-6 relative ${paginationZIndex}`}>
           <Pagination
             currentPage={currentPage}
@@ -292,7 +291,6 @@ const IndividualList = () => {
             onPageChange={handlePageChange}
           />
         </div>
-      )}
     </div>
   );
 };

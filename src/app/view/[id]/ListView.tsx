@@ -457,7 +457,7 @@ const ListView = ({ GetListId }: Props) => {
       >
         {/* リスト部分 */}
         <div
-          className="overflow-auto max-h-[60vh] p-2 border border-[#0288D1] rounded-lg 
+          className="overflow-auto  h-[70vh] lg:h-[60vh] p-2 border border-[#0288D1] rounded-lg 
   bg-gradient-to-br from-[#B3E5FC] to-[#81D4FA]
   scrollbar-thin scrollbar-thumb-[#0288D1] scrollbar-track-[#B3E5FC]"
           ref={listContainerRef}
@@ -467,7 +467,7 @@ const ListView = ({ GetListId }: Props) => {
               <Spinner size="xl" color="blue.500" />
             </div>
           ) : currentListItems.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {currentListItems.map((listItem) => (
                 <ViewItemCard
                   key={listItem.item_id}
@@ -491,7 +491,7 @@ const ListView = ({ GetListId }: Props) => {
       </motion.div>
 
       {/* ページネーション */}
-      {totalPages > 1 && (
+      {!isBottomNavOpen && (
         <div className={`mt-6 relative ${paginationZIndex}`}>
           <Pagination
             currentPage={currentPage}
