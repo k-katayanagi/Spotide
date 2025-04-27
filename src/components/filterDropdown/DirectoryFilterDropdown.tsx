@@ -2,8 +2,6 @@
 import { useState } from 'react';
 import ListNameInput from '../inputbox/ListNameInput';
 import CalendarPicker from '../dateTimePicker/CalendarPicker ';
-import ListSelect from '../ListSelect';
-import { listStatusOptions } from '@/consts/OptionList';
 import OkButton from '../buttons/OkButton';
 import { useListContext } from '@/contexts/ListContext';
 import { List } from '@/types/ListTypes';
@@ -22,11 +20,6 @@ const DirectoryFilterDropdown = ({ toggleFilterDropdown }: Props) => {
   const [createEndDate, setCreateEndDate] = useState<Date | null>(null);
   const [updateStartDate, setUpdateStartDate] = useState<Date | null>(null);
   const [updateEndDate, setUpdateEndDate] = useState<Date | null>(null);
-  const filterStatusOptions = [
-    { value: '', label: 'すべて' },
-    ...listStatusOptions,
-  ];
-  const [selectedStatus, setSelectedStatus] = useState<string>('');
 
   const handleFilterApply = (e: React.FormEvent) => {
     e.preventDefault();
@@ -84,11 +77,6 @@ const DirectoryFilterDropdown = ({ toggleFilterDropdown }: Props) => {
       );
     }
 
-    filteredLists = filteredLists.filter((list) => {
-      if (!selectedStatus) return true; // 空文字ならすべてを表示
-      return list.status === Number(selectedStatus); // 明示的に number に変換
-    });
-
     setSortLists(filteredLists);
     toggleFilterDropdown();
   };
@@ -109,7 +97,7 @@ const DirectoryFilterDropdown = ({ toggleFilterDropdown }: Props) => {
                   onChange={setListName}
                   error={error}
                   setError={setError}
-                  className="text-lg w-[180px] sm:w-[300px] md:w-[380px] h-[40px]"
+                  className="text-lg w-[180px] sm:w-[300px] md:w-[380px] h-[40px] border border-black"
                 />
               </div>
             </div>
@@ -180,18 +168,6 @@ const DirectoryFilterDropdown = ({ toggleFilterDropdown }: Props) => {
                     onChange={setOutingEndDate}
                   />
                 </div>
-              </div>
-            </div>
-
-            <div className="flex justify-center w-fit">
-              <div className="w-full max-w-[400px] self-start  items-start">
-                <ListSelect
-                  title="進捗状況"
-                  options={filterStatusOptions}
-                  onSelect={(value) => setSelectedStatus(value)}
-                  className="w-full w-[75px] h-[40px] max-w-[75px]"
-                />
-                <p>選択された進捗状況: {selectedStatus}</p>
               </div>
             </div>
             <div className="flex justify-end w-full">

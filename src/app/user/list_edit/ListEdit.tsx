@@ -349,7 +349,7 @@ const ListEdit = () => {
       >
         {/* リスト部分 */}
         <div
-          className="overflow-auto h-[65vh] p-2 border border-[#43A047] rounded-lg bg-gradient-to-br from-[#C8E6C9] to-[#A5D6A7]scrollbar-thin   scrollbar-thin scrollbar-thumb-[#2E7D32] scrollbar-track-[#C8E6C9]"
+          className="overflow-auto h-[72vh] lg:h-[60vh] p-2 border border-[#43A047] rounded-lg bg-gradient-to-br from-[#C8E6C9] to-[#A5D6A7]scrollbar-thin   scrollbar-thin scrollbar-thumb-[#2E7D32] scrollbar-track-[#C8E6C9]"
           ref={listContainerRef}
         >
           {loading ? (
@@ -357,7 +357,7 @@ const ListEdit = () => {
               <Spinner size="xl" color="green.500" />
             </div>
           ) : currentListItems.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {currentListItems.map((listItem) => (
                 <ListItemCard
                   key={listItem.item_id}
@@ -379,15 +379,13 @@ const ListEdit = () => {
       </motion.div>
 
       {/* ページネーション */}
-      {totalPages > 1 && (
-        <div className={`mt-6 relative ${paginationZIndex}`}>
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
-        </div>
-      )}
+      <div className={`mt-6 relative ${paginationZIndex}`}>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      </div>
     </div>
   );
 };

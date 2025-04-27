@@ -64,20 +64,20 @@ const SpotSearchFilterDropdown = ({ handleSearch }: Props) => {
                 title="都道府県"
                 options={addAllOption(prefectures)}
                 onSelect={setSelectedStatus}
-                className="w-[100px] sm:w-[120px] h-[20px] sm:h-[30px]"
+                className="w-[100px] sm:w-[120px] h-[20px] sm:h-[30px] border border-black"
               />
               {selectedStatus}
               <ListSelect
                 title="市区"
                 options={addAllOption(cityOptions)}
                 onSelect={setSelectedStatus}
-                className="w-[100px] sm:w-[120px] h-[20px] sm:h-[30px]"
+                className="w-[100px] sm:w-[120px] h-[20px] sm:h-[30px] border border-black"
               />
               <ListSelect
                 title="最寄駅"
                 options={addAllOption(stationOptions)}
                 onSelect={setSelectedStatus}
-                className="w-[100px] sm:w-[120px] h-[20px] sm:h-[30px]"
+                className="w-[100px] sm:w-[120px] h-[20px] sm:h-[30px] border border-black"
               />
             </div>
 
@@ -87,13 +87,13 @@ const SpotSearchFilterDropdown = ({ handleSearch }: Props) => {
                 title="カテゴリ"
                 options={addAllOption(categories)}
                 onSelect={setSelectedStatus}
-                className="w-[140px] sm:w-[160px] h-[20px] sm:h-[30px]"
+                className="w-[140px] sm:w-[160px] h-[20px] sm:h-[30px] border border-black"
               />
               <ListSelect
                 title="サブカテゴリ"
                 options={addAllOption(subCategories)}
                 onSelect={setSelectedStatus}
-                className="w-[140px] sm:w-[160px] h-[20px] sm:h-[30px]"
+                className="w-[140px] sm:w-[160px] h-[20px] sm:h-[30px] border border-black"
               />
             </div>
 
@@ -103,7 +103,7 @@ const SpotSearchFilterDropdown = ({ handleSearch }: Props) => {
                 title="営業時間"
                 options={addAllOption(hours)}
                 onSelect={setSelectedStatus}
-                className="w-[100px] sm:w-[120px] h-[20px] sm:h-[30px]"
+                className="w-[100px] sm:w-[120px] h-[20px] sm:h-[30px] border border-black"
               />
               <span className="flex justify-center lg:justify-end items-end mb-5">
                 ～
@@ -112,7 +112,7 @@ const SpotSearchFilterDropdown = ({ handleSearch }: Props) => {
                 <ListSelect
                   options={addAllOption(hours)}
                   onSelect={setSelectedStatus}
-                  className="w-[100px] sm:w-[120px] h-[20px] sm:h-[30px]"
+                  className="w-[100px] sm:w-[120px] h-[20px] sm:h-[30px] border border-black"
                 />
               </div>
             </div>
@@ -148,7 +148,7 @@ const SpotSearchFilterDropdown = ({ handleSearch }: Props) => {
                     { value: '30', label: '30分' },
                   ]}
                   onSelect={setSelectedStatus}
-                  className="w-[100px] sm:w-[120px] h-[20px] sm:h-[30px]"
+                  className="w-[100px] sm:w-[120px] h-[20px] sm:h-[30px] border border-black"
                 />
               </div>
 

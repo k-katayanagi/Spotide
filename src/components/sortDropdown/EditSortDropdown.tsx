@@ -46,7 +46,7 @@ const EditSortDropdown = () => {
           <ListSelect
             options={filteredListInfo}
             onSelect={(value) => setSelectedListInfo(value as keyof ListItem)}
-            className="w-[150px] h-[40px] max-w-[400px] text-center"
+            className="w-[150px] h-[40px] max-w-[400px] text-center border border-black"
           />
           <p>
             {
@@ -59,7 +59,7 @@ const EditSortDropdown = () => {
           <ListSelect
             options={Sort}
             onSelect={(value) => setSelectedSort(Number(value))}
-            className="w-full h-[40px] max-w-[100px] text-center"
+            className="w-full h-[40px] max-w-[100px] text-center border border-black"
           />
           <p>{Sort.find((item) => item.value === selectedSort)?.label}</p>
         </div>

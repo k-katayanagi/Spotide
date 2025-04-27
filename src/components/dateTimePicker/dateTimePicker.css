@@ -10,6 +10,12 @@
   width: auto;
 }
 
+/* 時間リストの表示を調整 */
+.react-datepicker__time-list {
+  max-height: 120px; /* 4つ分の高さに合わせる（時間は1項目あたり約40px程度） */
+  overflow-y: auto; /* スクロールを有効にする */
+}
+
 /* タイムピッカーを右側に配置 */
 .react-datepicker__time-container {
   width: 85px !important;
@@ -37,13 +43,28 @@
 
 /* 日付のホバー時 */
 .react-datepicker__day:hover {
-  background: #db4d6d !important;
+  background: #ff8761 !important;
   color: #fafafa !important;
 }
 
 /* 曜日 */
 .react-datepicker__day-name {
-  color: rgba(0, 0, 0, 0.54) !important;
+  color: #ff5722 !important;
+
+  /* 過ぎた日を灰色に */
+  .react-datepicker__day.past-day {
+    color: #6b7280 !important; /* 文字色を灰色に */
+  }
+}
+
+/* 日曜日の赤色 */
+.react-datepicker__day.sunday-day {
+  color: #f87171; /* 赤色 */
+}
+
+/* 土曜日の青色 */
+.react-datepicker__day.saturday-day {
+  color: #3b82f6; /* 青色 */
 }
 
 /* 今日の日付 */
@@ -67,7 +88,7 @@
   .react-datepicker__time-box
   ul.react-datepicker__time-list
   li.react-datepicker__time-list-item--selected {
-  background: #e87a90 !important;
+  background: #ff5722 !important;
   font-weight: normal !important;
   color: #fafafa !important;
 }
@@ -97,5 +118,32 @@
     .react-datepicker__quarter-text--in-range,
     .react-datepicker__year-text--in-range
   ) {
-  background-color: #f596aa !important;
+  background-color: #ff5722 !important;
+}
+
+/* 時間リストのアイテムホバー時の色 */
+.react-datepicker__time-list-item:hover {
+  background-color: #ff8761 !important; /* ホバー時の色 */
+  color: #fafafa !important; /* ホバー時の文字色 */
+}
+
+/* スクロールバーの全体 */
+.react-datepicker__time-list::-webkit-scrollbar {
+  width: 8px; /* スクロールバーの幅 */
+}
+
+/* スクロールバーのトラック（背景部分） */
+.react-datepicker__time-list::-webkit-scrollbar-track {
+  background-color: #f0f0f0; /* トラックの色（背景） */
+}
+
+/* スクロールバーのハンドル（動かせる部分） */
+.react-datepicker__time-list::-webkit-scrollbar-thumb {
+  background-color: #ff5722; /* スクロールバーの色 */
+  border-radius: 4px; /* 丸みをつける */
+}
+
+/* スクロールバーのハンドルをホバーした時の色 */
+.react-datepicker__time-list::-webkit-scrollbar-thumb:hover {
+  background-color: #ff8761; /* ホバー時の色 */
 }

@@ -32,6 +32,9 @@ const ShareList = () => {
   const toast = useToast();
   const [loading, setLoading] = useState(true);
   const userId = session?.user.id;
+  const [openMenuId, setOpenMenuId] = useState<number | null>(null);
+  const [viewUrlIssued, setViewUrlIssued] = useState(false);
+  const [listUrl, setListUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -135,9 +138,33 @@ const ShareList = () => {
     router.push(`/user/share_list/${listId}/list_edit`);
   };
 
-  // 閲覧ページに遷移する関数
-  const handleViewClick = (list: List) => {
-    router.push(`/view/${list.url}`);
+  const handleViewClick = async (list: List) => {
+    if (!listUrl && !viewUrlIssued) {
+      // 閲覧URL発行ボタンが押された場合
+      try {
+        const res = await fetch('/api/viewUrl', {
+          method: 'POST',
+          body: JSON.stringify({ listId: list.list_id }),
+          headers: { 'Content-Type': 'application/json' },
+        });
+
+        const data = await res.json();
+        console.log('POSTレスポンス:', data);
+
+        if (res.ok) {
+          setListUrl(data.viewUrl); // URLをセット
+          setViewUrlIssued(true); // ボタンを閲覧ボタンに切り替え
+        } else {
+          console.error('閲覧URLの発行に失敗しました', data.error);
+        }
+      } catch (error) {
+        console.error('閲覧URLの発行に失敗しました', error);
+      }
+    } else if (listUrl && viewUrlIssued) {
+      // 閲覧ボタンが押された場合
+      const uuid = listUrl.split('/').pop();
+      router.push(`/view/${uuid}`);
+    }
   };
 
   const handleDelete = async () => {
@@ -214,7 +241,7 @@ const ShareList = () => {
       >
         {/* リスト部分 */}
         <div
-          className="overflow-auto h-[60vh] p-2 border border-[#FF5722] rounded-lg  bg-gradient-to-br from-[#FFE0B2] to-[#FFCC80]
+          className="overflow-auto h-[72vh] lg:h-[60vh] p-2 border border-[#FF5722] rounded-lg  bg-gradient-to-br from-[#FFE0B2] to-[#FFCC80]
                 scrollbar-thin scrollbar-thumb-[#FF5722] scrollbar-track-[#FFE0B2]"
           ref={listContainerRef}
         >
@@ -223,7 +250,7 @@ const ShareList = () => {
               <Spinner size="xl" color="orange.500" />
             </div>
           ) : currentLists.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {currentLists.map((list) => {
                 if (!list.list_id) {
                   return null;
@@ -236,6 +263,8 @@ const ShareList = () => {
                     onDelete={() => handleDeleteClick(list)}
                     onEdit={() => handleEditClick(list.list_id)}
                     onView={() => handleViewClick(list)}
+                    openMenuId={openMenuId}
+                    setOpenMenuId={setOpenMenuId}
                   />
                 );
               })}
@@ -257,15 +286,13 @@ const ShareList = () => {
       />
 
       {/* ページネーション */}
-      {totalPages > 1 && (
-        <div className={`mt-6 relative ${paginationZIndex}`}>
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
-        </div>
-      )}
+      <div className={`mt-6 relative ${paginationZIndex}`}>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      </div>
     </div>
   );
 };

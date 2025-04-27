@@ -19,7 +19,7 @@ const ResponsiveFooter = () => {
       <footer className="fixed bottom-0 left-0 w-full z-30">
         {/* モバイル用 */}
         <div
-          className={`lg:hidden bg-white border-t-2 border-t-[#FF5722] rounded-t-3xl transition-transform duration-300 ${
+          className={`lg:hidden bg-white border-t-2 border-t-[#FF5722] rounded-t-3xl transition-transform duration-300 z-40 ${
             isBottomNavOpen ? 'translate-y-0' : 'translate-y-full'
           }`}
         >
