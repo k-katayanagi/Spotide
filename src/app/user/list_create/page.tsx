@@ -15,7 +15,7 @@ const ListCreate = () => {
   const toast = useToast();
   const [error, setError] = useState('');
   const [listName, setListName] = useState('');
-  const [selectedType, setSelectedType] = useState<string>('individual');
+  const [selectedType, setSelectedType] = useState<string>('');
   const [voteDate, setVoteDate] = useState<Date | null>(null);
   const [outingDate, setOutingDate] = useState<Date | null>(null);
 
@@ -72,7 +72,7 @@ const ListCreate = () => {
       });
 
       setListName('');
-      setSelectedType('individual');
+      setSelectedType('');
       setVoteDate(null);
       setOutingDate(null);
       setError('');
@@ -89,8 +89,8 @@ const ListCreate = () => {
   };
 
   return (
-    <div className="flex flex-col w-full min-h-screen pt-5 pl-5">
-      <h1 className="text-xl font-bold mt-0">リスト新規作成</h1>
+    <div className="flex flex-col w-full min-h-screen pt-5 px-5">
+      <h1 className="text-2xl font-bold mt-0">リスト新規作成</h1>
       <div className="flex flex-col items-center justify-start w-full flex-grow mt-20">
         <form
           onSubmit={handleSubmit}
@@ -102,15 +102,19 @@ const ListCreate = () => {
               onChange={onListNameChange}
               error={error}
               setError={setError}
-              className="w-full h-[40px]"
+              className="w-full h-[40px] border border-[#e68b6e] pl-4 placeholder:text-[#e68b6e] focus:outline-none focus:ring-2 focus:ring-[#FF5722]"
             />
           </div>
 
-          <div className="flex flex-col items-start self-start">
+          <div className="flex flex-col items-start self-start w-full">
             <ListSelect
               options={listTypeOptions}
               onSelect={handleSelectChange}
+              value={selectedType || ''}
               title="リストタイプ"
+              className="border border-[#e68b6e] px-4 focus:outline-none focus:ring-2 focus:ring-[#FF5722]"
+              placeholder="リストタイプを選択してください"
+              placeholderColor="#e68b6e"
             />
           </div>
 
@@ -129,7 +133,7 @@ const ListCreate = () => {
               value={outingDate}
             />
           </div>
-          <div className="w-full flex justify-end mt-5">
+          <div className="w-full flex justify-center lg:justify-end mt-5">
             <SubmitButton />
           </div>
         </form>
