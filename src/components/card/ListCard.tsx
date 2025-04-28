@@ -186,12 +186,12 @@ const ListCard = ({
         )}
       </div>
 
-      <div className="bg-[#f5f5f5] h-[14vh] lg:h-[19vh] p:p-2 lg:p-4 m-2 rounded-lg shadow-sm border">
-        <h1 className="text-gray-800 font-semibold mb-2 text-lg lg:text-xl">
+      <div className="bg-[#f5f5f5] h-[14.5vh] lg:h-[19vh] p-2 lg:p-4 m-2 rounded-lg shadow-sm border">
+        <h1 className="text-gray-800 font-semibold mb-1 lg:mb-2 text-lg lg:text-xl">
           日程情報
         </h1>
 
-        <div className="space-y-1 text-lg lg:text-xl text-gray-700">
+        <div className="space-y-1 pl-1 text-lg lg:text-xl text-gray-700">
           <p>投票開始日時: {formattedVoteStartDate}</p>
           <p>おでかけ日: {formattedOutingDate}</p>
           <p>作成日: {formattedCreateDate}</p>

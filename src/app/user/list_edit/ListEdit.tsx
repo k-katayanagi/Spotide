@@ -349,7 +349,7 @@ const ListEdit = () => {
       >
         {/* リスト部分 */}
         <div
-          className="overflow-auto h-[72vh] lg:h-[60vh] p-2 border border-[#43A047] rounded-lg bg-gradient-to-br from-[#C8E6C9] to-[#A5D6A7]scrollbar-thin   scrollbar-thin scrollbar-thumb-[#2E7D32] scrollbar-track-[#C8E6C9]"
+          className="overflow-auto h-[66vh] lg:h-[60vh] p-2 border border-[#43A047] rounded-lg bg-gradient-to-br from-[#C8E6C9] to-[#A5D6A7]scrollbar-thin   scrollbar-thin scrollbar-thumb-[#2E7D32] scrollbar-track-[#C8E6C9]"
           ref={listContainerRef}
         >
           {loading ? (

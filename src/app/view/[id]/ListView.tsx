@@ -457,7 +457,7 @@ const ListView = ({ GetListId }: Props) => {
       >
         {/* リスト部分 */}
         <div
-          className="overflow-auto  h-[70vh] lg:h-[60vh] p-2 border border-[#0288D1] rounded-lg 
+          className="overflow-auto  h-[66vh] lg:h-[60vh] p-2 border border-[#0288D1] rounded-lg 
   bg-gradient-to-br from-[#B3E5FC] to-[#81D4FA]
   scrollbar-thin scrollbar-thumb-[#0288D1] scrollbar-track-[#B3E5FC]"
           ref={listContainerRef}
