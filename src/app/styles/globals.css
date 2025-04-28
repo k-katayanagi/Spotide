@@ -17,7 +17,7 @@
 html {
   font-size: 62.5%;
   height: 100%;
-  overflow: hidden;
+  overflow-x: hidden; 
   min-width: 320px;
 }
 
@@ -29,8 +29,10 @@ body {
   flex-direction: column;
   font-size: 1.5rem;
   min-height: 100vh;
-  overflow: hidden; /* 基本はスクロールなし */
+  overflow-x: hidden; 
+  overflow-y: auto; 
 }
+
 
 /* メインコンテンツ */
 main {

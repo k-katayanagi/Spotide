@@ -1,11 +1,26 @@
-'use client';
 
-const Top = () => {
+
+import Head from 'next/head';
+import Top from './Top';
+
+const TopPage = () => {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      TOPページです
-    </div>
+    <>
+      <Head>
+        <link rel="preload" href="/images/top/background.svg" as="fetch" />
+      </Head>
+      <div
+        className="relative w-full h-[8000px] overflow-hidden"
+        style={{
+          backgroundImage: 'url(/images/top/background.svg)',
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: '100% auto',
+        }}
+      >
+        <Top />
+      </div>
+    </>
   );
 };
 
-export default Top;
+export default TopPage;
