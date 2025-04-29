@@ -5,7 +5,7 @@
 Googleマップと連携し、店舗を簡単に検索。リスト作成から投票完了まで一貫した体験を提供可能です。
 
 ## サービスのURL
-https://spotide.vercel.app/login  
+https://spotide.vercel.app
 ### テスト用Googleアカウント情報
 
 | 項目           | 内容                          |
