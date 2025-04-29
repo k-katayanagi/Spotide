@@ -33,7 +33,7 @@ const AuthGuard = ({ children }: { children: React.ReactNode }) => {
       router.push('/login');
     }
 
-    if (session && isPublicPage) {
+    if (session && isPublicPage && pathname !== '/') {
       router.push('/user/mypage');
     }
   }, [session, status, router, pathname]);

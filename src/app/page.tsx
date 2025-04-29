@@ -223,11 +223,18 @@ const Top = () => {
                     }
                   >
                     {/* Circle */}
-                    <div
-                      className={`relative
-            w-[260px]  lg:w-[600px] 
-            ${isLast ? 'mx-auto' : isOdd ? 'self-end' : 'self-start'}
-          `}
+                    <motion.div
+                      initial={
+                        isLast
+                          ? { opacity: 0, y: 100 }
+                          : { opacity: 0, x: isOdd ? 200 : -200 }
+                      }
+                      whileInView={
+                        isLast ? { opacity: 1, y: 0 } : { opacity: 1, x: 0 }
+                      }
+                      transition={{ duration: 1, ease: 'easeOut' }}
+                      viewport={{ once: true }}
+                      className={`relative w-[260px] lg:w-[600px] ${isLast ? 'mx-auto' : isOdd ? 'self-end' : 'self-start'}`}
                     >
                       {isLast && (
                         <>
@@ -273,25 +280,39 @@ const Top = () => {
                           dangerouslySetInnerHTML={{ __html: step.description }}
                         ></p>
                       </div>
-                    </div>
+                    </motion.div>
 
                     {/* Laptop */}
+
                     <div
-                      className={`
-            w-[240px]  lg:w-[500px] 
-            relative z-10 
-            ${isLast ? '-mt-60' : 'self-end -mt-20 lg:-mt-40'} 
-            ${!isLast && (isOdd ? '-mr-[120px] lg:-mr-[200px]' : '-ml-[120px] lg:-ml-[200px]')}
-            transform ${isLast ? 'translate-y-[110px] lg:translate-y-[-40px]' : 'translate-y-[60px] lg:translate-y-[120px] '}
-          `}
+                      className={` w-[240px]  lg:w-[500px] relative z-10 ${isLast ? '-mt-60' : 'self-end -mt-20 lg:-mt-40'} 
+                      ${!isLast && (isOdd ? '-mr-[120px] lg:-mr-[200px]' : '-ml-[120px] lg:-ml-[200px]')}
+                      transform ${isLast ? 'translate-y-[110px] lg:translate-y-[-40px]' : 'translate-y-[60px] lg:translate-y-[120px] '}
+                      `}
                     >
-                      <NextImage
-                        src={step.laptop}
-                        alt={`Laptop ${index + 1}`}
-                        layout="responsive"
-                        width={600}
-                        height={400}
-                      />
+                      <motion.div
+                        initial={
+                          isLast
+                            ? { opacity: 0, y: 100 }
+                            : { opacity: 0, x: isOdd ? -200 : 200 }
+                        }
+                        whileInView={
+                          isLast ? { opacity: 1, y: 0 } : { opacity: 1, x: 0 }
+                        }
+                        transition={{
+                          duration: 1,
+                          ease: 'easeOut',
+                        }}
+                        viewport={{ once: true }}
+                      >
+                        <NextImage
+                          src={step.laptop}
+                          alt={`Laptop ${index + 1}`}
+                          layout="responsive"
+                          width={600}
+                          height={400}
+                        />
+                      </motion.div>
                     </div>
                   </div>
                 );
@@ -308,16 +329,16 @@ const Top = () => {
                 「集める、シェアする、決める。」そのすべてを。
               </div>
             </div>
-          
-              {/* 👇この辺にログインボタン追加 */}
-              <div className="relative z-30 mt-[120px] flex flex-col items-center justify-center">
-                <h1 className="text-white text-xl5 bold ">ログインはこちら</h1>
-                <LoginButton onClick={handleLogin} />
-                {errorMessage && (
-                  <div className="text-red-500 mt-4 text-center">
-                    {errorMessage}
-                  </div>
-                )}
+
+            {/* 👇この辺にログインボタン追加 */}
+            <div className="relative z-30 mt-[120px] flex flex-col items-center justify-center">
+              <h1 className="text-white text-xl5 bold ">ログインはこちら</h1>
+              <LoginButton onClick={handleLogin} />
+              {errorMessage && (
+                <div className="text-red-500 mt-4 text-center">
+                  {errorMessage}
+                </div>
+              )}
             </div>
           </div>
         )}
