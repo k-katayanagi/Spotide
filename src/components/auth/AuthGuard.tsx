@@ -10,7 +10,7 @@ const AuthGuard = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname(); // 現在のURLを取得
 
   // ログイン不要なページ
-  const publicRoutes = ['/login', '/registry'];
+  const publicRoutes = ['/','/login', '/registry'];
   const searchSpot = pathname.includes('spot_search');
   const isViewPage = /^\/view(\/.*)?$/.test(pathname);
   const isShareListPage = /^\/user\/share_list\/\d+\/list_edit$/.test(pathname);
