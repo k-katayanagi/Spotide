@@ -139,6 +139,7 @@ const ShareList = () => {
   };
 
   const handleViewClick = async (list: List) => {
+    console.log(list)
     if (!listUrl && !viewUrlIssued) {
       // 閲覧URL発行ボタンが押された場合
       try {
@@ -149,8 +150,6 @@ const ShareList = () => {
         });
 
         const data = await res.json();
-        console.log('POSTレスポンス:', data);
-
         if (res.ok) {
           setListUrl(data.viewUrl); // URLをセット
           setViewUrlIssued(true); // ボタンを閲覧ボタンに切り替え
@@ -163,7 +162,8 @@ const ShareList = () => {
     } else if (listUrl && viewUrlIssued) {
       // 閲覧ボタンが押された場合
       const uuid = listUrl.split('/').pop();
-      router.push(`/view/${uuid}`);
+      const ownerParam = list.is_admin ? '?admin=true' : '';
+      router.push(`/view/${uuid}${ownerParam}`);
     }
   };
 

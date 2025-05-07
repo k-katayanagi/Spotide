@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import ListView from './ListView';
 import ParticipationAuth from './ParticipationAuth';
+import { useSearchParams } from 'next/navigation';
 
 type AuthListItem = {
   listId: string;
@@ -10,6 +11,9 @@ type AuthListItem = {
 };
 
 const ListViewPage = () => {
+  const searchParams = useSearchParams();
+  const isOwner = searchParams.get('admin') === 'true';
+
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [listId, setListId] = useState<string | null>(null);
 
@@ -22,18 +26,24 @@ const ListViewPage = () => {
         setListId(listIdMatch[1]);
       }
 
+      if (isOwner) {
+        setIsAuthenticated(true);
+        return; // ← 管理者ならこれ以上チェック不要
+      }
+
       const storedAuthLists = localStorage.getItem('authLists');
       const authLists: AuthListItem[] = storedAuthLists
         ? JSON.parse(storedAuthLists)
         : [];
 
-      if (listId) {
-        if (authLists.some((item: AuthListItem) => item.listId === listId)) {
-          setIsAuthenticated(true);
-        }
+      if (listIdMatch?.[1]) {
+        const matched = authLists.some(
+          (item) => item.listId === listIdMatch[1],
+        );
+        setIsAuthenticated(matched);
       }
     }
-  }, [listId]);
+  }, [isOwner]);
 
   const handleAuthSuccess = (participantId: number, listId: number) => {
     const stored = localStorage.getItem('authLists');
@@ -58,7 +68,7 @@ const ListViewPage = () => {
         <ParticipationAuth onAuthSuccess={handleAuthSuccess} />
       ) : (
         <div className="absolute top-0 left-0 w-full h-full bg-white">
-          <ListView GetListId={listId} />
+          <ListView GetListId={listId} isAdmin={isOwner}/>
         </div>
       )}
     </div>

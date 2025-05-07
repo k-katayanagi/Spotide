@@ -7,9 +7,10 @@ import useNavigation from '@/hooks/useNavigation';
 interface Props {
   className?: string;
   listId: number | null;
+  ownerParam? : boolean;
 }
 
-const IssueViewButton = ({ className, listId }: Props) => {
+const IssueViewButton = ({ className, listId,ownerParam}: Props) => {
   const { handleNavigateTo } = useNavigation();
   const [viewUrl, setViewUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -79,7 +80,7 @@ const IssueViewButton = ({ className, listId }: Props) => {
 
         // 遷移先を修正: view/uuid に遷移するように
         const uuid = viewUrl.split('/').pop(); // URLからUUIDを取り出す
-        const correctedUrl = `/view/${uuid}`;
+        const correctedUrl = `/view/${uuid}${ownerParam ? '?admin=true' : ''}`;
         console.log('修正後の遷移先URL:', correctedUrl); // 修正後の遷移先URLを確認
         handleNavigateTo(correctedUrl); // 修正後のURLに遷移
       }

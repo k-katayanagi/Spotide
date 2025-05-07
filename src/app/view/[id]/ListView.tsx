@@ -30,6 +30,7 @@ import useNavigation from '@/hooks/useNavigation';
 
 type Props = {
   GetListId: string | null;
+  isAdmin: boolean;
 };
 
 type AuthListItem = {
@@ -52,7 +53,7 @@ const defaultFields = [
   { key: 'created_at', label: '登録日' },
 ];
 
-const ListView = ({ GetListId }: Props) => {
+const ListView = ({ GetListId, isAdmin }: Props) => {
   const { data: session } = useSession();
   const params = useParams();
   const url = params?.id;
@@ -120,19 +121,67 @@ const ListView = ({ GetListId }: Props) => {
   ];
 
   useEffect(() => {
+    const fetchListAndItemsAsAdmin = async () => {
+      if (!url || !session?.user?.id) return;
+  
+      setLoading(true);
+      try {
+        const res = await fetch(`/api/view/admin`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            url,
+            userId: session.user.id,
+          }),
+        });
+  
+        const data = await res.json();
+  
+        if (res.ok) {
+          const { list, items, participant } = data;
+  
+          const listArray = Array.isArray(list) ? list : [list];
+          setLists(listArray);
+          setListItems(items);
+          setParticipant(participant);
+          setParticipantId(participant?.participant_id ?? null);
+          setVoteItem(participant?.item_id ?? null);
+  
+          if (listArray.length > 0) {
+            const currentTime = new Date().getTime();
+            const votingStartDate = new Date(listArray[0].voting_start_at);
+            const votingStartTimeUTC = votingStartDate.getTime() - 9 * 60 * 60 * 1000;
+  
+            const hasVotingStarted = currentTime >= votingStartTimeUTC;
+            setIsVotingStart(hasVotingStarted);
+            setIsVotingCompleted(participant?.is_vote ?? false);
+            setIsAllVotingCompleted(listArray[0].is_voting_completed);
+            setIsAggregationCompleted(listArray[0].is_aggregation_completed);
+            setIsEditing(false);
+          }
+        } else {
+          console.error('管理者リスト取得失敗:', data.error);
+        }
+      } catch (e) {
+        console.error('管理者APIエラー:', e);
+      } finally {
+        setLoading(false);
+      }
+    };
+  
     const fetchListAndItems = async (participantIdFromStorage: number) => {
       if (!url || !participantIdFromStorage) {
         console.log('URLまたはparticipantIdがありません');
         return;
       }
-
+  
       setLoading(true);
       try {
         const response = await fetch(
           `/api/view?url=${url}&participantId=${participantIdFromStorage}`,
         );
         const data = await response.json();
-
+  
         if (response.ok) {
           const { list, items, participant } = data;
           const listArray = Array.isArray(list) ? list : [list];
@@ -141,15 +190,12 @@ const ListView = ({ GetListId }: Props) => {
           setParticipant(participant);
           setParticipantId(participantIdFromStorage);
           setVoteItem(participant.item_id);
-
-          if (listArray && listArray.length > 0) {
+  
+          if (listArray.length > 0) {
             const currentTime = new Date().getTime();
-
             const votingStartDate = new Date(listArray[0].voting_start_at);
-            const votingStartTime = votingStartDate.getTime();
-
-            const votingStartTimeUTC = votingStartTime - 9 * 60 * 60 * 1000;
-
+            const votingStartTimeUTC = votingStartDate.getTime() - 9 * 60 * 60 * 1000;
+  
             const hasVotingStarted = currentTime >= votingStartTimeUTC;
             setIsVotingStart(hasVotingStarted);
             setIsVotingCompleted(participant.is_vote);
@@ -166,9 +212,14 @@ const ListView = ({ GetListId }: Props) => {
         setLoading(false);
       }
     };
-
+  
+    // 管理者だったら専用APIでfetch
+    if (isAdmin) {
+      fetchListAndItemsAsAdmin();
+    }
+  
+    // 一般参加者用の処理
     const storedData = localStorage.getItem('authLists');
-
     if (storedData) {
       try {
         const parsedData = JSON.parse(storedData);
@@ -176,7 +227,7 @@ const ListView = ({ GetListId }: Props) => {
         const foundParticipant = parsedData.find(
           (item: AuthListItem) => item.listId === listId,
         );
-
+  
         if (foundParticipant) {
           const participantId = foundParticipant.participantId;
           fetchListAndItems(participantId);
@@ -197,6 +248,7 @@ const ListView = ({ GetListId }: Props) => {
     isAggregationCompleted,
     isEditing,
   ]);
+  
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;

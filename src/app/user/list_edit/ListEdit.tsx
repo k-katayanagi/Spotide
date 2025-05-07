@@ -136,7 +136,7 @@ const ListEdit = () => {
         const hasAdminAccess = data.some(
           (list: List) => String(list.creator_id) === String(sessionUserId),
         );
-
+        console.log(hasAdminAccess)
         const isAccessible = hasLocalAccess || hasAdminAccess;
         setHasAccess(isAccessible);
 
@@ -277,7 +277,7 @@ const ListEdit = () => {
               'リストが見つかりません'}
         </h1>
         <div className="flex items-center gap-2">
-          <IssueViewButton listId={listId} />
+          <IssueViewButton listId={listId} ownerParam = {hasAccess}/>
           <div className="flex gap-5 items-center">
             <FilterButton onClick={toggleFilterDropdown} disabled={isSort} />
             <SortButton onClick={toggleSortDropdown} disabled={isFilter} />
