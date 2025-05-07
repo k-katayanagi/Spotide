@@ -80,7 +80,7 @@ const IssueViewButton = ({ className, listId,ownerParam}: Props) => {
 
         // 遷移先を修正: view/uuid に遷移するように
         const uuid = viewUrl.split('/').pop(); // URLからUUIDを取り出す
-        const correctedUrl = `/view/${uuid}${ownerParam ? '?admin=true' : ''}`;
+        const correctedUrl = `/view/${uuid}${ownerParam ? '?auth=true' : ''}`;
         console.log('修正後の遷移先URL:', correctedUrl); // 修正後の遷移先URLを確認
         handleNavigateTo(correctedUrl); // 修正後のURLに遷移
       }

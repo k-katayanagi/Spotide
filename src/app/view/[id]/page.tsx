@@ -12,7 +12,7 @@ type AuthListItem = {
 
 const ListViewPage = () => {
   const searchParams = useSearchParams();
-  const isOwner = searchParams.get('admin') === 'true';
+  const isOwner = searchParams.get('auth') === 'true';
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [listId, setListId] = useState<string | null>(null);

@@ -162,7 +162,7 @@ const ShareList = () => {
     } else if (listUrl && viewUrlIssued) {
       // 閲覧ボタンが押された場合
       const uuid = listUrl.split('/').pop();
-      const ownerParam = list.is_admin ? '?admin=true' : '';
+      const ownerParam = list.is_admin ? '?auth=true' : '';
       router.push(`/view/${uuid}${ownerParam}`);
     }
   };
