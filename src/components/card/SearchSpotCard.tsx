@@ -17,13 +17,14 @@ const defaultFields = [
 interface Props {
   SearchSpot: Spot;
   onAdd?: () => void;
+  addingSpotId?: number | null;
 }
 
-const SearchSpotCard = ({ SearchSpot, onAdd }: Props) => {
+const SearchSpotCard = ({ SearchSpot, onAdd, addingSpotId }: Props) => {
   return (
     <div className="bg-white border border-orange-300 shadow-md rounded-lg p-4 h-auto min-h-[320px] flex flex-col justify-between">
       <div className="flex justify-center items-center mb-4 space-x-2 sm:space-x-6 md:space-x-10 lg:space-x-16 xl:space-x-20">
-        <AddButton onClick={onAdd} />
+        <AddButton onClick={onAdd} loading={addingSpotId === SearchSpot.id} />
       </div>
       <div className="flex-1">
         {/* 画像がある場合にのみ表示 */}

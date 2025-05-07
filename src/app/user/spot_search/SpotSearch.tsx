@@ -41,6 +41,7 @@ const SpotSearch = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
   const listContainerRef = useRef<HTMLDivElement>(null);
+  const [addingSpotId, setAddingSpotId] = useState<number | null>(null);
 
   const searchParams = useSearchParams();
   const isCreator = searchParams.get('isCreator') === 'true';
@@ -94,9 +95,13 @@ const SpotSearch = () => {
   };
 
   const handleAddListItem = async (spot: Spot) => {
+    if (addingSpotId === spot.id) return; // そのアイテムすでに処理中
+    setAddingSpotId(spot.id); // このスポットが処理中だと記録
+
     const participantId = JSON.parse(
       localStorage.getItem('authLists') || '[]',
     ).find((item: AuthListItem) => item.listId === listid)?.participantId;
+
     try {
       const response = await fetch('/api/listItems', {
         method: 'POST',
@@ -152,6 +157,8 @@ const SpotSearch = () => {
           position: 'top',
         });
       }
+    } finally {
+      setAddingSpotId(null);
     }
   };
 
@@ -298,6 +305,7 @@ const SpotSearch = () => {
                   key={Item.id}
                   SearchSpot={Item}
                   onAdd={() => handleAddListItem(Item)}
+                  addingSpotId={addingSpotId}
                 />
               ))
             ) : (
